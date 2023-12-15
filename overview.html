@@ -173,7 +173,7 @@
                     <main>
                         <h1 id="mostro-specification-for-clients"><a class="header" href="#mostro-specification-for-clients">Mostro specification for clients</a></h1>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
-<p>All messages broadcasted by Mostro daemon are <a href="https://github.com/nostr-protocol/nips/blob/master/01.md#kinds">Parameterized Replaceable Events</a> and use <code>30078</code> as event <code>kind</code>, a list of standard event kinds can be found <a href="https://github.com/nostr-protocol/nips#event-kinds">here</a></p>
+<p>All messages broadcasted by Mostro daemon are <a href="https://github.com/nostr-protocol/nips/blob/master/01.md#kinds">Parameterized Replaceable Events</a> and use <code>38383</code> as event <code>kind</code>, a list of standard event kinds can be found <a href="https://github.com/nostr-protocol/nips#event-kinds">here</a></p>
 <h2 id="communication-between-users-and-mostro"><a class="header" href="#communication-between-users-and-mostro">Communication between users and Mostro</a></h2>
 <p>All messages from/to Mostro should be a Nostr event <a href="https://github.com/nostr-protocol/nips/blob/master/04.md">kind 4</a>, the <code>content</code> field of the event should be a base64-encoded, aes-256-cbc encrypted JSON-serialized string (with no white space or line breaks) of the following structure:</p>
 <ul>

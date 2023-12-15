@@ -210,6 +210,32 @@
   }
 }
 </code></pre>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingPayment</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;WaitingPayment&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;l&quot;, &quot;MostroP2P&quot;],
+      [&quot;data_label&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
+</code></pre>
 <p>And send a message to the buyer with the following content:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -232,6 +258,32 @@
     &quot;content&quot;: null
   }
 }
+</code></pre>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;l&quot;, &quot;MostroP2P&quot;],
+      [&quot;data_label&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
 </code></pre>
 <p>And sends a message to the buyer with the following content:</p>
 <pre><code class="language-json">{
@@ -273,6 +325,32 @@
 }
 </code></pre>
 <p>Now both parties have an <code>Active</code> order and they can keep going with the trade.</p>
+<p>Finally Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Active</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;Active&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;l&quot;, &quot;MostroP2P&quot;],
+      [&quot;data_label&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
+</code></pre>
 
                     </main>
 

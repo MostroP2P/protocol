@@ -172,7 +172,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="cancel-order"><a class="header" href="#cancel-order">Cancel Order</a></h1>
-<p>A user can cancel an Order created by himself and with status <code>Pending</code> sending action <code>Cancel</code>, the message will look like this:</p>
+<p>A user can cancel an Order created by himself and with status <code>Pending</code> sending action <code>Cancel</code>, the message content will look like this:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
@@ -194,6 +194,32 @@
     &quot;content&quot;: null
   }
 }
+</code></pre>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Canceled</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;Canceled&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;l&quot;, &quot;MostroP2P&quot;],
+      [&quot;data_label&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
 </code></pre>
 <h2 id="cancel-cooperatively"><a class="header" href="#cancel-cooperatively">Cancel cooperatively</a></h2>
 <p>A user can cancel an <code>Active</code> order, but will need the counterparty to agree, let's look at an example where the seller initiates a cooperative cancellation:</p>
@@ -228,6 +254,32 @@
     &quot;content&quot;: null
   }
 }
+</code></pre>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>CooperativelyCanceled</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;CooperativelyCanceled&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;l&quot;, &quot;MostroP2P&quot;],
+      [&quot;data_label&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
 </code></pre>
 <p>The buyer can accept the cooperative cancellation sending this message:</p>
 <pre><code class="language-json">{
