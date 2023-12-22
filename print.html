@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">10.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">10.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">11.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -188,18 +188,27 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqq...&quot;,
+    &quot;pubkey&quot;: &quot;0001be6bd50247846a28cce439a10470a39b1b6c81d5c3be2475156a413e1e3a&quot;,
     &quot;action&quot;: &quot;FiatSent&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
+<h2 id="keys"><a class="header" href="#keys">Keys</a></h2>
+<p>For all examples the participants will use this keys:</p>
+<ul>
+<li>Mostro's pubkey <code>dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a</code></li>
+<li>Seller's real pubkey <code>00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78</code></li>
+<li>Seller's ephemeral pubkey <code>1f5bb148a25bca31506594722e746b10acf2641a12725b12072dcbc46ade544d</code></li>
+<li>Buyer's real pubkey <code>0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427</code></li>
+<li>Buyer's ephemeral pubkey <code>9a42ac72d6466a6dbe5b4b07a8717ee13e55abb6bdd810ea9c321c9a32ee837b</code></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="creating-a-new-order"><a class="header" href="#creating-a-new-order">Creating a new order</a></h1>
 <p>To create a new sell order the user should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqq...&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;, // Seller's real pubkey
     &quot;action&quot;: &quot;NewOrder&quot;,
     &quot;content&quot;: {
       &quot;Order&quot;: {
@@ -228,7 +237,7 @@
 <pre><code class="language-json">{
   &quot;id&quot;: &quot;cade205b849a872d74ba4d2a978135dbc05b4e5f483bb4403c42627dfd24f67d&quot;,
   &quot;kind&quot;: 4,
-  &quot;pubkey&quot;: &quot;1f5bb148a25bca31506594722e746b10acf2641a12725b12072dcbc46ade544d&quot;,
+  &quot;pubkey&quot;: &quot;1f5bb148a25bca31506594722e746b10acf2641a12725b12072dcbc46ade544d&quot;, // Seller's ephemeral pubkey
   &quot;content&quot;: &quot;base64-encoded-aes-256-cbc-encrypted-JSON-serialized-string&quot;,
   &quot;tags&quot;: [
     [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;] // Mostro's pubkey
@@ -243,8 +252,7 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqq...&quot;,
-    &quot;action&quot;: &quot;NewOrder&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;content&quot;: {
       &quot;Order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
@@ -279,8 +287,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;7e8fe1eb644f33ff51d8805c02a0e1a6d034e6234eac50ef7a7e0dac68a0414f7910366204fa8217086f90eddaa37ded71e61f736d1838e37c0b73f6a16c4af2&quot;
@@ -293,21 +301,20 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqq...&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
     &quot;action&quot;: &quot;TakeSell&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>This event would look like this:</p>
 <p>The event to send to Mostro would look like this:</p>
 <pre><code class="language-json">{
   &quot;id&quot;: &quot;cade205b849a872d74ba4d2a978135dbc05b4e5f483bb4403c42627dfd24f67d&quot;,
   &quot;kind&quot;: 4,
-  &quot;pubkey&quot;: &quot;1f5bb148a25bca31506594722e746b10acf2641a12725b12072dcbc46ade544d&quot;,
+  &quot;pubkey&quot;: &quot;9a42ac72d6466a6dbe5b4b07a8717ee13e55abb6bdd810ea9c321c9a32ee837b&quot;,
   &quot;content&quot;: &quot;base64-encoded-aes-256-cbc-encrypted-JSON-serialized-string&quot;,
   &quot;tags&quot;: [
-    [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;] // Mostro's pubkey
+    [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;]
   ],
   &quot;created_at&quot;: 1234567890,
   &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
@@ -354,8 +361,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -409,8 +416,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -422,11 +429,24 @@
 <pre><code class="language-json">{
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqqxssz4k6swex94zdg5s4pqx3uqlhwsc2vdzvhjvzk33pcypkhqe9aeq2&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;action&quot;: &quot;TakeBuy&quot;,
     &quot;content&quot;: null
   }
+}
+</code></pre>
+<p>The event to send to Mostro would look like this:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;cade205b849a872d74ba4d2a978135dbc05b4e5f483bb4403c42627dfd24f67d&quot;,
+  &quot;kind&quot;: 4,
+  &quot;pubkey&quot;: &quot;1f5bb148a25bca31506594722e746b10acf2641a12725b12072dcbc46ade544d&quot;, // Seller's ephemeral pubkey
+  &quot;content&quot;: &quot;base64-encoded-aes-256-cbc-encrypted-JSON-serialized-string&quot;,
+  &quot;tags&quot;: [
+    [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;] // Mostro's pubkey
+  ],
+  &quot;created_at&quot;: 1234567890,
+  &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
 <h2 id="mostro-response-2"><a class="header" href="#mostro-response-2">Mostro response</a></h2>
@@ -474,8 +494,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -523,8 +543,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -589,8 +609,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -686,8 +706,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -702,10 +722,23 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: null,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
     &quot;action&quot;: &quot;FiatSent&quot;,
     &quot;content&quot;: null
   }
+}
+</code></pre>
+<p>The event to send to Mostro would look like this:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;cade205b849a872d74ba4d2a978135dbc05b4e5f483bb4403c42627dfd24f67d&quot;,
+  &quot;kind&quot;: 4,
+  &quot;pubkey&quot;: &quot;9a42ac72d6466a6dbe5b4b07a8717ee13e55abb6bdd810ea9c321c9a32ee837b&quot;,
+  &quot;content&quot;: &quot;base64-encoded-aes-256-cbc-encrypted-JSON-serialized-string&quot;,
+  &quot;tags&quot;: [
+    [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;]
+  ],
+  &quot;created_at&quot;: 1234567890,
+  &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
 <h2 id="mostro-response-3"><a class="header" href="#mostro-response-3">Mostro response</a></h2>
@@ -714,11 +747,11 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqqt938cer4dvlslg04zwwf66ts8r3txp6mv79cx2498pyuqx8uq0c7qkj&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
     &quot;action&quot;: &quot;FiatSent&quot;,
     &quot;content&quot;: {
       &quot;Peer&quot;: {
-        &quot;pubkey&quot;: &quot;npub1qqqxssz4k6swex94zdg5s4pqx3uqlhwsc2vdzvhjvzk33pcypkhqe9aeq2&quot;
+        &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;
       }
     }
   }
@@ -729,11 +762,11 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqqxssz4k6swex94zdg5s4pqx3uqlhwsc2vdzvhjvzk33pcypkhqe9aeq2&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;action&quot;: &quot;FiatSent&quot;,
     &quot;content&quot;: {
       &quot;Peer&quot;: {
-        &quot;pubkey&quot;: &quot;npub1qqqt938cer4dvlslg04zwwf66ts8r3txp6mv79cx2498pyuqx8uq0c7qkj&quot;
+        &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;
       }
     }
   }
@@ -757,8 +790,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -771,7 +804,7 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqqxssz4k6swex94zdg5s4pqx3uqlhwsc2vdzvhjvzk33pcypkhqe9aeq2&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;action&quot;: &quot;Release&quot;,
     &quot;content&quot;: null
   }
@@ -830,8 +863,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -856,8 +889,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -901,7 +934,7 @@
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 rating event, in this event the <code>d</code> tag will be the user pubkey <code>npub1qqqt938cer4dvlslg04zwwf66ts8r3txp6mv79cx2498pyuqx8uq0c7qkj</code> and looks like this:</p>
+<p>Mostro updates the nip 33 rating event, in this event the <code>d</code> tag will be the user pubkey <code>00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78</code> and looks like this:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -911,7 +944,7 @@
     &quot;created_at&quot;: 1702637077,
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
-      [&quot;d&quot;, &quot;npub1qqqt938cer4dvlslg04zwwf66ts8r3txp6mv79cx2498pyuqx8uq0c7qkj&quot;],
+      [&quot;d&quot;, &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;],
       [&quot;total_reviews&quot;, &quot;1&quot;],
       [&quot;total_rating&quot;, &quot;2&quot;],
       [&quot;last_rating&quot;, &quot;1&quot;],
@@ -930,7 +963,7 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqqt938cer4dvlslg04zwwf66ts8r3txp6mv79cx2498pyuqx8uq0c7qkj&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;action&quot;: &quot;Cancel&quot;,
     &quot;content&quot;: null
   }
@@ -966,8 +999,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -1026,8 +1059,8 @@
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;l&quot;, &quot;MostroP2P&quot;],
-      [&quot;data_label&quot;, &quot;order&quot;]
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
@@ -1062,7 +1095,7 @@
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;pubkey&quot;: &quot;npub1qqqt938cer4dvlslg04zwwf66ts8r3txp6mv79cx2498pyuqx8uq0c7qkj&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;action&quot;: &quot;Dispute&quot;,
     &quot;content&quot;: null
   }
@@ -1092,6 +1125,207 @@
 }
 </code></pre>
 <p>Mostro will not update the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Dispute</code>, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.</p>
+<h2 id="mostro-send-a-nip-33-event-to-show-the-dispute"><a class="header" href="#mostro-send-a-nip-33-event-to-show-the-dispute">Mostro send a nip 33 event to show the dispute</a></h2>
+<p>Here is an example of the nip 33 event sent by Mostro:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;4a4d63698f8a27d7d44e5669224acf6af2516a9350ae5f07d3cb91e5601f7302&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703016565,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
+      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;dispute&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;00a1da45c00684c5af18cf292ca11697c9e70f2a691e6cd397211e717d2f54362dd401d7567da8184a5c596f48a09693479e67214c23e773523a63d0b1c3f537&quot;
+  }
+]
+</code></pre>
+<p>Mostro admin will see the dispute and can take it using the dispute <code>Id</code> from <code>d</code> tag, in this case <code>efc75871-2568-40b9-a6ee-c382d4d6de01</code>.</p>
+<pre><code class="language-json">{
+  &quot;Dispute&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AdminTakeDispute&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<p>Mostro will send a confirmation message to the admin with the Order details:</p>
+<pre><code class="language-json">{
+  &quot;Dispute&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AdminTakeDispute&quot;,
+    &quot;content&quot;: {
+      &quot;Order&quot;: {
+        &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+        &quot;kind&quot;: &quot;Sell&quot;,
+        &quot;status&quot;: &quot;Active&quot;,
+        &quot;amount&quot;: 0,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;fiat_amount&quot;: 100,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;master_buyer_pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+        &quot;master_seller_pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
+        &quot;buyer_invoice&quot;: &quot;lnbcrt11020n1pjcypj3pp58m3d9gcu4cc8l3jgkpfn7zhqv2jfw7p3t6z3tq2nmk9cjqam2c3sdqqcqzzsxqyz5vqsp5mew44wzjs0a58d9sfpkrdpyrytswna6gftlfrv8xghkc6fexu6sq9qyyssqnwfkqdxm66lxjv8z68ysaf0fmm50ztvv773jzuyf8a5tat3lnhks6468ngpv3lk5m7yr7vsg97jh6artva5qhd95vafqhxupyuawmrcqnthl9y&quot;,
+        &quot;created_at&quot;: 1698870173
+      }
+    }
+  }
+}
+</code></pre>
+<p>Also Mostro will broadcast a new nip33 dispute event to update the Dispute <code>status</code> to <code>InProgress</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;2bb3f5a045bcc1eb057fd1e22c0cece7c58428a6ab5153299ef4e1e89633fde9&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703020540,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
+      [&quot;s&quot;, &quot;InProgress&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;dispute&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;20d454a0704cfac1d4a6660d234ce407deb56db8f08598741af5d38c0698a96234fd326a34e7efb2ac20c1c0ed0a921fd50513aab8f5c4b83e2509f2d32794d2&quot;
+  }
+]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="settle-order"><a class="header" href="#settle-order">Settle order</a></h1>
+<p>An admin can settle an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>Order</code> message to Mostro with action <code>AdminSettle</code> with the <code>Id</code> of the order like this:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AdminSettle&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<h2 id="mostro-response-7"><a class="header" href="#mostro-response-7">Mostro response</a></h2>
+<p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AdminSettle,&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<h2 id="mostro-send-a-nip-33-event-to-show-the-order-is-settled-by-the-admin"><a class="header" href="#mostro-send-a-nip-33-event-to-show-the-order-is-settled-by-the-admin">Mostro send a nip 33 event to show the order is settled by the admin</a></h2>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;3d74ce3f10096d163603aa82beb5778bd1686226fdfcfba5d4c3a2c3137929ea&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703260182,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;SettledByAdmin&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;76bfc5e9ce089757dd4074472e1df421da700ce133c874f40b1136607121eca8acfdd2b8b4b374adaa83fa0c7d99672eb21a1068b6b6b774742d5de5bfc932ba&quot;
+  }
+]
+</code></pre>
+<p>Mostro updates the nip 33 order event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>SettledByAdmin</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;316cf27758b0ae358dbc1fdcf27da38d80910543c8f74efeb77e7230910770ca&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703274022,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;SettledByAdmin&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;27803a0f0f9961bff3ebdcd94c489dc27910002c51cbf297a0d95d8ced4f5d40d7b021ae342e90aa31acfdaee4536097368271b89239d9aed5de4dc986f6ed0b&quot;
+  }
+]
+</code></pre>
+<p>And updates nip33 dispute event with status <code>Settled</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;098e8622eae022a79bc793984fccbc5ea3f6641bdcdffaa031c00d3bd33ca5a0&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703274022,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
+      [&quot;s&quot;, &quot;Settled&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;dispute&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;6d7ca7bef7b696f1f6f8cfc33b3fe1beb2fdc6b7647efc93be669c6c1a9d4bafc770d9b0d25432c204dd487d48b39e589dfd7b03bf0e808483921b8937bd5367&quot;
+  }
+]
+</code></pre>
+<h2 id="mostro-tries-to-pay-buyers-invoice"><a class="header" href="#mostro-tries-to-pay-buyers-invoice">Mostro tries to pay buyer's invoice</a></h2>
+<p>If the buyer's invoice is paid successfully Mostro will update the nip33 order event status <code>Success</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;6170892aca6a73906142e58a9c29734d49b399a3811f6216ce553b4a77a8a11e&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703274032,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;b374ca1a-d596-419b-8d95-b8866044d892&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;Success&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;1670a9e61f7bc99f7121a95a2d479456970fbd9bc84d663160e35d1a95d71a006c7986db050ea584d5040927879fd9dcc85dc0ab5c6367f679c9fd5fd33a3cfb&quot;
+  }
+]
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="actions"><a class="header" href="#actions">Actions</a></h1>
 <h2 id="mostro_coreaction"><a class="header" href="#mostro_coreaction">mostro_core::Action</a></h2>
 <p>Action is used to identify each message between Mostro and users</p>
