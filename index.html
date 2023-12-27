@@ -179,8 +179,8 @@
 <ul>
 <li><code>version</code>: Version of the protocol, currently <code>1</code></li>
 <li><code>pubkey</code> (optional): Real pubkey of the user, if present the message is signed with the real pubkey, this is used when users are sending messages from ephemeral keys</li>
-<li><a href="https://docs.rs/mostro-core/latest/mostro_core/enum.Action.html">action</a>: Action to be performed by Mostro daemon</li>
-<li><a href="https://docs.rs/mostro-core/latest/mostro_core/enum.Content.html">content</a> (optional): Content of the message, this field is optional and depends on the action</li>
+<li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">action</a>: Action to be performed by Mostro daemon</li>
+<li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html">content</a> (optional): Content of the message, this field is optional and depends on the action</li>
 </ul>
 <p>These fields are relative to the wrapper, here an example of a <code>FiatSent</code> Order message, in this case <code>id</code> is the Order Id:</p>
 <pre><code class="language-json">{
