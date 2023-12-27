@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">10.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">11.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">10.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">11.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">12.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -1298,6 +1298,77 @@
     ],
     &quot;content&quot;: &quot;&quot;,
     &quot;sig&quot;: &quot;1670a9e61f7bc99f7121a95a2d479456970fbd9bc84d663160e35d1a95d71a006c7986db050ea584d5040927879fd9dcc85dc0ab5c6367f679c9fd5fd33a3cfb&quot;
+  }
+]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="cancel-order-1"><a class="header" href="#cancel-order-1">Cancel order</a></h1>
+<p>An admin can cancel an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>Order</code> message to Mostro with action <code>AdminCancel</code> with the <code>Id</code> of the order like this:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AdminCancel&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<h2 id="mostro-response-8"><a class="header" href="#mostro-response-8">Mostro response</a></h2>
+<p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AdminCancel&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<h2 id="mostro-updates-nip-33-events-1"><a class="header" href="#mostro-updates-nip-33-events-1">Mostro updates nip 33 events</a></h2>
+<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>CanceledByAdmin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;3d74ce3f10096d163603aa82beb5778bd1686226fdfcfba5d4c3a2c3137929ea&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703260182,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;CanceledByAdmin&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;76bfc5e9ce089757dd4074472e1df421da700ce133c874f40b1136607121eca8acfdd2b8b4b374adaa83fa0c7d99672eb21a1068b6b6b774742d5de5bfc932ba&quot;
+  }
+]
+</code></pre>
+<p>And updates nip33 dispute event with status <code>SellerRefunded</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;098e8622eae022a79bc793984fccbc5ea3f6641bdcdffaa031c00d3bd33ca5a0&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1703274022,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
+      [&quot;s&quot;, &quot;SellerRefunded&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;dispute&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;6d7ca7bef7b696f1f6f8cfc33b3fe1beb2fdc6b7647efc93be669c6c1a9d4bafc770d9b0d25432c204dd487d48b39e589dfd7b03bf0e808483921b8937bd5367&quot;
   }
 ]
 </code></pre>

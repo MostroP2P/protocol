@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Settle order - Mostro messages specs</title>
+        <title>Cancel order - Mostro messages specs</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html" class="active"><strong aria-hidden="true">10.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">11.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">12.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">10.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html" class="active"><strong aria-hidden="true">11.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">12.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,14 +171,14 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="settle-order"><a class="header" href="#settle-order">Settle order</a></h1>
-<p>An admin can settle an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>Order</code> message to Mostro with action <code>AdminSettle</code> with the <code>Id</code> of the order like this:</p>
+                        <h1 id="cancel-order"><a class="header" href="#cancel-order">Cancel order</a></h1>
+<p>An admin can cancel an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>Order</code> message to Mostro with action <code>AdminCancel</code> with the <code>Id</code> of the order like this:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminSettle&quot;,
+    &quot;action&quot;: &quot;AdminCancel&quot;,
     &quot;content&quot;: null
   }
 }
@@ -190,13 +190,13 @@
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminSettle&quot;,
+    &quot;action&quot;: &quot;AdminCancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <h2 id="mostro-updates-nip-33-events"><a class="header" href="#mostro-updates-nip-33-events">Mostro updates nip 33 events</a></h2>
-<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>SettledByAdmin</code>, this means that the hold invoice paid by the seller was settled:</p>
+<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>CanceledByAdmin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -209,7 +209,7 @@
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
       [&quot;k&quot;, &quot;Sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;SettledByAdmin&quot;],
+      [&quot;s&quot;, &quot;CanceledByAdmin&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -222,7 +222,7 @@
   }
 ]
 </code></pre>
-<p>And updates nip33 dispute event with status <code>Settled</code>:</p>
+<p>And updates nip33 dispute event with status <code>SellerRefunded</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -233,7 +233,7 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
-      [&quot;s&quot;, &quot;Settled&quot;],
+      [&quot;s&quot;, &quot;SellerRefunded&quot;],
       [&quot;y&quot;, &quot;mostrop2p&quot;],
       [&quot;z&quot;, &quot;dispute&quot;]
     ],
@@ -242,43 +242,16 @@
   }
 ]
 </code></pre>
-<h2 id="payment-of-the-buyers-invoice"><a class="header" href="#payment-of-the-buyers-invoice">Payment of the buyer's invoice</a></h2>
-<p>At this point Mostro is trying to pay the buyer's invoice, right after complete the payment Mostro will update the status of the order nip33 event to <code>Success</code>:</p>
-<pre><code class="language-json">[
-  &quot;EVENT&quot;,
-  &quot;RAND&quot;,
-  {
-    &quot;id&quot;: &quot;6170892aca6a73906142e58a9c29734d49b399a3811f6216ce553b4a77a8a11e&quot;,
-    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
-    &quot;created_at&quot;: 1703274032,
-    &quot;kind&quot;: 38383,
-    &quot;tags&quot;: [
-      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
-      [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Success&quot;],
-      [&quot;amt&quot;, &quot;7851&quot;],
-      [&quot;fa&quot;, &quot;100&quot;],
-      [&quot;pm&quot;, &quot;face to face&quot;],
-      [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;y&quot;, &quot;mostrop2p&quot;],
-      [&quot;z&quot;, &quot;order&quot;]
-    ],
-    &quot;content&quot;: &quot;&quot;,
-    &quot;sig&quot;: &quot;1670a9e61f7bc99f7121a95a2d479456970fbd9bc84d663160e35d1a95d71a006c7986db050ea584d5040927879fd9dcc85dc0ab5c6367f679c9fd5fd33a3cfb&quot;
-  }
-]
-</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="dispute.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="settle_order.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="cancel_order.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="actions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -288,11 +261,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="dispute.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="settle_order.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="cancel_order.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="actions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
