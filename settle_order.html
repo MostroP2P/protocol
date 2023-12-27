@@ -190,12 +190,13 @@
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminSettle,&quot;,
+    &quot;action&quot;: &quot;AdminSettle&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<h2 id="mostro-send-a-nip-33-event-to-show-the-order-is-settled-by-the-admin"><a class="header" href="#mostro-send-a-nip-33-event-to-show-the-order-is-settled-by-the-admin">Mostro send a nip 33 event to show the order is settled by the admin</a></h2>
+<h2 id="mostro-updates-nip-33-events"><a class="header" href="#mostro-updates-nip-33-events">Mostro updates nip 33 events</a></h2>
+<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>SettledByAdmin</code>, this means that the hold invoice paid by the seller was settled:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -221,32 +222,6 @@
   }
 ]
 </code></pre>
-<p>Mostro updates the nip 33 order event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>SettledByAdmin</code>:</p>
-<pre><code class="language-json">[
-  &quot;EVENT&quot;,
-  &quot;RAND&quot;,
-  {
-    &quot;id&quot;: &quot;316cf27758b0ae358dbc1fdcf27da38d80910543c8f74efeb77e7230910770ca&quot;,
-    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
-    &quot;created_at&quot;: 1703274022,
-    &quot;kind&quot;: 38383,
-    &quot;tags&quot;: [
-      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
-      [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;SettledByAdmin&quot;],
-      [&quot;amt&quot;, &quot;7851&quot;],
-      [&quot;fa&quot;, &quot;100&quot;],
-      [&quot;pm&quot;, &quot;face to face&quot;],
-      [&quot;premium&quot;, &quot;1&quot;],
-      [&quot;y&quot;, &quot;mostrop2p&quot;],
-      [&quot;z&quot;, &quot;order&quot;]
-    ],
-    &quot;content&quot;: &quot;&quot;,
-    &quot;sig&quot;: &quot;27803a0f0f9961bff3ebdcd94c489dc27910002c51cbf297a0d95d8ced4f5d40d7b021ae342e90aa31acfdaee4536097368271b89239d9aed5de4dc986f6ed0b&quot;
-  }
-]
-</code></pre>
 <p>And updates nip33 dispute event with status <code>Settled</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
@@ -267,8 +242,8 @@
   }
 ]
 </code></pre>
-<h2 id="mostro-tries-to-pay-buyers-invoice"><a class="header" href="#mostro-tries-to-pay-buyers-invoice">Mostro tries to pay buyer's invoice</a></h2>
-<p>If the buyer's invoice is paid successfully Mostro will update the nip33 order event status <code>Success</code>:</p>
+<h2 id="payment-of-the-buyers-invoice"><a class="header" href="#payment-of-the-buyers-invoice">Payment of the buyer's invoice</a></h2>
+<p>At this point Mostro is trying to pay the buyer's invoice, right after complete the payment Mostro will update the status of the order nip33 event to <code>Success</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -278,7 +253,7 @@
     &quot;created_at&quot;: 1703274032,
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
-      [&quot;d&quot;, &quot;b374ca1a-d596-419b-8d95-b8866044d892&quot;],
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
       [&quot;k&quot;, &quot;Sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
       [&quot;s&quot;, &quot;Success&quot;],
