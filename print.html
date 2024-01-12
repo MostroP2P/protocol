@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">10.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">11.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">12.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">12.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">13.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">14.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -297,6 +297,95 @@
   }
 ]
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="creating-a-new-order-1"><a class="header" href="#creating-a-new-order-1">Creating a new order</a></h1>
+<p>Creating buy order with a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> would make the process way faster and easy going, to acomplish the buyer should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;, // Buyer's real pubkey
+    &quot;action&quot;: &quot;NewOrder&quot;,
+    &quot;content&quot;: {
+      &quot;Order&quot;: {
+        &quot;kind&quot;: &quot;Buy&quot;,
+        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;amount&quot;: 0,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;fiat_amount&quot;: 100,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;buyer_invoice&quot;: &quot;mostro_p2p@ln.tips&quot;,
+        &quot;created_at&quot;: 0
+      }
+    }
+  }
+}
+</code></pre>
+<p>The nostr event will look like this:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;cade205b849a872d74ba4d2a978135dbc05b4e5f483bb4403c42627dfd24f67d&quot;,
+  &quot;kind&quot;: 4,
+  &quot;pubkey&quot;: &quot;9a42ac72d6466a6dbe5b4b07a8717ee13e55abb6bdd810ea9c321c9a32ee837b&quot;, // Buyer's ephemeral pubkey
+  &quot;content&quot;: &quot;base64-encoded-aes-256-cbc-encrypted-JSON-serialized-string&quot;,
+  &quot;tags&quot;: [
+    [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;] // Mostro's pubkey
+  ],
+  &quot;created_at&quot;: 1234567890,
+  &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
+}
+</code></pre>
+<h2 id="confirmation-message-1"><a class="header" href="#confirmation-message-1">Confirmation message</a></h2>
+<p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;content&quot;: {
+      &quot;Order&quot;: {
+        &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+        &quot;kind&quot;: &quot;Sell&quot;,
+        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;amount&quot;: 0,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;fiat_amount&quot;: 100,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;master_buyer_pubkey&quot;: null,
+        &quot;master_seller_pubkey&quot;: null,
+        &quot;buyer_invoice&quot;: &quot;mostro_p2p@ln.tips&quot;,
+        &quot;created_at&quot;: 1698870173
+      }
+    }
+  }
+}
+</code></pre>
+<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>Pending</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;84fad0d29cb3529d789faeff2033e88fe157a48e071c6a5d1619928289420e31&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702548701,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;amt&quot;, &quot;0&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;7e8fe1eb644f33ff51d8805c02a0e1a6d034e6234eac50ef7a7e0dac68a0414f7910366204fa8217086f90eddaa37ded71e61f736d1838e37c0b73f6a16c4af2&quot;
+  }
+]
+</code></pre>
+<p>After a seller takes this order Mostro will not ask for an invoice to the buyer, Mostro will get the buyer's invoice and paid it when the seller releases the funds.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-sell-order"><a class="header" href="#taking-a-sell-order">Taking a sell order</a></h1>
 <p>If the order amount is <code>0</code> the buyer don't know the exact amount to create the invoice, buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
 <pre><code class="language-json">{
@@ -372,13 +461,13 @@
 ]
 </code></pre>
 <h2 id="buyer-sends-ln-invoice"><a class="header" href="#buyer-sends-ln-invoice">Buyer sends LN invoice</a></h2>
-<p>The buyer sends a nip 04 evento to Mostro with the LN invoice, in case the order has a fixed sats amount, the buyer can we skip the previous step, here the unencrypted content of the event:</p>
+<p>The buyer sends a nip 04 event to Mostro with the lightning invoice, the action should be the same the buyer just received in the last message from Mostro (<code>AddInvoice</code>), here the unencrypted content of the event:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;TakeSell&quot;,
+    &quot;action&quot;: &quot;AddInvoice&quot;,
     &quot;content&quot;: {
       &quot;PaymentRequest&quot;: [
         null,
@@ -389,6 +478,71 @@
 }
 </code></pre>
 <h2 id="mostro-response-1"><a class="header" href="#mostro-response-1">Mostro response</a></h2>
+<p>Mostro send a nip 04 event to the buyer with a wrapped <code>Order</code> in the content, it would look like this:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;WaitingSellerToPay&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingPayment</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;WaitingPayment&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-sell-order-with-a-lightning-address"><a class="header" href="#taking-a-sell-order-with-a-lightning-address">Taking a sell order with a lightning address</a></h1>
+<p>The buyer can use a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> to receive funds and avoid to create and send lightning invoices on each trade, to acomplish this the buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;action&quot;: &quot;TakeSell&quot;,
+    &quot;content&quot;: {
+      &quot;PaymentRequest&quot;: [null, &quot;mostro_p2p@ln.tips&quot;]
+    }
+  }
+}
+</code></pre>
+<p>The event to send to Mostro would look like this:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;cade205b849a872d74ba4d2a978135dbc05b4e5f483bb4403c42627dfd24f67d&quot;,
+  &quot;kind&quot;: 4,
+  &quot;pubkey&quot;: &quot;9a42ac72d6466a6dbe5b4b07a8717ee13e55abb6bdd810ea9c321c9a32ee837b&quot;,
+  &quot;content&quot;: &quot;base64-encoded-aes-256-cbc-encrypted-JSON-serialized-string&quot;,
+  &quot;tags&quot;: [
+    [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;]
+  ],
+  &quot;created_at&quot;: 1234567890,
+  &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
+}
+</code></pre>
+<h2 id="mostro-response-2"><a class="header" href="#mostro-response-2">Mostro response</a></h2>
 <p>Mostro send a nip 04 event to the buyer with a wrapped <code>Order</code> in the content, it would look like this:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -451,7 +605,7 @@
   &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
-<h2 id="mostro-response-2"><a class="header" href="#mostro-response-2">Mostro response</a></h2>
+<h2 id="mostro-response-3"><a class="header" href="#mostro-response-3">Mostro response</a></h2>
 <p>Mostro respond to the seller with a message with the following content:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -632,7 +786,7 @@
         {
           &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
           &quot;kind&quot;: &quot;Sell&quot;,
-          &quot;status&quot;: &quot;WaitingBuyerInvoice&quot;,
+          &quot;status&quot;: &quot;WaitingPayment&quot;,
           &quot;amount&quot;: 7851,
           &quot;fiat_code&quot;: &quot;VES&quot;,
           &quot;fiat_amount&quot;: 100,
@@ -646,7 +800,7 @@
   }
 }
 </code></pre>
-<p>After the hold invoice is paid Mostro will send a new message to seller with the following content:</p>
+<p>After the hold invoice is paid and the buyer already sent the invoice to receive the sats, Mostro will send a new message to seller with the following content:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
@@ -724,6 +878,84 @@
   }
 ]
 </code></pre>
+<h2 id="if-the-buyer-didnt-sent-the-invoice-yet"><a class="header" href="#if-the-buyer-didnt-sent-the-invoice-yet">If the buyer didn't sent the invoice yet</a></h2>
+<p>Mostro send this message to the seller:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;action&quot;: &quot;WaitingBuyerInvoice&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<p>And this message to the buyer:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;content&quot;: {
+      &quot;Order&quot;: {
+        &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+        &quot;kind&quot;: &quot;Sell&quot;,
+        &quot;status&quot;: &quot;WaitingBuyerInvoice&quot;,
+        &quot;amount&quot;: 7851,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;fiat_amount&quot;: 100,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;created_at&quot;: 1698937797
+      }
+    }
+  }
+}
+</code></pre>
+<p>And updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
+</code></pre>
+<p>Now buyer sends the invoice to Mostro:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;content&quot;: {
+      &quot;PaymentRequest&quot;: [
+        null,
+        &quot;lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e&quot;
+      ]
+    }
+  }
+}
+</code></pre>
+<p>And both parties receives each other pubkeys to start a direct conversation</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fiat-sent"><a class="header" href="#fiat-sent">Fiat sent</a></h1>
 <p>After the buyer sends the fiat money to the seller, the buyer should send a message to Mostro indicating that the fiat money was sent, the message will look like this:</p>
 <pre><code class="language-json">{
@@ -749,7 +981,7 @@
   &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
-<h2 id="mostro-response-3"><a class="header" href="#mostro-response-3">Mostro response</a></h2>
+<h2 id="mostro-response-4"><a class="header" href="#mostro-response-4">Mostro response</a></h2>
 <p>Mostro send a messages to both parties confirming <code>FiatSent</code> action and sending again the counterpart pubkey, here an example of the message to the buyer:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -818,7 +1050,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-4"><a class="header" href="#mostro-response-4">Mostro response</a></h2>
+<h2 id="mostro-response-5"><a class="header" href="#mostro-response-5">Mostro response</a></h2>
 <p>Here an example of the Mostro response to the seller:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -930,7 +1162,7 @@
   }
 }
 </code></pre>
-<h2 id="confirmation-message-1"><a class="header" href="#confirmation-message-1">Confirmation message</a></h2>
+<h2 id="confirmation-message-2"><a class="header" href="#confirmation-message-2">Confirmation message</a></h2>
 <p>If Mostro received the correct message, it will send back a confirmation message to the user with <code>Action: RateReceived</code>:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -977,7 +1209,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-5"><a class="header" href="#mostro-response-5">Mostro response</a></h2>
+<h2 id="mostro-response-6"><a class="header" href="#mostro-response-6">Mostro response</a></h2>
 <p>Mostro will send a message with action <code>Cancel</code> confirming the order was canceled, here an example of the message:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -1109,7 +1341,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-6"><a class="header" href="#mostro-response-6">Mostro response</a></h2>
+<h2 id="mostro-response-7"><a class="header" href="#mostro-response-7">Mostro response</a></h2>
 <p>Mostro will send this message to the seller:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -1223,7 +1455,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-7"><a class="header" href="#mostro-response-7">Mostro response</a></h2>
+<h2 id="mostro-response-8"><a class="header" href="#mostro-response-8">Mostro response</a></h2>
 <p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
@@ -1321,7 +1553,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-8"><a class="header" href="#mostro-response-8">Mostro response</a></h2>
+<h2 id="mostro-response-9"><a class="header" href="#mostro-response-9">Mostro response</a></h2>
 <p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {

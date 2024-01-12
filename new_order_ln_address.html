@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Actions - Mostro messages specs</title>
+        <title>Creating a Buy order with a LN address - Mostro messages specs</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">12.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">13.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html" class="active"><strong aria-hidden="true">14.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html" class="active"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">12.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">13.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">14.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,54 +171,107 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="actions"><a class="header" href="#actions">Actions</a></h1>
-<h2 id="mostro_coreaction"><a class="header" href="#mostro_coreaction">mostro_core::Action</a></h2>
-<p>Action is used to identify each message between Mostro and users</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>  pub enum Action {
-    Order,
-    TakeSell,
-    TakeBuy,
-    PayInvoice,
-    FiatSent,
-    Release,
-    Cancel,
-    CooperativeCancelInitiatedByYou,
-    CooperativeCancelInitiatedByPeer,
-    DisputeInitiatedByYou,
-    DisputeInitiatedByPeer,
-    CooperativeCancelAccepted,
-    BuyerInvoiceAccepted,
-    SaleCompleted,
-    PurchaseCompleted,
-    HoldInvoicePaymentAccepted,
-    HoldInvoicePaymentSettled,
-    HoldInvoicePaymentCanceled,
-    WaitingSellerToPay,
-    WaitingBuyerInvoice,
-    AddInvoice,
-    BuyerTookOrder,
-    RateUser,
-    CantDo,
-    Received,
-    Dispute,
-    AdminCancel,
-    AdminSettle,
-    AdminAddSolver,
-    AdminTakeDispute,
+                        <h1 id="creating-a-new-order"><a class="header" href="#creating-a-new-order">Creating a new order</a></h1>
+<p>Creating buy order with a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> would make the process way faster and easy going, to acomplish the buyer should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;, // Buyer's real pubkey
+    &quot;action&quot;: &quot;NewOrder&quot;,
+    &quot;content&quot;: {
+      &quot;Order&quot;: {
+        &quot;kind&quot;: &quot;Buy&quot;,
+        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;amount&quot;: 0,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;fiat_amount&quot;: 100,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;buyer_invoice&quot;: &quot;mostro_p2p@ln.tips&quot;,
+        &quot;created_at&quot;: 0
+      }
+    }
+  }
 }
-<span class="boring">}</span></code></pre></pre>
-<p>You can see details in <a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">mostro core documentation</a></p>
+</code></pre>
+<p>The nostr event will look like this:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;cade205b849a872d74ba4d2a978135dbc05b4e5f483bb4403c42627dfd24f67d&quot;,
+  &quot;kind&quot;: 4,
+  &quot;pubkey&quot;: &quot;9a42ac72d6466a6dbe5b4b07a8717ee13e55abb6bdd810ea9c321c9a32ee837b&quot;, // Buyer's ephemeral pubkey
+  &quot;content&quot;: &quot;base64-encoded-aes-256-cbc-encrypted-JSON-serialized-string&quot;,
+  &quot;tags&quot;: [
+    [&quot;p&quot;, &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;] // Mostro's pubkey
+  ],
+  &quot;created_at&quot;: 1234567890,
+  &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
+}
+</code></pre>
+<h2 id="confirmation-message"><a class="header" href="#confirmation-message">Confirmation message</a></h2>
+<p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;content&quot;: {
+      &quot;Order&quot;: {
+        &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+        &quot;kind&quot;: &quot;Sell&quot;,
+        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;amount&quot;: 0,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;fiat_amount&quot;: 100,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;master_buyer_pubkey&quot;: null,
+        &quot;master_seller_pubkey&quot;: null,
+        &quot;buyer_invoice&quot;: &quot;mostro_p2p@ln.tips&quot;,
+        &quot;created_at&quot;: 1698870173
+      }
+    }
+  }
+}
+</code></pre>
+<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>Pending</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;84fad0d29cb3529d789faeff2033e88fe157a48e071c6a5d1619928289420e31&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702548701,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;amt&quot;, &quot;0&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;7e8fe1eb644f33ff51d8805c02a0e1a6d034e6234eac50ef7a7e0dac68a0414f7910366204fa8217086f90eddaa37ded71e61f736d1838e37c0b73f6a16c4af2&quot;
+  }
+]
+</code></pre>
+<p>After a seller takes this order Mostro will not ask for an invoice to the buyer, Mostro will get the buyer's invoice and paid it when the seller releases the funds.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="cancel_order.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="new_order.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next prefetch" href="take_sell.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -226,10 +279,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="cancel_order.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="new_order.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next prefetch" href="take_sell.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

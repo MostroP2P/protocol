@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating an order</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">2.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">3.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html" class="active"><strong aria-hidden="true">4.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">5.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">6.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">7.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">8.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">9.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">10.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">11.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">12.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html" class="active"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">12.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">13.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">14.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -184,7 +184,7 @@
         {
           &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
           &quot;kind&quot;: &quot;Sell&quot;,
-          &quot;status&quot;: &quot;WaitingBuyerInvoice&quot;,
+          &quot;status&quot;: &quot;WaitingPayment&quot;,
           &quot;amount&quot;: 7851,
           &quot;fiat_code&quot;: &quot;VES&quot;,
           &quot;fiat_amount&quot;: 100,
@@ -198,7 +198,7 @@
   }
 }
 </code></pre>
-<p>After the hold invoice is paid Mostro will send a new message to seller with the following content:</p>
+<p>After the hold invoice is paid and the buyer already sent the invoice to receive the sats, Mostro will send a new message to seller with the following content:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
     &quot;version&quot;: &quot;1&quot;,
@@ -276,6 +276,84 @@
   }
 ]
 </code></pre>
+<h2 id="if-the-buyer-didnt-sent-the-invoice-yet"><a class="header" href="#if-the-buyer-didnt-sent-the-invoice-yet">If the buyer didn't sent the invoice yet</a></h2>
+<p>Mostro send this message to the seller:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;action&quot;: &quot;WaitingBuyerInvoice&quot;,
+    &quot;content&quot;: null
+  }
+}
+</code></pre>
+<p>And this message to the buyer:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;content&quot;: {
+      &quot;Order&quot;: {
+        &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+        &quot;kind&quot;: &quot;Sell&quot;,
+        &quot;status&quot;: &quot;WaitingBuyerInvoice&quot;,
+        &quot;amount&quot;: 7851,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;fiat_amount&quot;: 100,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;created_at&quot;: 1698937797
+      }
+    }
+  }
+}
+</code></pre>
+<p>And updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;100&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
+</code></pre>
+<p>Now buyer sends the invoice to Mostro:</p>
+<pre><code class="language-json">{
+  &quot;Order&quot;: {
+    &quot;version&quot;: &quot;1&quot;,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;content&quot;: {
+      &quot;PaymentRequest&quot;: [
+        null,
+        &quot;lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e&quot;
+      ]
+    }
+  }
+}
+</code></pre>
+<p>And both parties receives each other pubkeys to start a direct conversation</p>
 
                     </main>
 
