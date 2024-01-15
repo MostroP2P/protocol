@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html" class="active"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="settle_order.html"><strong aria-hidden="true">12.</strong> Settle order</a></li><li class="chapter-item expanded "><a href="cancel_order.html"><strong aria-hidden="true">13.</strong> Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">14.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html" class="active"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">12.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">13.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">14.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -175,7 +175,7 @@
 <p>After a successful trade Mostro send a nip04 event to both parties to let them know they can rate each other, here an example how the message look like:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
-    &quot;version&quot;: &quot;1&quot;,
+    &quot;version&quot;: 1,
     &quot;id&quot;: &quot;7e44aa5d-855a-4b17-865e-8ca3834a91a3&quot;,
     &quot;pubkey&quot;: null,
     &quot;action&quot;: &quot;RateUser&quot;,
@@ -186,7 +186,7 @@
 <p>After a Mostro client receive this message, the user can rate the other party, the rating is a number between 1 and 5, to rate the client must receive user's input and create a new nip04 event to send to Mostro with this content:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
-    &quot;version&quot;: &quot;1&quot;,
+    &quot;version&quot;: 1,
     &quot;id&quot;: &quot;7e44aa5d-855a-4b17-865e-8ca3834a91a3&quot;,
     &quot;pubkey&quot;: null,
     &quot;action&quot;: &quot;RateUser&quot;,
@@ -200,7 +200,7 @@
 <p>If Mostro received the correct message, it will send back a confirmation message to the user with <code>Action: RateReceived</code>:</p>
 <pre><code class="language-json">{
   &quot;Order&quot;: {
-    &quot;version&quot;: &quot;1&quot;,
+    &quot;version&quot;: 1,
     &quot;id&quot;: &quot;7e44aa5d-855a-4b17-865e-8ca3834a91a3&quot;,
     &quot;pubkey&quot;: null,
     &quot;action&quot;: &quot;RateReceived&quot;,
