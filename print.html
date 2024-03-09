@@ -183,13 +183,13 @@
 <li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">action</a>: Action to be performed by Mostro daemon</li>
 <li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html">content</a> (optional): Content of the message, this field is optional and depends on the action</li>
 </ul>
-<p>These fields are relative to the wrapper, here an example of a <code>FiatSent</code> Order message, in this case <code>id</code> is the Order Id:</p>
+<p>These fields are relative to the wrapper, here an example of a <code>fiat-sent</code> Order message, in this case <code>id</code> is the Order Id:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0001be6bd50247846a28cce439a10470a39b1b6c81d5c3be2475156a413e1e3a&quot;,
-    &quot;action&quot;: &quot;FiatSent&quot;,
+    &quot;action&quot;: &quot;fiat-sent&quot;,
     &quot;content&quot;: null
   }
 }
@@ -208,14 +208,14 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="creating-a-new-order"><a class="header" href="#creating-a-new-order">Creating a new order</a></h1>
 <p>To create a new sell order the user should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;, // Seller's real pubkey
-    &quot;action&quot;: &quot;NewOrder&quot;,
+    &quot;action&quot;: &quot;new-order&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+      &quot;order&quot;: {
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -229,8 +229,8 @@
 </code></pre>
 <p>Let's explain some of the fields:</p>
 <ul>
-<li>kind: <code>Sell</code> or <code>Buy</code></li>
-<li>status: Is always <code>Pending</code> when creating a new order</li>
+<li>kind: <code>sell</code> or <code>buy</code></li>
+<li>status: Is always <code>pending</code> when creating a new order</li>
 <li>amount: 0 for when we want to sell with at market price, otherwise the amount in satoshis</li>
 <li>pubkey: Real user's npub, we use this when the message was sent from an ephemeral key</li>
 <li>created_at: No need to send the correct unix timestamp, Mostro will replace it with the current time</li>
@@ -251,15 +251,15 @@
 <h2 id="confirmation-message"><a class="header" href="#confirmation-message">Confirmation message</a></h2>
 <p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -271,7 +271,7 @@
   }
 }
 </code></pre>
-<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>Pending</code>:</p>
+<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>pending</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -282,9 +282,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;s&quot;, &quot;pending&quot;],
       [&quot;amt&quot;, &quot;0&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -300,14 +300,14 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="creating-a-new-order-1"><a class="header" href="#creating-a-new-order-1">Creating a new order</a></h1>
 <p>Creating buy order with a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> would make the process way faster and easy going, to acomplish the buyer should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;, // Buyer's real pubkey
-    &quot;action&quot;: &quot;NewOrder&quot;,
+    &quot;action&quot;: &quot;new-order&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
-        &quot;kind&quot;: &quot;Buy&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+      &quot;order&quot;: {
+        &quot;kind&quot;: &quot;buy&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -336,15 +336,15 @@
 <h2 id="confirmation-message-1"><a class="header" href="#confirmation-message-1">Confirmation message</a></h2>
 <p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -359,7 +359,7 @@
   }
 }
 </code></pre>
-<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>Pending</code>:</p>
+<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>pending</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -370,9 +370,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;s&quot;, &quot;pending&quot;],
       [&quot;amt&quot;, &quot;0&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -389,11 +389,11 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-sell-order"><a class="header" href="#taking-a-sell-order">Taking a sell order</a></h1>
 <p>If the order amount is <code>0</code> the buyer don't know the exact amount to create the invoice, buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;TakeSell&quot;,
+    &quot;action&quot;: &quot;take-sell&quot;,
     &quot;content&quot;: null
   }
 }
@@ -414,13 +414,13 @@
 <h2 id="mostro-response"><a class="header" href="#mostro-response">Mostro response</a></h2>
 <p>In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is <code>0</code>, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the unencrypted content of the message:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
@@ -434,7 +434,7 @@
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>waiting-buyer-invoice</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -445,9 +445,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;s&quot;, &quot;waiting-buyer-invoice&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -461,15 +461,15 @@
 ]
 </code></pre>
 <h2 id="buyer-sends-ln-invoice"><a class="header" href="#buyer-sends-ln-invoice">Buyer sends LN invoice</a></h2>
-<p>The buyer sends a nip 04 event to Mostro with the lightning invoice, the action should be the same the buyer just received in the last message from Mostro (<code>AddInvoice</code>), here the unencrypted content of the event:</p>
+<p>The buyer sends a nip 04 event to Mostro with the lightning invoice, the action should be the same the buyer just received in the last message from Mostro (<code>add-invoice</code>), here the unencrypted content of the event:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         null,
         &quot;lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e&quot;
       ]
@@ -478,13 +478,13 @@
 }
 </code></pre>
 <h2 id="mostro-response-1"><a class="header" href="#mostro-response-1">Mostro response</a></h2>
-<p>Mostro send a nip 04 event to the buyer with a wrapped <code>Order</code> in the content, it would look like this:</p>
+<p>Mostro send a nip 04 event to the buyer with a wrapped <code>order</code> in the content, it would look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;WaitingSellerToPay&quot;,
+    &quot;action&quot;: &quot;waiting-seller-to-pay&quot;,
     &quot;content&quot;: null
   }
 }
@@ -500,9 +500,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingPayment&quot;],
+      [&quot;s&quot;, &quot;waiting-payment&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -518,13 +518,13 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-sell-order-with-a-lightning-address"><a class="header" href="#taking-a-sell-order-with-a-lightning-address">Taking a sell order with a lightning address</a></h1>
 <p>The buyer can use a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> to receive funds and avoid to create and send lightning invoices on each trade, to acomplish this the buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;TakeSell&quot;,
+    &quot;action&quot;: &quot;take-sell&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [null, &quot;mostro_p2p@ln.tips&quot;]
+      &quot;payment_request&quot;: [null, &quot;mostro_p2p@ln.tips&quot;]
     }
   }
 }
@@ -543,13 +543,13 @@
 }
 </code></pre>
 <h2 id="mostro-response-2"><a class="header" href="#mostro-response-2">Mostro response</a></h2>
-<p>Mostro send a nip 04 event to the buyer with a wrapped <code>Order</code> in the content, it would look like this:</p>
+<p>Mostro send a nip 04 event to the buyer with a wrapped <code>order</code> in the content, it would look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;WaitingSellerToPay&quot;,
+    &quot;action&quot;: &quot;waiting-seller-to-pay&quot;,
     &quot;content&quot;: null
   }
 }
@@ -565,9 +565,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingPayment&quot;],
+      [&quot;s&quot;, &quot;waiting-payment&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -583,11 +583,11 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-buy-order"><a class="header" href="#taking-a-buy-order">Taking a buy order</a></h1>
 <p>To take an order the seller will send to Mostro a message with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-    &quot;action&quot;: &quot;TakeBuy&quot;,
+    &quot;action&quot;: &quot;take-buy&quot;,
     &quot;content&quot;: null
   }
 }
@@ -608,17 +608,17 @@
 <h2 id="mostro-response-3"><a class="header" href="#mostro-response-3">Mostro response</a></h2>
 <p>Mostro respond to the seller with a message with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;PayInvoice&quot;,
+    &quot;action&quot;: &quot;pay-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         {
           &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-          &quot;kind&quot;: &quot;Buy&quot;,
-          &quot;status&quot;: &quot;WaitingPayment&quot;,
+          &quot;kind&quot;: &quot;buy&quot;,
+          &quot;status&quot;: &quot;waiting-payment&quot;,
           &quot;amount&quot;: 7851,
           &quot;fiat_code&quot;: &quot;VES&quot;,
           &quot;fiat_amount&quot;: 100,
@@ -643,9 +643,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingPayment&quot;],
+      [&quot;s&quot;, &quot;waiting-payment&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -660,11 +660,11 @@
 </code></pre>
 <p>And send a message to the buyer with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;WaitingSellerToPay&quot;,
+    &quot;action&quot;: &quot;waiting-seller-to-pay&quot;,
     &quot;content&quot;: null
   }
 }
@@ -672,16 +672,16 @@
 <h2 id="seller-pays-ln-invoice"><a class="header" href="#seller-pays-ln-invoice">Seller pays LN invoice</a></h2>
 <p>After seller pays the hold invoice Mostro send a message to the seller with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;WaitingBuyerInvoice&quot;,
+    &quot;action&quot;: &quot;waiting-buyer-invoice&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>waiting-buyer-invoice</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -692,9 +692,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;s&quot;, &quot;waiting-buyer-invoice&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -709,15 +709,15 @@
 </code></pre>
 <p>And sends a message to the buyer with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;status&quot;: &quot;WaitingBuyerInvoice&quot;,
+        &quot;status&quot;: &quot;waiting-buyer-invoice&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -732,13 +732,13 @@
 <h2 id="buyer-sends-ln-invoice-1"><a class="header" href="#buyer-sends-ln-invoice-1">Buyer sends LN invoice</a></h2>
 <p>Buyer sends the LN invoice to Mostro.</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         null,
         &quot;lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e&quot;
       ]
@@ -746,8 +746,8 @@
   }
 }
 </code></pre>
-<p>Now both parties have an <code>Active</code> order and they can keep going with the trade.</p>
-<p>Finally Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Active</code>:</p>
+<p>Now both parties have an <code>active</code> order and they can keep going with the trade.</p>
+<p>Finally Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>active</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -758,9 +758,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Active&quot;],
+      [&quot;s&quot;, &quot;active&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -776,17 +776,17 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="seller-pays-hold-invoice"><a class="header" href="#seller-pays-hold-invoice">Seller pays hold invoice</a></h1>
 <p>When the seller is the maker and the order was taken by a buyer, Mostro will send to the seller a message asking to pay the hold invoice, the content of the message will look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;PayInvoice&quot;,
+    &quot;action&quot;: &quot;pay-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         {
           &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-          &quot;kind&quot;: &quot;Sell&quot;,
-          &quot;status&quot;: &quot;WaitingPayment&quot;,
+          &quot;kind&quot;: &quot;sell&quot;,
+          &quot;status&quot;: &quot;waiting-payment&quot;,
           &quot;amount&quot;: 7851,
           &quot;fiat_code&quot;: &quot;VES&quot;,
           &quot;fiat_amount&quot;: 100,
@@ -802,16 +802,16 @@
 </code></pre>
 <p>After the hold invoice is paid and the buyer already sent the invoice to receive the sats, Mostro will send a new message to seller with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;BuyerTookOrder&quot;,
+    &quot;action&quot;: &quot;buyer-took-order&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Active&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;active&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -828,16 +828,16 @@
 </code></pre>
 <p>Mostro also send a message to the buyer, this way they can both write to each other in private, this message would look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;HoldInvoicePaymentAccepted&quot;,
+    &quot;action&quot;: &quot;hold-invoice-payment-accepted&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Active&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;active&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -852,7 +852,7 @@
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Active</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>active</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -863,9 +863,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Active&quot;],
+      [&quot;s&quot;, &quot;active&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -881,27 +881,27 @@
 <h2 id="if-the-buyer-didnt-sent-the-invoice-yet"><a class="header" href="#if-the-buyer-didnt-sent-the-invoice-yet">If the buyer didn't sent the invoice yet</a></h2>
 <p>Mostro send this message to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;WaitingBuyerInvoice&quot;,
+    &quot;action&quot;: &quot;waiting-buyer-invoice&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And this message to the buyer:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;WaitingBuyerInvoice&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;waiting-buyer-invoice&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -913,7 +913,7 @@
   }
 }
 </code></pre>
-<p>And updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<p>And updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>waiting-buyer-invoice</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -924,9 +924,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;s&quot;, &quot;waiting-buyer-invoice&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -941,13 +941,13 @@
 </code></pre>
 <p>Now buyer sends the invoice to Mostro:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         null,
         &quot;lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e&quot;
       ]
@@ -959,11 +959,11 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="fiat-sent"><a class="header" href="#fiat-sent">Fiat sent</a></h1>
 <p>After the buyer sends the fiat money to the seller, the buyer should send a message to Mostro indicating that the fiat money was sent, the message will look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;FiatSent&quot;,
+    &quot;action&quot;: &quot;fiat-sent&quot;,
     &quot;content&quot;: null
   }
 }
@@ -982,13 +982,13 @@
 }
 </code></pre>
 <h2 id="mostro-response-4"><a class="header" href="#mostro-response-4">Mostro response</a></h2>
-<p>Mostro send a messages to both parties confirming <code>FiatSent</code> action and sending again the counterpart pubkey, here an example of the message to the buyer:</p>
+<p>Mostro send a messages to both parties confirming <code>fiat-sent</code> action and sending again the counterpart pubkey, here an example of the message to the buyer:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;FiatSent&quot;,
+    &quot;action&quot;: &quot;fiat-sent&quot;,
     &quot;content&quot;: {
       &quot;Peer&quot;: {
         &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;
@@ -999,11 +999,11 @@
 </code></pre>
 <p>And here an example of the message from Mostro to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
-    &quot;action&quot;: &quot;FiatSent&quot;,
+    &quot;action&quot;: &quot;fiat-sent&quot;,
     &quot;content&quot;: {
       &quot;Peer&quot;: {
         &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;
@@ -1012,7 +1012,7 @@
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>FiatSent</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>fiat-sent</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1023,9 +1023,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;FiatSent&quot;],
+      [&quot;s&quot;, &quot;fiat-sent&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1038,14 +1038,14 @@
   }
 ]
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="release"><a class="header" href="#release">Release</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="release"><a class="header" href="#release">release</a></h1>
 <p>After confirming the buyer sent the fiat money, the seller should send a message to Mostro indicating that sats should be delivered to the buyer, the message will look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
-    &quot;action&quot;: &quot;Release&quot;,
+    &quot;action&quot;: &quot;release&quot;,
     &quot;content&quot;: null
   }
 }
@@ -1053,22 +1053,22 @@
 <h2 id="mostro-response-5"><a class="header" href="#mostro-response-5">Mostro response</a></h2>
 <p>Here an example of the Mostro response to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;HoldInvoicePaymentSettled&quot;,
+    &quot;action&quot;: &quot;hold-invoice-payment-settled&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And a message to the buyer to let him know that the sats were released:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Release&quot;,
+    &quot;action&quot;: &quot;release&quot;,
     &quot;content&quot;: null
   }
 }
@@ -1076,16 +1076,16 @@
 <h2 id="buyer-receives-sats"><a class="header" href="#buyer-receives-sats">Buyer receives sats</a></h2>
 <p>Right after seller release sats Mostro will try to pay the buyer's lightning invoice, if the payment is successful Mostro will send a message to the buyer indicating that the purchase was completed:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;PurchaseCompleted&quot;,
+    &quot;action&quot;: &quot;purchase-completed&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>SettledHoldInvoice</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>settled-hold-invoice</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1096,9 +1096,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;SettledHoldInvoice&quot;],
+      [&quot;s&quot;, &quot;settled-hold-invoice&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1111,7 +1111,7 @@
   }
 ]
 </code></pre>
-<p>Seconds later Mostro will try to pay the buyer's invoice, if the payment is successful Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Success</code>:</p>
+<p>Seconds later Mostro will try to pay the buyer's invoice, if the payment is successful Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>success</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1122,9 +1122,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Success&quot;],
+      [&quot;s&quot;, &quot;success&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1140,22 +1140,22 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="user-rating"><a class="header" href="#user-rating">User rating</a></h1>
 <p>After a successful trade Mostro send a nip04 event to both parties to let them know they can rate each other, here an example how the message look like:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;7e44aa5d-855a-4b17-865e-8ca3834a91a3&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;RateUser&quot;,
+    &quot;action&quot;: &quot;rate-user&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>After a Mostro client receive this message, the user can rate the other party, the rating is a number between 1 and 5, to rate the client must receive user's input and create a new nip04 event to send to Mostro with this content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;7e44aa5d-855a-4b17-865e-8ca3834a91a3&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;RateUser&quot;,
+    &quot;action&quot;: &quot;rate-user&quot;,
     &quot;content&quot;: {
       &quot;RatingUser&quot;: 5 // User input
     }
@@ -1165,11 +1165,11 @@
 <h2 id="confirmation-message-2"><a class="header" href="#confirmation-message-2">Confirmation message</a></h2>
 <p>If Mostro received the correct message, it will send back a confirmation message to the user with <code>Action: RateReceived</code>:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;7e44aa5d-855a-4b17-865e-8ca3834a91a3&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;RateReceived&quot;,
+    &quot;action&quot;: &quot;rate-received&quot;,
     &quot;content&quot;: null
   }
 }
@@ -1198,30 +1198,30 @@
 ]
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cancel-order"><a class="header" href="#cancel-order">Cancel Order</a></h1>
-<p>A user can cancel an Order created by himself and with status <code>Pending</code> sending action <code>Cancel</code>, the message content will look like this:</p>
+<p>A user can cancel an Order created by himself and with status <code>pending</code> sending action <code>cancel</code>, the message content will look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <h2 id="mostro-response-6"><a class="header" href="#mostro-response-6">Mostro response</a></h2>
-<p>Mostro will send a message with action <code>Cancel</code> confirming the order was canceled, here an example of the message:</p>
+<p>Mostro will send a message with action <code>cancel</code> confirming the order was canceled, here an example of the message:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Canceled</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>canceled</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1232,9 +1232,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Canceled&quot;],
+      [&quot;s&quot;, &quot;canceled&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1248,40 +1248,40 @@
 ]
 </code></pre>
 <h2 id="cancel-cooperatively"><a class="header" href="#cancel-cooperatively">Cancel cooperatively</a></h2>
-<p>A user can cancel an <code>Active</code> order, but will need the counterparty to agree, let's look at an example where the seller initiates a cooperative cancellation:</p>
+<p>A user can cancel an <code>active</code> order, but will need the counterparty to agree, let's look at an example where the seller initiates a cooperative cancellation:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>Mostro will send this message to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;CooperativeCancelInitiatedByYou&quot;,
+    &quot;action&quot;: &quot;cooperative-cancel-initiated-by-you&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And this message to the buyer:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;CooperativeCancelInitiatedByPeer&quot;,
+    &quot;action&quot;: &quot;cooperative-cancel-initiated-by-peer&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>CooperativelyCanceled</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>cooperatively-canceled</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1292,9 +1292,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;CooperativelyCanceled&quot;],
+      [&quot;s&quot;, &quot;cooperatively-canceled&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1309,34 +1309,34 @@
 </code></pre>
 <p>The buyer can accept the cooperative cancellation sending this message:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And Mostro will send this message to both parties:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;CooperativeCancelAccepted&quot;,
+    &quot;action&quot;: &quot;cooperative-cancel-accepted&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dispute"><a class="header" href="#dispute">Dispute</a></h1>
-<p>A use can start a dispute in an order with status <code>Pending</code> or <code>FiatSent</code> sending action <code>Dispute</code>, here is an example where the seller initiates a dispute:</p>
+<p>A use can start a dispute in an order with status <code>pending</code> or <code>fiat-sent</code> sending action <code>dispute</code>, here is an example where the seller initiates a dispute:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
-    &quot;action&quot;: &quot;Dispute&quot;,
+    &quot;action&quot;: &quot;dispute&quot;,
     &quot;content&quot;: null
   }
 }
@@ -1344,27 +1344,27 @@
 <h2 id="mostro-response-7"><a class="header" href="#mostro-response-7">Mostro response</a></h2>
 <p>Mostro will send this message to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;DisputeInitiatedByYou,&quot;,
+    &quot;action&quot;: &quot;dispute-initiated-by-you&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And here is the message to the buyer:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;DisputeInitiatedByPeer&quot;,
+    &quot;action&quot;: &quot;dispute-initiated-by-peer&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro will not update the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Dispute</code>, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.</p>
+<p>Mostro will not update the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>dispute</code>, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.</p>
 <h2 id="mostro-send-a-nip-33-event-to-show-the-dispute"><a class="header" href="#mostro-send-a-nip-33-event-to-show-the-dispute">Mostro send a nip 33 event to show the dispute</a></h2>
 <p>Here is an example of the nip 33 event sent by Mostro:</p>
 <pre><code class="language-json">[
@@ -1377,7 +1377,7 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
-      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;s&quot;, &quot;pending&quot;],
       [&quot;y&quot;, &quot;mostrop2p&quot;],
       [&quot;z&quot;, &quot;dispute&quot;]
     ],
@@ -1388,27 +1388,27 @@
 </code></pre>
 <p>Mostro admin will see the dispute and can take it using the dispute <code>Id</code> from <code>d</code> tag, in this case <code>efc75871-2568-40b9-a6ee-c382d4d6de01</code>.</p>
 <pre><code class="language-json">{
-  &quot;Dispute&quot;: {
+  &quot;dispute&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminTakeDispute&quot;,
+    &quot;action&quot;: &quot;admin-take-dispute&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>Mostro will send a confirmation message to the admin with the Order details:</p>
 <pre><code class="language-json">{
-  &quot;Dispute&quot;: {
+  &quot;dispute&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminTakeDispute&quot;,
+    &quot;action&quot;: &quot;admin-take-dispute&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Active&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;active&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -1423,7 +1423,7 @@
   }
 }
 </code></pre>
-<p>Also Mostro will broadcast a new nip33 dispute event to update the Dispute <code>status</code> to <code>InProgress</code>:</p>
+<p>Also Mostro will broadcast a new nip33 dispute event to update the Dispute <code>status</code> to <code>in-progress</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1434,7 +1434,7 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
-      [&quot;s&quot;, &quot;InProgress&quot;],
+      [&quot;s&quot;, &quot;in-progress&quot;],
       [&quot;y&quot;, &quot;mostrop2p&quot;],
       [&quot;z&quot;, &quot;dispute&quot;]
     ],
@@ -1444,13 +1444,13 @@
 ]
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="settle-order"><a class="header" href="#settle-order">Settle order</a></h1>
-<p>An admin can settle an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>Order</code> message to Mostro with action <code>AdminSettle</code> with the <code>Id</code> of the order like this:</p>
+<p>An admin can settle an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>order</code> message to Mostro with action <code>admin-settle</code> with the <code>Id</code> of the order like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminSettle&quot;,
+    &quot;action&quot;: &quot;admin-settle&quot;,
     &quot;content&quot;: null
   }
 }
@@ -1458,17 +1458,17 @@
 <h2 id="mostro-response-8"><a class="header" href="#mostro-response-8">Mostro response</a></h2>
 <p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminSettle&quot;,
+    &quot;action&quot;: &quot;admin-settle&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <h2 id="mostro-updates-nip-33-events"><a class="header" href="#mostro-updates-nip-33-events">Mostro updates nip 33 events</a></h2>
-<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>SettledByAdmin</code>, this means that the hold invoice paid by the seller was settled:</p>
+<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>settled-by-admin</code>, this means that the hold invoice paid by the seller was settled:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1479,9 +1479,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;SettledByAdmin&quot;],
+      [&quot;s&quot;, &quot;settled-by-admin&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1494,7 +1494,7 @@
   }
 ]
 </code></pre>
-<p>And updates nip33 dispute event with status <code>Settled</code>:</p>
+<p>And updates nip33 dispute event with status <code>settled</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1505,7 +1505,7 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
-      [&quot;s&quot;, &quot;Settled&quot;],
+      [&quot;s&quot;, &quot;settled&quot;],
       [&quot;y&quot;, &quot;mostrop2p&quot;],
       [&quot;z&quot;, &quot;dispute&quot;]
     ],
@@ -1515,7 +1515,7 @@
 ]
 </code></pre>
 <h2 id="payment-of-the-buyers-invoice"><a class="header" href="#payment-of-the-buyers-invoice">Payment of the buyer's invoice</a></h2>
-<p>At this point Mostro is trying to pay the buyer's invoice, right after complete the payment Mostro will update the status of the order nip33 event to <code>Success</code>:</p>
+<p>At this point Mostro is trying to pay the buyer's invoice, right after complete the payment Mostro will update the status of the order nip33 event to <code>success</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1526,9 +1526,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Success&quot;],
+      [&quot;s&quot;, &quot;success&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1542,13 +1542,13 @@
 ]
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="cancel-order-1"><a class="header" href="#cancel-order-1">Cancel order</a></h1>
-<p>An admin can cancel an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>Order</code> message to Mostro with action <code>AdminCancel</code> with the <code>Id</code> of the order like this:</p>
+<p>An admin can cancel an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>order</code> message to Mostro with action <code>admin-cancel</code> with the <code>Id</code> of the order like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminCancel&quot;,
+    &quot;action&quot;: &quot;admin-cancel&quot;,
     &quot;content&quot;: null
   }
 }
@@ -1556,17 +1556,17 @@
 <h2 id="mostro-response-9"><a class="header" href="#mostro-response-9">Mostro response</a></h2>
 <p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminCancel&quot;,
+    &quot;action&quot;: &quot;admin-cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <h2 id="mostro-updates-nip-33-events-1"><a class="header" href="#mostro-updates-nip-33-events-1">Mostro updates nip 33 events</a></h2>
-<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>CanceledByAdmin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
+<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>canceled-by-admin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1577,9 +1577,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;CanceledByAdmin&quot;],
+      [&quot;s&quot;, &quot;canceled-by-admin&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -1592,7 +1592,7 @@
   }
 ]
 </code></pre>
-<p>And updates nip33 dispute event with status <code>SellerRefunded</code>:</p>
+<p>And updates nip33 dispute event with status <code>seller-refunded</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -1603,7 +1603,7 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
-      [&quot;s&quot;, &quot;SellerRefunded&quot;],
+      [&quot;s&quot;, &quot;seller-refunded&quot;],
       [&quot;y&quot;, &quot;mostrop2p&quot;],
       [&quot;z&quot;, &quot;dispute&quot;]
     ],
@@ -1615,41 +1615,6 @@
 <div style="break-before: page; page-break-before: always;"></div><h1 id="actions"><a class="header" href="#actions">Actions</a></h1>
 <h2 id="mostro_coreaction"><a class="header" href="#mostro_coreaction">mostro_core::Action</a></h2>
 <p>Action is used to identify each message between Mostro and users</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>  pub enum Action {
-    Order,
-    TakeSell,
-    TakeBuy,
-    PayInvoice,
-    FiatSent,
-    Release,
-    Cancel,
-    CooperativeCancelInitiatedByYou,
-    CooperativeCancelInitiatedByPeer,
-    DisputeInitiatedByYou,
-    DisputeInitiatedByPeer,
-    CooperativeCancelAccepted,
-    BuyerInvoiceAccepted,
-    SaleCompleted,
-    PurchaseCompleted,
-    HoldInvoicePaymentAccepted,
-    HoldInvoicePaymentSettled,
-    HoldInvoicePaymentCanceled,
-    WaitingSellerToPay,
-    WaitingBuyerInvoice,
-    AddInvoice,
-    BuyerTookOrder,
-    RateUser,
-    CantDo,
-    Received,
-    Dispute,
-    AdminCancel,
-    AdminSettle,
-    AdminAddSolver,
-    AdminTakeDispute,
-}
-<span class="boring">}</span></code></pre></pre>
 <p>You can see details in <a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">mostro core documentation</a></p>
 
                     </main>

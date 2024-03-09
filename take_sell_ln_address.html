@@ -174,13 +174,13 @@
                         <h1 id="taking-a-sell-order-with-a-lightning-address"><a class="header" href="#taking-a-sell-order-with-a-lightning-address">Taking a sell order with a lightning address</a></h1>
 <p>The buyer can use a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> to receive funds and avoid to create and send lightning invoices on each trade, to acomplish this the buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;TakeSell&quot;,
+    &quot;action&quot;: &quot;take-sell&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [null, &quot;mostro_p2p@ln.tips&quot;]
+      &quot;payment_request&quot;: [null, &quot;mostro_p2p@ln.tips&quot;]
     }
   }
 }
@@ -199,13 +199,13 @@
 }
 </code></pre>
 <h2 id="mostro-response"><a class="header" href="#mostro-response">Mostro response</a></h2>
-<p>Mostro send a nip 04 event to the buyer with a wrapped <code>Order</code> in the content, it would look like this:</p>
+<p>Mostro send a nip 04 event to the buyer with a wrapped <code>order</code> in the content, it would look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;WaitingSellerToPay&quot;,
+    &quot;action&quot;: &quot;waiting-seller-to-pay&quot;,
     &quot;content&quot;: null
   }
 }
@@ -221,9 +221,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingPayment&quot;],
+      [&quot;s&quot;, &quot;waiting-payment&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],

@@ -174,41 +174,6 @@
                         <h1 id="actions"><a class="header" href="#actions">Actions</a></h1>
 <h2 id="mostro_coreaction"><a class="header" href="#mostro_coreaction">mostro_core::Action</a></h2>
 <p>Action is used to identify each message between Mostro and users</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>  pub enum Action {
-    Order,
-    TakeSell,
-    TakeBuy,
-    PayInvoice,
-    FiatSent,
-    Release,
-    Cancel,
-    CooperativeCancelInitiatedByYou,
-    CooperativeCancelInitiatedByPeer,
-    DisputeInitiatedByYou,
-    DisputeInitiatedByPeer,
-    CooperativeCancelAccepted,
-    BuyerInvoiceAccepted,
-    SaleCompleted,
-    PurchaseCompleted,
-    HoldInvoicePaymentAccepted,
-    HoldInvoicePaymentSettled,
-    HoldInvoicePaymentCanceled,
-    WaitingSellerToPay,
-    WaitingBuyerInvoice,
-    AddInvoice,
-    BuyerTookOrder,
-    RateUser,
-    CantDo,
-    Received,
-    Dispute,
-    AdminCancel,
-    AdminSettle,
-    AdminAddSolver,
-    AdminTakeDispute,
-}
-<span class="boring">}</span></code></pre></pre>
 <p>You can see details in <a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">mostro core documentation</a></p>
 
                     </main>

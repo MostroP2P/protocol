@@ -174,14 +174,14 @@
                         <h1 id="creating-a-new-order"><a class="header" href="#creating-a-new-order">Creating a new order</a></h1>
 <p>To create a new sell order the user should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;, // Seller's real pubkey
-    &quot;action&quot;: &quot;NewOrder&quot;,
+    &quot;action&quot;: &quot;new-order&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+      &quot;order&quot;: {
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -195,8 +195,8 @@
 </code></pre>
 <p>Let's explain some of the fields:</p>
 <ul>
-<li>kind: <code>Sell</code> or <code>Buy</code></li>
-<li>status: Is always <code>Pending</code> when creating a new order</li>
+<li>kind: <code>sell</code> or <code>buy</code></li>
+<li>status: Is always <code>pending</code> when creating a new order</li>
 <li>amount: 0 for when we want to sell with at market price, otherwise the amount in satoshis</li>
 <li>pubkey: Real user's npub, we use this when the message was sent from an ephemeral key</li>
 <li>created_at: No need to send the correct unix timestamp, Mostro will replace it with the current time</li>
@@ -217,15 +217,15 @@
 <h2 id="confirmation-message"><a class="header" href="#confirmation-message">Confirmation message</a></h2>
 <p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -237,7 +237,7 @@
   }
 }
 </code></pre>
-<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>Pending</code>:</p>
+<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>pending</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -248,9 +248,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;s&quot;, &quot;pending&quot;],
       [&quot;amt&quot;, &quot;0&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],

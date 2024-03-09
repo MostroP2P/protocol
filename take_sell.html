@@ -174,11 +174,11 @@
                         <h1 id="taking-a-sell-order"><a class="header" href="#taking-a-sell-order">Taking a sell order</a></h1>
 <p>If the order amount is <code>0</code> the buyer don't know the exact amount to create the invoice, buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;TakeSell&quot;,
+    &quot;action&quot;: &quot;take-sell&quot;,
     &quot;content&quot;: null
   }
 }
@@ -199,13 +199,13 @@
 <h2 id="mostro-response"><a class="header" href="#mostro-response">Mostro response</a></h2>
 <p>In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is <code>0</code>, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the unencrypted content of the message:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
@@ -219,7 +219,7 @@
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>waiting-buyer-invoice</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -230,9 +230,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;s&quot;, &quot;waiting-buyer-invoice&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -246,15 +246,15 @@
 ]
 </code></pre>
 <h2 id="buyer-sends-ln-invoice"><a class="header" href="#buyer-sends-ln-invoice">Buyer sends LN invoice</a></h2>
-<p>The buyer sends a nip 04 event to Mostro with the lightning invoice, the action should be the same the buyer just received in the last message from Mostro (<code>AddInvoice</code>), here the unencrypted content of the event:</p>
+<p>The buyer sends a nip 04 event to Mostro with the lightning invoice, the action should be the same the buyer just received in the last message from Mostro (<code>add-invoice</code>), here the unencrypted content of the event:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         null,
         &quot;lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e&quot;
       ]
@@ -263,13 +263,13 @@
 }
 </code></pre>
 <h2 id="mostro-response-1"><a class="header" href="#mostro-response-1">Mostro response</a></h2>
-<p>Mostro send a nip 04 event to the buyer with a wrapped <code>Order</code> in the content, it would look like this:</p>
+<p>Mostro send a nip 04 event to the buyer with a wrapped <code>order</code> in the content, it would look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;WaitingSellerToPay&quot;,
+    &quot;action&quot;: &quot;waiting-seller-to-pay&quot;,
     &quot;content&quot;: null
   }
 }
@@ -285,9 +285,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingPayment&quot;],
+      [&quot;s&quot;, &quot;waiting-payment&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],

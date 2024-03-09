@@ -172,30 +172,30 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="cancel-order"><a class="header" href="#cancel-order">Cancel Order</a></h1>
-<p>A user can cancel an Order created by himself and with status <code>Pending</code> sending action <code>Cancel</code>, the message content will look like this:</p>
+<p>A user can cancel an Order created by himself and with status <code>pending</code> sending action <code>cancel</code>, the message content will look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <h2 id="mostro-response"><a class="header" href="#mostro-response">Mostro response</a></h2>
-<p>Mostro will send a message with action <code>Cancel</code> confirming the order was canceled, here an example of the message:</p>
+<p>Mostro will send a message with action <code>cancel</code> confirming the order was canceled, here an example of the message:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Canceled</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>canceled</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -206,9 +206,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Canceled&quot;],
+      [&quot;s&quot;, &quot;canceled&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -222,40 +222,40 @@
 ]
 </code></pre>
 <h2 id="cancel-cooperatively"><a class="header" href="#cancel-cooperatively">Cancel cooperatively</a></h2>
-<p>A user can cancel an <code>Active</code> order, but will need the counterparty to agree, let's look at an example where the seller initiates a cooperative cancellation:</p>
+<p>A user can cancel an <code>active</code> order, but will need the counterparty to agree, let's look at an example where the seller initiates a cooperative cancellation:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>Mostro will send this message to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;CooperativeCancelInitiatedByYou&quot;,
+    &quot;action&quot;: &quot;cooperative-cancel-initiated-by-you&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And this message to the buyer:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;CooperativeCancelInitiatedByPeer&quot;,
+    &quot;action&quot;: &quot;cooperative-cancel-initiated-by-peer&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>CooperativelyCanceled</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>cooperatively-canceled</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -266,9 +266,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;CooperativelyCanceled&quot;],
+      [&quot;s&quot;, &quot;cooperatively-canceled&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -283,22 +283,22 @@
 </code></pre>
 <p>The buyer can accept the cooperative cancellation sending this message:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Cancel&quot;,
+    &quot;action&quot;: &quot;cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And Mostro will send this message to both parties:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;CooperativeCancelAccepted&quot;,
+    &quot;action&quot;: &quot;cooperative-cancel-accepted&quot;,
     &quot;content&quot;: null
   }
 }

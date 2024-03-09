@@ -174,14 +174,14 @@
                         <h1 id="creating-a-new-order"><a class="header" href="#creating-a-new-order">Creating a new order</a></h1>
 <p>Creating buy order with a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> would make the process way faster and easy going, to acomplish the buyer should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;, // Buyer's real pubkey
-    &quot;action&quot;: &quot;NewOrder&quot;,
+    &quot;action&quot;: &quot;new-order&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
-        &quot;kind&quot;: &quot;Buy&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+      &quot;order&quot;: {
+        &quot;kind&quot;: &quot;buy&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -210,15 +210,15 @@
 <h2 id="confirmation-message"><a class="header" href="#confirmation-message">Confirmation message</a></h2>
 <p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Pending&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
         &quot;amount&quot;: 0,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -233,7 +233,7 @@
   }
 }
 </code></pre>
-<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>Pending</code>:</p>
+<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>pending</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -244,9 +244,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Pending&quot;],
+      [&quot;s&quot;, &quot;pending&quot;],
       [&quot;amt&quot;, &quot;0&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],

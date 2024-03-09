@@ -174,17 +174,17 @@
                         <h1 id="seller-pays-hold-invoice"><a class="header" href="#seller-pays-hold-invoice">Seller pays hold invoice</a></h1>
 <p>When the seller is the maker and the order was taken by a buyer, Mostro will send to the seller a message asking to pay the hold invoice, the content of the message will look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;PayInvoice&quot;,
+    &quot;action&quot;: &quot;pay-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         {
           &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-          &quot;kind&quot;: &quot;Sell&quot;,
-          &quot;status&quot;: &quot;WaitingPayment&quot;,
+          &quot;kind&quot;: &quot;sell&quot;,
+          &quot;status&quot;: &quot;waiting-payment&quot;,
           &quot;amount&quot;: 7851,
           &quot;fiat_code&quot;: &quot;VES&quot;,
           &quot;fiat_amount&quot;: 100,
@@ -200,16 +200,16 @@
 </code></pre>
 <p>After the hold invoice is paid and the buyer already sent the invoice to receive the sats, Mostro will send a new message to seller with the following content:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;BuyerTookOrder&quot;,
+    &quot;action&quot;: &quot;buyer-took-order&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Active&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;active&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -226,16 +226,16 @@
 </code></pre>
 <p>Mostro also send a message to the buyer, this way they can both write to each other in private, this message would look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;HoldInvoicePaymentAccepted&quot;,
+    &quot;action&quot;: &quot;hold-invoice-payment-accepted&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;Active&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;active&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -250,7 +250,7 @@
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Active</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>active</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -261,9 +261,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Active&quot;],
+      [&quot;s&quot;, &quot;active&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -279,27 +279,27 @@
 <h2 id="if-the-buyer-didnt-sent-the-invoice-yet"><a class="header" href="#if-the-buyer-didnt-sent-the-invoice-yet">If the buyer didn't sent the invoice yet</a></h2>
 <p>Mostro send this message to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
-    &quot;action&quot;: &quot;WaitingBuyerInvoice&quot;,
+    &quot;action&quot;: &quot;waiting-buyer-invoice&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And this message to the buyer:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;Order&quot;: {
+      &quot;order&quot;: {
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
-        &quot;kind&quot;: &quot;Sell&quot;,
-        &quot;status&quot;: &quot;WaitingBuyerInvoice&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;waiting-buyer-invoice&quot;,
         &quot;amount&quot;: 7851,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
@@ -311,7 +311,7 @@
   }
 }
 </code></pre>
-<p>And updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>WaitingBuyerInvoice</code>:</p>
+<p>And updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>waiting-buyer-invoice</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -322,9 +322,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;WaitingBuyerInvoice&quot;],
+      [&quot;s&quot;, &quot;waiting-buyer-invoice&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -339,13 +339,13 @@
 </code></pre>
 <p>Now buyer sends the invoice to Mostro:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AddInvoice&quot;,
+    &quot;action&quot;: &quot;add-invoice&quot;,
     &quot;content&quot;: {
-      &quot;PaymentRequest&quot;: [
+      &quot;payment_request&quot;: [
         null,
         &quot;lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e&quot;
       ]

@@ -172,13 +172,13 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="cancel-order"><a class="header" href="#cancel-order">Cancel order</a></h1>
-<p>An admin can cancel an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>Order</code> message to Mostro with action <code>AdminCancel</code> with the <code>Id</code> of the order like this:</p>
+<p>An admin can cancel an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an <code>order</code> message to Mostro with action <code>admin-cancel</code> with the <code>Id</code> of the order like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminCancel&quot;,
+    &quot;action&quot;: &quot;admin-cancel&quot;,
     &quot;content&quot;: null
   }
 }
@@ -186,17 +186,17 @@
 <h2 id="mostro-response"><a class="header" href="#mostro-response">Mostro response</a></h2>
 <p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;AdminCancel&quot;,
+    &quot;action&quot;: &quot;admin-cancel&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <h2 id="mostro-updates-nip-33-events"><a class="header" href="#mostro-updates-nip-33-events">Mostro updates nip 33 events</a></h2>
-<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>CanceledByAdmin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
+<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>canceled-by-admin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -207,9 +207,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;CanceledByAdmin&quot;],
+      [&quot;s&quot;, &quot;canceled-by-admin&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -222,7 +222,7 @@
   }
 ]
 </code></pre>
-<p>And updates nip33 dispute event with status <code>SellerRefunded</code>:</p>
+<p>And updates nip33 dispute event with status <code>seller-refunded</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -233,7 +233,7 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;],
-      [&quot;s&quot;, &quot;SellerRefunded&quot;],
+      [&quot;s&quot;, &quot;seller-refunded&quot;],
       [&quot;y&quot;, &quot;mostrop2p&quot;],
       [&quot;z&quot;, &quot;dispute&quot;]
     ],

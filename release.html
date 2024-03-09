@@ -171,14 +171,14 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="release"><a class="header" href="#release">Release</a></h1>
+                        <h1 id="release"><a class="header" href="#release">release</a></h1>
 <p>After confirming the buyer sent the fiat money, the seller should send a message to Mostro indicating that sats should be delivered to the buyer, the message will look like this:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
-    &quot;action&quot;: &quot;Release&quot;,
+    &quot;action&quot;: &quot;release&quot;,
     &quot;content&quot;: null
   }
 }
@@ -186,22 +186,22 @@
 <h2 id="mostro-response"><a class="header" href="#mostro-response">Mostro response</a></h2>
 <p>Here an example of the Mostro response to the seller:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;HoldInvoicePaymentSettled&quot;,
+    &quot;action&quot;: &quot;hold-invoice-payment-settled&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
 <p>And a message to the buyer to let him know that the sats were released:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;Release&quot;,
+    &quot;action&quot;: &quot;release&quot;,
     &quot;content&quot;: null
   }
 }
@@ -209,16 +209,16 @@
 <h2 id="buyer-receives-sats"><a class="header" href="#buyer-receives-sats">Buyer receives sats</a></h2>
 <p>Right after seller release sats Mostro will try to pay the buyer's lightning invoice, if the payment is successful Mostro will send a message to the buyer indicating that the purchase was completed:</p>
 <pre><code class="language-json">{
-  &quot;Order&quot;: {
+  &quot;order&quot;: {
     &quot;version&quot;: 1,
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
-    &quot;action&quot;: &quot;PurchaseCompleted&quot;,
+    &quot;action&quot;: &quot;purchase-completed&quot;,
     &quot;content&quot;: null
   }
 }
 </code></pre>
-<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>SettledHoldInvoice</code>:</p>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>settled-hold-invoice</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -229,9 +229,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;SettledHoldInvoice&quot;],
+      [&quot;s&quot;, &quot;settled-hold-invoice&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
@@ -244,7 +244,7 @@
   }
 ]
 </code></pre>
-<p>Seconds later Mostro will try to pay the buyer's invoice, if the payment is successful Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>Success</code>:</p>
+<p>Seconds later Mostro will try to pay the buyer's invoice, if the payment is successful Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>success</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -255,9 +255,9 @@
     &quot;kind&quot;: 38383,
     &quot;tags&quot;: [
       [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
-      [&quot;k&quot;, &quot;Sell&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
       [&quot;f&quot;, &quot;VES&quot;],
-      [&quot;s&quot;, &quot;Success&quot;],
+      [&quot;s&quot;, &quot;success&quot;],
       [&quot;amt&quot;, &quot;7851&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
       [&quot;pm&quot;, &quot;face to face&quot;],
