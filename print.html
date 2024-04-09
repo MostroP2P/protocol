@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">12.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">13.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">14.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">12.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">13.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">14.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">15.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -1611,6 +1611,33 @@
     &quot;sig&quot;: &quot;6d7ca7bef7b696f1f6f8cfc33b3fe1beb2fdc6b7647efc93be669c6c1a9d4bafc770d9b0d25432c204dd487d48b39e589dfd7b03bf0e808483921b8937bd5367&quot;
   }
 ]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="admin-add-solver"><a class="header" href="#admin-add-solver">Admin add solver</a></h1>
+<p>Solvers are users appointed by the Mostro administrator and are responsible for resolving disputes.</p>
+<p>The administrator can add or remove them at any time.</p>
+<p>The administrator can also solve disputes.</p>
+<p>To add a solver the admin will need to send an <code>order</code> message to Mostro with action <code>admin-add-solver</code>:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;admin-add-solver&quot;,
+    &quot;content&quot;: {
+      &quot;text_message&quot;: &quot;npub1qqq884wtp2jn96lqhqlnarl4kk3rmvrc9z2nmrvqujx3m4l2ea5qd5d0fq&quot;
+    }
+  }
+}
+</code></pre>
+<h2 id="mostro-response-10"><a class="header" href="#mostro-response-10">Mostro response</a></h2>
+<p>Mostro will send this message to the admin:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;admin-add-solver&quot;,
+    &quot;content&quot;: null
+  }
+}
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="actions"><a class="header" href="#actions">Actions</a></h1>
 <h2 id="mostro_coreaction"><a class="header" href="#mostro_coreaction">mostro_core::Action</a></h2>
