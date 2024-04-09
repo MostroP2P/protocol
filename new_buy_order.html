@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Creating a Buy order with a LN address - Mostro messages specs</title>
+        <title>Creating a Buy order - Mostro messages specs</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_order_ln_address.html" class="active"><strong aria-hidden="true">2.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">3.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">4.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">5.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">6.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">7.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">8.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">9.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">10.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">11.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">12.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">13.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">14.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">15.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_sell_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_buy_order.html" class="active"><strong aria-hidden="true">2.</strong> Creating a Buy order</a></li><li class="chapter-item expanded "><a href="new_buy_order_ln_address.html"><strong aria-hidden="true">3.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="list_orders.html"><strong aria-hidden="true">4.</strong> List orders</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">5.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">6.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">7.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">8.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">9.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">10.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">11.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">12.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">13.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="list_disputes.html"><strong aria-hidden="true">14.</strong> List disputes</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">15.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">16.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">17.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">18.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,8 +171,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="creating-a-new-order"><a class="header" href="#creating-a-new-order">Creating a new order</a></h1>
-<p>Creating buy order with a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> would make the process way faster and easy going, to acomplish the buyer should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
+                        <h1 id="creating-a-new-buy-order"><a class="header" href="#creating-a-new-buy-order">Creating a new buy order</a></h1>
+<p>To create a new buy order the user should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
     &quot;version&quot;: 1,
@@ -187,7 +187,6 @@
         &quot;fiat_amount&quot;: 100,
         &quot;payment_method&quot;: &quot;face to face&quot;,
         &quot;premium&quot;: 1,
-        &quot;buyer_invoice&quot;: &quot;mostro_p2p@ln.tips&quot;,
         &quot;created_at&quot;: 0
       }
     }
@@ -226,7 +225,7 @@
         &quot;premium&quot;: 1,
         &quot;master_buyer_pubkey&quot;: null,
         &quot;master_seller_pubkey&quot;: null,
-        &quot;buyer_invoice&quot;: &quot;mostro_p2p@ln.tips&quot;,
+        &quot;buyer_invoice&quot;: null,
         &quot;created_at&quot;: 1698870173
       }
     }
@@ -259,17 +258,27 @@
   }
 ]
 </code></pre>
-<p>After a seller takes this order Mostro will not ask for an invoice to the buyer, Mostro will get the buyer's invoice and paid it when the seller releases the funds.</p>
+<p>After a seller takes this order Mostro will request an invoice from the buyer, Mostro will pay the buyer's invoice when the seller releases the funds.</p>
+<h2 id="creating-the-order-with-a-lightning-invoice"><a class="header" href="#creating-the-order-with-a-lightning-invoice">Creating the order with a lightning invoice</a></h2>
+<p>There are two ways where the buyer can create the order adding the invoice:</p>
+<ol>
+<li>
+<p>If the buyer already knows the amount, e.g. buyer wants to buy 15000 sats with 10 euros, in this case the buyer knows from the beginning that the invoice should have amount 15000 - Mostro's fee, instead of the user doing the calculation, the client must do it and in some cases create the invoice with the right amount.</p>
+</li>
+<li>
+<p>If the buyer don't know the amount, e.g. buyer wants to buy sats with 10 euros, in this case the buyer can add an amountless invoice and Mostro will pay it with the market price amount - Mostro's fee automatically.</p>
+</li>
+</ol>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="new_order.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="new_sell_order.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="take_sell.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="new_buy_order_ln_address.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -279,11 +288,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="new_order.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="new_sell_order.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="take_sell.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="new_buy_order_ln_address.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
