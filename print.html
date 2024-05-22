@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_sell_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_buy_order.html"><strong aria-hidden="true">2.</strong> Creating a Buy order</a></li><li class="chapter-item expanded "><a href="new_buy_order_ln_address.html"><strong aria-hidden="true">3.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="list_orders.html"><strong aria-hidden="true">4.</strong> List orders</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">5.</strong> Take sell</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">6.</strong> Take sell with a LN address</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">7.</strong> Take buy</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">8.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">9.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">10.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">11.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">12.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">13.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="list_disputes.html"><strong aria-hidden="true">14.</strong> List disputes</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">15.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">16.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">17.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">18.</strong> Actions</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_sell_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_sell_range_order.html"><strong aria-hidden="true">2.</strong> Creating a Sell range order</a></li><li class="chapter-item expanded "><a href="new_buy_order.html"><strong aria-hidden="true">3.</strong> Creating a Buy order</a></li><li class="chapter-item expanded "><a href="new_buy_order_ln_address.html"><strong aria-hidden="true">4.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="list_orders.html"><strong aria-hidden="true">5.</strong> List orders</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">6.</strong> Take sell order</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">7.</strong> Take sell order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell_range_order.html"><strong aria-hidden="true">8.</strong> Take range sell order</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">9.</strong> Take buy order</a></li><li class="chapter-item expanded "><a href="take_buy_range_order.html"><strong aria-hidden="true">10.</strong> Take range buy order</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">11.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">12.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">13.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">14.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">15.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">16.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="list_disputes.html"><strong aria-hidden="true">17.</strong> List disputes</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">18.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">19.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">20.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">21.</strong> Actions</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -299,6 +299,84 @@
   }
 ]
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="creating-a-new-sell-range-order"><a class="header" href="#creating-a-new-sell-range-order">Creating a new sell range order</a></h1>
+<p>To create a new range order the user should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;, // Seller's real pubkey
+    &quot;action&quot;: &quot;new-order&quot;,
+    &quot;content&quot;: {
+      &quot;order&quot;: {
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
+        &quot;amount&quot;: 0,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;min_amount&quot;: 10,
+        &quot;max_amount&quot;: 20,
+        &quot;fiat_amount&quot;: 0,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;created_at&quot;: 0
+      }
+    }
+  }
+}
+</code></pre>
+<p>We two new fields, <code>min_amount</code> and <code>max_amount</code>, to define the range of the order. The <code>fiat_amount</code> field is set to 0 to indicate that the order is for a range of amounts.</p>
+<p>When a taker takes the order, the amount will be set on the message.</p>
+<h2 id="confirmation-message-1"><a class="header" href="#confirmation-message-1">Confirmation message</a></h2>
+<p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;00000ba40c5795451705bb9c165b3af93c846894d3062a9cd7fcba090eb3bf78&quot;,
+    &quot;content&quot;: {
+      &quot;order&quot;: {
+        &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+        &quot;kind&quot;: &quot;sell&quot;,
+        &quot;status&quot;: &quot;pending&quot;,
+        &quot;amount&quot;: 0,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;min_amount&quot;: 10,
+        &quot;max_amount&quot;: 20,
+        &quot;fiat_amount&quot;: 0,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;created_at&quot;: 1698870173
+      }
+    }
+  }
+}
+</code></pre>
+<p>Mostro publishes this order as an event kind <code>38383</code> with status <code>pending</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;84fad0d29cb3529d789faeff2033e88fe157a48e071c6a5d1619928289420e31&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702548701,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;pending&quot;],
+      [&quot;amt&quot;, &quot;0&quot;],
+      [&quot;fa&quot;, &quot;10-20&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;],
+      [&quot;expiration&quot;, &quot;1716453501&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;7e8fe1eb644f33ff51d8805c02a0e1a6d034e6234eac50ef7a7e0dac68a0414f7910366204fa8217086f90eddaa37ded71e61f736d1838e37c0b73f6a16c4af2&quot;
+  }
+]
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="creating-a-new-buy-order"><a class="header" href="#creating-a-new-buy-order">Creating a new buy order</a></h1>
 <p>To create a new buy order the user should send a Nostr event kind 4 (an encrypted message) to Mostro with the following content:</p>
 <pre><code class="language-json">{
@@ -334,7 +412,7 @@
   &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
-<h2 id="confirmation-message-1"><a class="header" href="#confirmation-message-1">Confirmation message</a></h2>
+<h2 id="confirmation-message-2"><a class="header" href="#confirmation-message-2">Confirmation message</a></h2>
 <p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -433,7 +511,7 @@
   &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
-<h2 id="confirmation-message-2"><a class="header" href="#confirmation-message-2">Confirmation message</a></h2>
+<h2 id="confirmation-message-3"><a class="header" href="#confirmation-message-3">Confirmation message</a></h2>
 <p>Mostro will send back a nip04 event as a confirmation message to the user like the following:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -708,6 +786,89 @@
   }
 ]
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-sell-range-order"><a class="header" href="#taking-a-sell-range-order">Taking a sell range order</a></h1>
+<p>If the order fiat amount is a range like <code>10-20</code> the buyer must indicate a fiat amount to take the order, buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;action&quot;: &quot;take-sell&quot;,
+    &quot;content&quot;: {
+      &quot;amount&quot;: 15
+    }
+  }
+}
+</code></pre>
+<h2 id="mostro-response-3"><a class="header" href="#mostro-response-3">Mostro response</a></h2>
+<p>In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is <code>0</code>, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the unencrypted content of the message:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: null,
+    &quot;action&quot;: &quot;add-invoice&quot;,
+    &quot;content&quot;: {
+      &quot;order&quot;: {
+        &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+        &quot;amount&quot;: 7851,
+        &quot;fiat_code&quot;: &quot;VES&quot;,
+        &quot;min_amount&quot;: 10,
+        &quot;max_amount&quot;: 20,
+        &quot;fiat_amount&quot;: 15,
+        &quot;payment_method&quot;: &quot;face to face&quot;,
+        &quot;premium&quot;: 1,
+        &quot;master_buyer_pubkey&quot;: null,
+        &quot;master_seller_pubkey&quot;: null,
+        &quot;buyer_invoice&quot;: null,
+        &quot;created_at&quot;: null,
+        &quot;expires_at&quot;: null
+      }
+    }
+  }
+}
+</code></pre>
+<p>Mostro updates the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>waiting-buyer-invoice</code>:</p>
+<pre><code class="language-json">[
+  &quot;EVENT&quot;,
+  &quot;RAND&quot;,
+  {
+    &quot;id&quot;: &quot;eb0582360ebd3836c90711f774fbecb27e600f4a5fedf4fc2d16fc852f8380b1&quot;,
+    &quot;pubkey&quot;: &quot;dbe0b1be7aafd3cfba92d7463edbd4e33b2969f61bd554d37ac56f032e13355a&quot;,
+    &quot;created_at&quot;: 1702549437,
+    &quot;kind&quot;: 38383,
+    &quot;tags&quot;: [
+      [&quot;d&quot;, &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;],
+      [&quot;k&quot;, &quot;sell&quot;],
+      [&quot;f&quot;, &quot;VES&quot;],
+      [&quot;s&quot;, &quot;waiting-buyer-invoice&quot;],
+      [&quot;amt&quot;, &quot;7851&quot;],
+      [&quot;fa&quot;, &quot;15&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;premium&quot;, &quot;1&quot;],
+      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;z&quot;, &quot;order&quot;],
+      [&quot;expiration&quot;, &quot;1716453501&quot;]
+    ],
+    &quot;content&quot;: &quot;&quot;,
+    &quot;sig&quot;: &quot;a835f8620db3ebdd9fa142ae99c599a61da86321c60f7c9fed0cc57169950f4121757ff64a5e998baccf6b68272aa51819c3e688d8ad586c0177b3cd1ab09c0f&quot;
+  }
+]
+</code></pre>
+<h2 id="using-a-lightning-address"><a class="header" href="#using-a-lightning-address">Using a lightning address</a></h2>
+<p>The buyer can use a <a href="https://github.com/andrerfneves/lightning-address">lightning address</a> to receive funds and avoid to create and send lightning invoices on each trade, with a range order we set the fiat amount as the third element of the <code>payment_request</code> array, to acomplish this the buyer will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;action&quot;: &quot;take-sell&quot;,
+    &quot;content&quot;: {
+      &quot;payment_request&quot;: [null, &quot;mostro_p2p@ln.tips&quot;, 15]
+    }
+  }
+}
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-buy-order"><a class="header" href="#taking-a-buy-order">Taking a buy order</a></h1>
 <p>To take an order the seller will send to Mostro a message with the following content:</p>
 <pre><code class="language-json">{
@@ -733,7 +894,7 @@
   &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
-<h2 id="mostro-response-3"><a class="header" href="#mostro-response-3">Mostro response</a></h2>
+<h2 id="mostro-response-4"><a class="header" href="#mostro-response-4">Mostro response</a></h2>
 <p>Mostro respond to the seller with a message with the following content:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -901,6 +1062,22 @@
   }
 ]
 </code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="taking-a-buy-range-order"><a class="header" href="#taking-a-buy-range-order">Taking a buy range order</a></h1>
+<p>If the order fiat amount is a range like <code>10-20</code> the seller must indicate a fiat amount to take the order, seller will send a message in a Nostr event kind 4 to Mostro with the following content:</p>
+<pre><code class="language-json">{
+  &quot;order&quot;: {
+    &quot;version&quot;: 1,
+    &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
+    &quot;pubkey&quot;: &quot;0000147e939bef2b81c27af4c1b702c90c3843f7212a34934bff1e049b7f1427&quot;,
+    &quot;action&quot;: &quot;take-buy&quot;,
+    &quot;content&quot;: {
+      &quot;amount&quot;: 15
+    }
+  }
+}
+</code></pre>
+<h2 id="mostro-response-5"><a class="header" href="#mostro-response-5">Mostro response</a></h2>
+<p>Response is the same as we explained in the <a href="./take_buy.html">Taking a buy order</a> section.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="seller-pays-hold-invoice"><a class="header" href="#seller-pays-hold-invoice">Seller pays hold invoice</a></h1>
 <p>When the seller is the maker and the order was taken by a buyer, Mostro will send to the seller a message asking to pay the hold invoice, the content of the message will look like this:</p>
 <pre><code class="language-json">{
@@ -1109,7 +1286,7 @@
   &quot;sig&quot;: &quot;a21eb195fe418613aa9a3a8a78039b090e50dc3f9fb06b0f3fe41c63221adc073a9317a1f28d9db843a43c28d860ba173b70132ca85b0e706f6487d43a57ee82&quot;
 }
 </code></pre>
-<h2 id="mostro-response-4"><a class="header" href="#mostro-response-4">Mostro response</a></h2>
+<h2 id="mostro-response-6"><a class="header" href="#mostro-response-6">Mostro response</a></h2>
 <p>Mostro send a messages to both parties confirming <code>fiat-sent</code> action and sending again the counterpart pubkey, here an example of the message to the buyer:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -1178,7 +1355,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-5"><a class="header" href="#mostro-response-5">Mostro response</a></h2>
+<h2 id="mostro-response-7"><a class="header" href="#mostro-response-7">Mostro response</a></h2>
 <p>Here an example of the Mostro response to the seller:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -1290,7 +1467,7 @@
   }
 }
 </code></pre>
-<h2 id="confirmation-message-3"><a class="header" href="#confirmation-message-3">Confirmation message</a></h2>
+<h2 id="confirmation-message-4"><a class="header" href="#confirmation-message-4">Confirmation message</a></h2>
 <p>If Mostro received the correct message, it will send back a confirmation message to the user with <code>Action: rate-received</code>:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -1339,7 +1516,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-6"><a class="header" href="#mostro-response-6">Mostro response</a></h2>
+<h2 id="mostro-response-8"><a class="header" href="#mostro-response-8">Mostro response</a></h2>
 <p>Mostro will send a message with action <code>cancel</code> confirming the order was canceled, here an example of the message:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -1471,7 +1648,7 @@
   }
 }
 </code></pre>
-<h2 id="mostro-response-7"><a class="header" href="#mostro-response-7">Mostro response</a></h2>
+<h2 id="mostro-response-9"><a class="header" href="#mostro-response-9">Mostro response</a></h2>
 <p>Mostro will send this message to the seller:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -1608,7 +1785,7 @@ Clients can query this events by nostr event kind `38383`, nostr event author, d
   }
 }
 </code></pre>
-<h2 id="mostro-response-8"><a class="header" href="#mostro-response-8">Mostro response</a></h2>
+<h2 id="mostro-response-10"><a class="header" href="#mostro-response-10">Mostro response</a></h2>
 <p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -1706,7 +1883,7 @@ Clients can query this events by nostr event kind `38383`, nostr event author, d
   }
 }
 </code></pre>
-<h2 id="mostro-response-9"><a class="header" href="#mostro-response-9">Mostro response</a></h2>
+<h2 id="mostro-response-11"><a class="header" href="#mostro-response-11">Mostro response</a></h2>
 <p>Mostro will send this message to the both parties buyer/seller and to the admin:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
@@ -1781,7 +1958,7 @@ Clients can query this events by nostr event kind `38383`, nostr event author, d
   }
 }
 </code></pre>
-<h2 id="mostro-response-10"><a class="header" href="#mostro-response-10">Mostro response</a></h2>
+<h2 id="mostro-response-12"><a class="header" href="#mostro-response-12">Mostro response</a></h2>
 <p>Mostro will send this message to the admin:</p>
 <pre><code class="language-json">{
   &quot;order&quot;: {
