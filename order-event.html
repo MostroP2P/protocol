@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>List orders - Mostro messages specs</title>
+        <title>Order event - Mostro messages specs</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_sell_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_sell_range_order.html"><strong aria-hidden="true">2.</strong> Creating a Sell range order</a></li><li class="chapter-item expanded "><a href="new_buy_order.html"><strong aria-hidden="true">3.</strong> Creating a Buy order</a></li><li class="chapter-item expanded "><a href="new_buy_order_ln_address.html"><strong aria-hidden="true">4.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="list_orders.html" class="active"><strong aria-hidden="true">5.</strong> List orders</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">6.</strong> Take sell order</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">7.</strong> Take sell order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell_range_order.html"><strong aria-hidden="true">8.</strong> Take range sell order</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">9.</strong> Take buy order</a></li><li class="chapter-item expanded "><a href="take_buy_range_order.html"><strong aria-hidden="true">10.</strong> Take range buy order</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">11.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">12.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">13.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">14.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">15.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">16.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="list_disputes.html"><strong aria-hidden="true">17.</strong> List disputes</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">18.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">19.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">20.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">21.</strong> Actions</a></li><li class="chapter-item expanded "><a href="order-event.html"><strong aria-hidden="true">22.</strong> Order event</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_sell_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_sell_range_order.html"><strong aria-hidden="true">2.</strong> Creating a Sell range order</a></li><li class="chapter-item expanded "><a href="new_buy_order.html"><strong aria-hidden="true">3.</strong> Creating a Buy order</a></li><li class="chapter-item expanded "><a href="new_buy_order_ln_address.html"><strong aria-hidden="true">4.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="list_orders.html"><strong aria-hidden="true">5.</strong> List orders</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">6.</strong> Take sell order</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">7.</strong> Take sell order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell_range_order.html"><strong aria-hidden="true">8.</strong> Take range sell order</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">9.</strong> Take buy order</a></li><li class="chapter-item expanded "><a href="take_buy_range_order.html"><strong aria-hidden="true">10.</strong> Take range buy order</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">11.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">12.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">13.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">14.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">15.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">16.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="list_disputes.html"><strong aria-hidden="true">17.</strong> List disputes</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">18.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">19.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">20.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">21.</strong> Actions</a></li><li class="chapter-item expanded "><a href="order-event.html" class="active"><strong aria-hidden="true">22.</strong> Order event</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -171,8 +171,12 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="listing-orders"><a class="header" href="#listing-orders">Listing Orders</a></h1>
-<p>Mostro publishes new orders with event kind <code>38383</code> and status <code>pending</code>:</p>
+                        <h1 id="peer-to-peer-order-events"><a class="header" href="#peer-to-peer-order-events">Peer-to-peer Order events</a></h1>
+<h2 id="abstract"><a class="header" href="#abstract">Abstract</a></h2>
+<p>Peer-to-peer (P2P) platforms have seen an upturn in recent years, while having more and more options is positive, in the specific case of p2p, having several options contributes to the liquidity split, meaning sometimes there's not enough assets available for trading. If we combine all these individual solutions into one big pool of orders, it will make them much more competitive compared to centralized systems, where a single authority controls the liquidity.</p>
+<p>This NIP defines a simple standard for peer-to-peer order events, which enables the creation of a big liquidity pool for all p2p platforms participating.</p>
+<h2 id="the-event"><a class="header" href="#the-event">The event</a></h2>
+<p>Events are <a href="https://github.com/nostr-protocol/nips/blob/master/01.md#kinds">Parameterized Replaceable Events</a> and use <code>38383</code> as event kind, a p2p event look like this:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -188,12 +192,20 @@
       [&quot;s&quot;, &quot;pending&quot;],
       [&quot;amt&quot;, &quot;0&quot;],
       [&quot;fa&quot;, &quot;100&quot;],
-      [&quot;pm&quot;, &quot;face to face&quot;],
+      [&quot;pm&quot;, &quot;face to face&quot;, &quot;bank transfer&quot;],
       [&quot;premium&quot;, &quot;1&quot;],
+      [
+        &quot;rating&quot;,
+        &quot;{\&quot;total_reviews\&quot;:1,\&quot;total_rating\&quot;:3.0,\&quot;last_rating\&quot;:3,\&quot;max_rate\&quot;:5,\&quot;min_rate\&quot;:1}&quot;
+      ],
+      [&quot;source&quot;, &quot;https://t.me/p2plightning/xxxxxxx&quot;],
       [&quot;network&quot;, &quot;mainnet&quot;],
       [&quot;layer&quot;, &quot;lightning&quot;],
+      [&quot;name&quot;, &quot;Satoshi&quot;],
+      [&quot;g&quot;, &quot;&lt;geohash&gt;&quot;],
+      [&quot;bond&quot;, &quot;0&quot;],
       [&quot;expiration&quot;, &quot;1719391096&quot;],
-      [&quot;y&quot;, &quot;mostrop2p&quot;],
+      [&quot;y&quot;, &quot;lnp2pbot&quot;],
       [&quot;z&quot;, &quot;order&quot;]
     ],
     &quot;content&quot;: &quot;&quot;,
@@ -201,19 +213,49 @@
   }
 ]
 </code></pre>
-<p>Clients can query this events by nostr event kind <code>38383</code>, nostr event author, order status (<code>s</code>), order kind (<code>k</code>), order currency (<code>f</code>), type (<code>z</code>)</p>
+<h2 id="tags"><a class="header" href="#tags">Tags</a></h2>
+<ul>
+<li><code>d</code> &lt; Order ID &gt;: A unique identifier for the order.</li>
+<li><code>k</code> &lt; Order type &gt;: <code>sell</code> or <code>buy</code>.</li>
+<li><code>f</code> &lt; Currency &gt;: The asset being traded, using the <a href="https://en.wikipedia.org/wiki/ISO_4217">ISO 4217</a> standard.</li>
+<li><code>s</code> &lt; Status &gt;: <code>pending</code>, <code>canceled</code>, <code>in-progress</code>, <code>success</code>.</li>
+<li><code>amt</code> &lt; Amount &gt;: The amount of Bitcoin to be traded, the amount is defined in satoshis, if <code>0</code> means that the amount of satoshis will be obtained from a public API after the taker accepts the order.</li>
+<li><code>fa</code> &lt; Fiat amount &gt;: The fiat amount being traded, for range orders two values are expected, the minimum and maximum amount.</li>
+<li><code>pm</code> &lt; Payment method &gt;: The payment method used for the trade, if the order has multiple payment methods, they should be separated by a comma.</li>
+<li><code>premium</code> &lt; Premium &gt;: The percentage of the premium the maker is willing to pay.</li>
+<li><code>source</code> [Source]: The source of the order, it can be a URL that redirects to the order.</li>
+<li><code>rating</code> [Rating]: The rating of the maker, this document does not define how the rating is calculated, it's up to the platform to define it.</li>
+<li><code>network</code> &lt; Network &gt;: The network used for the trade, it can be <code>mainnet</code>, <code>testnet</code>, <code>signet</code>, etc.</li>
+<li><code>layer</code> &lt; Layer &gt;: The layer used for the trade, it can be <code>onchain</code>, <code>lightning</code>, <code>liquid</code>, etc.</li>
+<li><code>name</code> [Name]: The name of the maker.</li>
+<li><code>g</code> [Geohash]: The geohash of the operation, it can be useful in a face to face trade.</li>
+<li><code>bond</code> [Bond]: The bond amount, the bond is a security deposit that both parties must pay.</li>
+<li><code>expiration</code> &lt; Expiration&gt;: The expiration date of the order (<a href="https://github.com/nostr-protocol/nips/blob/master/40.md">NIP-40</a>).</li>
+<li><code>y</code> &lt; Platform &gt;: The platform that created the order.</li>
+<li><code>z</code> &lt; Document &gt;: <code>order</code>.</li>
+</ul>
+<p>Mandatory tags are enclosed with <code>&lt;tag&gt;</code>, optional tags are enclosed with <code>[tag]</code>.</p>
+<h2 id="implementations"><a class="header" href="#implementations">Implementations</a></h2>
+<p>Currently implemented on the following platforms:</p>
+<ul>
+<li><a href="https://github.com/MostroP2P/mostro">Mostro</a></li>
+<li><a href="https://github.com/lnp2pBot/bot">@lnp2pBot</a></li>
+</ul>
+<h2 id="this-document-is-inspired-on"><a class="header" href="#this-document-is-inspired-on">This document is inspired on</a></h2>
+<ul>
+<li><a href="https://mostro.network/messages/">Mostro messages specification</a></li>
+<li><a href="https://github.com/nostr-protocol/nips/blob/8250274a22f4882f621510df0054fd6167c10c9e/31001.md">Messages specification for peer 2 peer NIP proposal</a></li>
+<li><a href="https://github.com/nobu-maeda/n3xb">n3xB</a></li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="new_buy_order_ln_address.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="actions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="take_sell.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -221,13 +263,10 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="new_buy_order_ln_address.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="actions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="take_sell.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
             </nav>
 
         </div>
