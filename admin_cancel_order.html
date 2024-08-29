@@ -195,8 +195,8 @@
   }
 }
 </code></pre>
-<h2 id="mostro-updates-nip-33-events"><a class="header" href="#mostro-updates-nip-33-events">Mostro updates nip 33 events</a></h2>
-<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>canceled-by-admin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
+<h2 id="mostro-updates-parameterized-replaceable-events"><a class="header" href="#mostro-updates-parameterized-replaceable-events">Mostro updates parameterized replaceable events</a></h2>
+<p>Mostro will publish two parameterized replaceable events, one for the order to update the status to <code>canceled-by-admin</code>, this means that the hold invoice was canceled and the seller's funds were returned:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -222,7 +222,7 @@
   }
 ]
 </code></pre>
-<p>And updates nip33 dispute event with status <code>seller-refunded</code>:</p>
+<p>And updates parameterized replaceable dispute event with status <code>seller-refunded</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,

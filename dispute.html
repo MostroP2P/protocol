@@ -191,7 +191,9 @@
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
     &quot;action&quot;: &quot;dispute-initiated-by-you&quot;,
-    &quot;content&quot;: null
+    &quot;content&quot;: {
+      &quot;dispute&quot;: &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;
+    }
   }
 }
 </code></pre>
@@ -202,13 +204,15 @@
     &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
     &quot;pubkey&quot;: null,
     &quot;action&quot;: &quot;dispute-initiated-by-peer&quot;,
-    &quot;content&quot;: null
+    &quot;content&quot;: {
+      &quot;dispute&quot;: &quot;efc75871-2568-40b9-a6ee-c382d4d6de01&quot;
+    }
   }
 }
 </code></pre>
-<p>Mostro will not update the nip 33 event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>dispute</code>, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.</p>
-<h2 id="mostro-send-a-nip-33-event-to-show-the-dispute"><a class="header" href="#mostro-send-a-nip-33-event-to-show-the-dispute">Mostro send a nip 33 event to show the dispute</a></h2>
-<p>Here is an example of the nip 33 event sent by Mostro:</p>
+<p>Mostro will not update the parameterized replaceable event with <code>d</code> tag <code>ede61c96-4c13-4519-bf3a-dcf7f1e9d842</code> to change the status to <code>dispute</code>, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.</p>
+<h2 id="mostro-send-a-parameterized-replaceable-event-to-show-the-dispute"><a class="header" href="#mostro-send-a-parameterized-replaceable-event-to-show-the-dispute">Mostro send a parameterized replaceable event to show the dispute</a></h2>
+<p>Here is an example of the event sent by Mostro:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -251,7 +255,7 @@
         &quot;id&quot;: &quot;ede61c96-4c13-4519-bf3a-dcf7f1e9d842&quot;,
         &quot;kind&quot;: &quot;sell&quot;,
         &quot;status&quot;: &quot;active&quot;,
-        &quot;amount&quot;: 0,
+        &quot;amount&quot;: 3333,
         &quot;fiat_code&quot;: &quot;VES&quot;,
         &quot;fiat_amount&quot;: 100,
         &quot;payment_method&quot;: &quot;face to face&quot;,
@@ -265,7 +269,7 @@
   }
 }
 </code></pre>
-<p>Also Mostro will broadcast a new nip33 dispute event to update the Dispute <code>status</code> to <code>in-progress</code>:</p>
+<p>Also Mostro will broadcast a new parameterized replaceable dispute event to update the Dispute <code>status</code> to <code>in-progress</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,

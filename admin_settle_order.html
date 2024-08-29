@@ -195,8 +195,8 @@
   }
 }
 </code></pre>
-<h2 id="mostro-updates-nip-33-events"><a class="header" href="#mostro-updates-nip-33-events">Mostro updates nip 33 events</a></h2>
-<p>Mostro will publish two nip33 messages, one for the order to update the status to <code>settled-by-admin</code>, this means that the hold invoice paid by the seller was settled:</p>
+<h2 id="mostro-updates-parameterized-replaceable-events"><a class="header" href="#mostro-updates-parameterized-replaceable-events">Mostro updates parameterized replaceable events</a></h2>
+<p>Mostro will publish two parameterized replaceable messages, one for the order to update the status to <code>settled-by-admin</code>, this means that the hold invoice paid by the seller was settled:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -222,7 +222,7 @@
   }
 ]
 </code></pre>
-<p>And updates nip33 dispute event with status <code>settled</code>:</p>
+<p>And updates parameterized replaceable dispute event with status <code>settled</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
@@ -243,7 +243,7 @@
 ]
 </code></pre>
 <h2 id="payment-of-the-buyers-invoice"><a class="header" href="#payment-of-the-buyers-invoice">Payment of the buyer's invoice</a></h2>
-<p>At this point Mostro is trying to pay the buyer's invoice, right after complete the payment Mostro will update the status of the order nip33 event to <code>success</code>:</p>
+<p>At this point Mostro is trying to pay the buyer's invoice, right after complete the payment Mostro will update the status of the order parameterized replaceable event to <code>success</code>:</p>
 <pre><code class="language-json">[
   &quot;EVENT&quot;,
   &quot;RAND&quot;,
