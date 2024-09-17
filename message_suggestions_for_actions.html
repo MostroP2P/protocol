@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Message suggestions for actions - Mostro messages specs</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="overview.html">Home</a></li><li class="chapter-item expanded "><a href="new_sell_order.html"><strong aria-hidden="true">1.</strong> Creating a Sell order</a></li><li class="chapter-item expanded "><a href="new_sell_range_order.html"><strong aria-hidden="true">2.</strong> Creating a Sell range order</a></li><li class="chapter-item expanded "><a href="new_buy_order.html"><strong aria-hidden="true">3.</strong> Creating a Buy order</a></li><li class="chapter-item expanded "><a href="new_buy_order_ln_address.html"><strong aria-hidden="true">4.</strong> Creating a Buy order with a LN address</a></li><li class="chapter-item expanded "><a href="list_orders.html"><strong aria-hidden="true">5.</strong> List orders</a></li><li class="chapter-item expanded "><a href="take_sell.html"><strong aria-hidden="true">6.</strong> Take sell order</a></li><li class="chapter-item expanded "><a href="take_sell_ln_address.html"><strong aria-hidden="true">7.</strong> Take sell order with a LN address</a></li><li class="chapter-item expanded "><a href="take_sell_range_order.html"><strong aria-hidden="true">8.</strong> Take range sell order</a></li><li class="chapter-item expanded "><a href="take_buy.html"><strong aria-hidden="true">9.</strong> Take buy order</a></li><li class="chapter-item expanded "><a href="take_buy_range_order.html"><strong aria-hidden="true">10.</strong> Take range buy order</a></li><li class="chapter-item expanded "><a href="seller_pay_hold_invoice.html"><strong aria-hidden="true">11.</strong> Seller pays hold invoice</a></li><li class="chapter-item expanded "><a href="fiatsent.html"><strong aria-hidden="true">12.</strong> Fiat sent</a></li><li class="chapter-item expanded "><a href="release.html"><strong aria-hidden="true">13.</strong> Release</a></li><li class="chapter-item expanded "><a href="user_rating.html"><strong aria-hidden="true">14.</strong> Rate user</a></li><li class="chapter-item expanded "><a href="cancel.html"><strong aria-hidden="true">15.</strong> Cancel</a></li><li class="chapter-item expanded "><a href="dispute.html"><strong aria-hidden="true">16.</strong> Dispute</a></li><li class="chapter-item expanded "><a href="list_disputes.html"><strong aria-hidden="true">17.</strong> List disputes</a></li><li class="chapter-item expanded "><a href="admin_settle_order.html"><strong aria-hidden="true">18.</strong> Admin Settle order</a></li><li class="chapter-item expanded "><a href="admin_cancel_order.html"><strong aria-hidden="true">19.</strong> Admin Cancel order</a></li><li class="chapter-item expanded "><a href="admin_add_solver.html"><strong aria-hidden="true">20.</strong> Admin Add Solver</a></li><li class="chapter-item expanded "><a href="actions.html"><strong aria-hidden="true">21.</strong> Actions</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="message_suggestions_for_actions.html" class="active"><strong aria-hidden="true">21.1.</strong> Message suggestions for actions</a></li></ol></li><li class="chapter-item expanded "><a href="order-event.html"><strong aria-hidden="true">22.</strong> Order event</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Mostro messages specs</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="message-suggestions-for-some-actions"><a class="header" href="#message-suggestions-for-some-actions">Message suggestions for some actions</a></h1>
+<p>Here are suggestions for messages that clients could show to users when they receive certain actions. Clients can customize these messages to their convenience, as well as translate them, add emojis or any other modifications they consider necessary to provide a good user experience. Clients must complete the information that is in <code>monospace</code> format.</p>
+<ul>
+<li>
+<p><strong>new-order:</strong> Your offer has been published! Please wait until another user picks your order. It will be available for <code>expiration_hours</code> hours. You can cancel this order before another user picks it up by executing: <code>cancel</code>.</p>
+</li>
+<li>
+<p><strong>canceled:</strong> You have cancelled the order ID: <code>id</code>!</p>
+</li>
+<li>
+<p><strong>pay-invoice:</strong> Please pay this hold invoice of <code>amount</code> Sats for <code>fiat_code</code> <code>fiat_amount</code> to start the operation. If you do not pay it within <code>expiration_seconds</code> the trade will be cancelled.</p>
+</li>
+<li>
+<p><strong>add-invoice:</strong> Please send me an invoice for <code>amount</code> satoshis equivalent to  <code>fiat_code</code> <code>fiat_amount</code>.  This is where I’ll send the funds upon completion of the trade. If you don't provide the invoice within <code>expiration_seconds</code> this trade will be cancelled.</p>
+</li>
+<li>
+<p><strong>waiting-seller-to-pay:</strong> Please wait a bit. I've sent a payment request to the seller to sends the Sats for the order ID <code>id</code>. Once the payment is made, I'll connect you both. If the seller doesn’t complete the payment within <code>expiration_seconds</code> minutes the trade will be cancelled.</p>
+</li>
+<li>
+<p><strong>waiting-buyer-invoice:</strong> Payment received! Your Sats are now &quot;held&quot; in your own wallet. Please wait a bit. I've requested the buyer to provide an invoice. Once they do, I 'll connect you both. If they does not do so within <code>expiration_seconds</code> your Sats will be available at your wallet again and the trade will be cancelled.</p>
+</li>
+<li>
+<p><strong>buyer-invoice-accepted:</strong> Invoice has been successfully saved!</p>
+</li>
+<li>
+<p><strong>hold-invoice-payment-accepted:</strong> Get in touch with the seller, this is their npub <code>seller-npub</code> to get the details on how to send the fiat money for the order <code>id</code>, you must send <code>fiat_code</code> <code>fiat_amount</code> using <code>payment_method</code>. Once you send the fiat money, please let me know with <code>fiat-sent</code>.</p>
+</li>
+<li>
+<p><strong>buyer-took-order:</strong> Get in touch with the buyer, this is their npub <code>buyer-npub</code> to inform them how to send you <code>fiat_code</code> <code>fiat_amount</code> through <code>payment_method</code>. I will notify you once the buyer indicates the fiat money has been sent. Afterward, you should verify if it has arrived. If the buyer does not respond, you can initiate a cancellation or a dispute. Remember, an administrator will NEVER contact you to resolve your order unless you open a dispute first.</p>
+</li>
+<li>
+<p><strong>fiat-sent-ok:</strong></p>
+<ul>
+<li><em>To the buyer</em>:  I have informed to <code>seller-npub</code> that you have sent the fiat money. When the seller confirms they have received your fiat money, they should release the funds. If they refuse, you can open a dispute.</li>
+<li><em>To the seller</em>: <code>buyer-npub</code> has informed that they have sent you the fiat money. Once you confirm receipt, please release the funds. After releasing, the money will go to the buyer and there will be no turning back, so only proceed if you are sure. If you want to release the Sats to the buyer, send me <code>release-order-message</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>released:</strong> <code>seller-npub</code> has already released the Sats! Expect your invoice to be paid any time. Remember your wallet needs to be online to receive through the Lightning Network.</p>
+</li>
+<li>
+<p><strong>purchase-completed:</strong> Your satoshis purchase has been completed successfully. I have paid your invoice, enjoy sound money!</p>
+</li>
+<li>
+<p><strong>hold-invoice-payment-settled:</strong> Your Sats sale has been completed after confirming the payment from <code>buyer-npub</code>.</p>
+</li>
+<li>
+<p><strong>rate:</strong> Please qualify your counterparty </p>
+</li>
+<li>
+<p><strong>rate-received:</strong> Rating successfully saved!</p>
+</li>
+<li>
+<p><strong>cooperative-cancel-initiated-by-you:</strong> You have initiated the cancellation of the order ID: <code>id</code>. Your counterparty must agree to the cancellation too. If they do not respond, you can open a dispute. Note that no administrator will contact you regarding this cancellation unless you open a dispute first.</p>
+</li>
+<li>
+<p><strong>cooperative-cancel-initiated-by-peer:</strong> Your counterparty wants to cancel order ID: <code>id</code>. Note that no administrator will contact you regarding this cancellation unless you open a dispute first. If you agree on such cancellation, please send me <code>cancel-order-message</code>.</p>
+</li>
+<li>
+<p><strong>cooperative-cancel-accepted:</strong> Order <code>id</code> has been successfully cancelled!</p>
+</li>
+<li>
+<p><strong>dispute-initiated-by-you:</strong> You have initiated a dispute for order Id: <code>id</code>.  A solver will be assigned to your dispute soon. Once assigned, I will share their npub with you, and only they will be able to assist you. You may contact the solver directly, but if they reach out first, please ask them to provide the token for your dispute. Your dispute token is: <code>user-token</code>.</p>
+</li>
+<li>
+<p><strong>dispute-initiated-by-peer:</strong> Your counterparty has initiated a dispute for order Id: <code>${orderId}.</code> A solver will be assigned to your dispute soon. Once assigned, I will share their npub with you, and only they will be able to assist you. You may contact the solver directly, but if they reach out first, please ask them to provide the token for your dispute. Your dispute token is: <code>user-token</code>.</p>
+</li>
+<li>
+<p><strong>admin-took-dispute:</strong> </p>
+<ul>
+<li><em>To the admin</em>: Here are the details of the dispute order you have taken: <code>details</code>. You need to determine which user is correct and decide whether to cancel or complete the order. Please note that your decision will be final and cannot be reversed.</li>
+<li><em>To the users</em>: The solver <code>admin-npub</code> will handle your dispute.  You can contact them directly, but if they reach out to you first, make sure to ask them for your dispute token.</li>
+</ul>
+</li>
+<li>
+<p><strong>admin-canceled:</strong></p>
+<ul>
+<li><em>To the admin</em>: You have cancelled the order ID: <code>id</code>!</li>
+<li><em>To the users</em>: Admin has cancelled the order ID: <code>id</code>!</li>
+</ul>
+</li>
+<li>
+<p><strong>admin-settled:</strong> </p>
+<ul>
+<li><em>To the admin</em>: You have completed the order ID: <code>id</code>!</li>
+<li><em>To the users</em>: Admin has completed the order ID: <code>id</code>!</li>
+</ul>
+</li>
+<li>
+<p><strong>is-not-your-dispute:</strong> This dispute was not assigned to you! </p>
+</li>
+<li>
+<p><strong>not-found:</strong> Dispute not found. </p>
+</li>
+<li>
+<p><strong>payment-failed:</strong> I tried to send you the Sats but the payment of your invoice failed, I will try <code>payment_attempts</code> more times in <code>payment_retries_interval</code> minutes window. Please ensure your node/wallet is online.</p>
+</li>
+<li>
+<p><strong>invoice-updated:</strong> Invoice has been successfully updated!</p>
+</li>
+<li>
+<p><strong>hold-invoice-payment-canceled:</strong> The invoice was cancelled, your Sats will be available at your wallet again.</p>
+</li>
+<li>
+<p><strong>cant-do:</strong> You are not allowed to <code>action</code> for this order!</p>
+</li>
+<li>
+<p><strong>admin-add-solver:</strong> You have successfully added to the solver <code>npub</code>.</p>
+</li>
+<li>
+<p><strong>is-not-your-order:</strong> You did not create this order and are not authorized to <code>action</code> it.</p>
+</li>
+<li>
+<p><strong>not-allowed-by-status:</strong> You are not allowed to <code>action</code> because order Id <code>id</code> status is <code>order-status</code>.</p>
+</li>
+<li>
+<p><strong>out-of-range-fiat-amount:</strong> The requested amount is incorrect and may be outside the acceptable range. The minimum is  <code>min_amount</code> and the maximum is <code>max_amount</code>.</p>
+</li>
+<li>
+<p><strong>incorrect-invoice-amount:</strong> </p>
+<ul>
+<li><em>If the buyer previously had sent the <code>new-order</code> action</em>:<br />
+An invoice with non-zero amount was receive for the new order. Please send an invoice with a zero amount or no invoice at all.</li>
+<li><em>If the buyer previously sent the <code>add-invoice</code> action</em>:<br />
+The amount stated in the invoice is incorrect. Please send an invoice with an amount of <code>amount</code> satoshis, an invoice without an amount, or a lightning address.</li>
+</ul>
+</li>
+<li>
+<p><strong>invalid-sats-amount:</strong> That specified Sats amount is invalid.</p>
+</li>
+<li>
+<p><strong>out-of-range-sats-amount:</strong> The allowed Sats amount for this Mostro is between min <code>min_order_amount</code> and max <code>max_order_amount</code>. Please enter an amount within this range.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="actions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="order-event.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="actions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="order-event.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
