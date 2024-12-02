@@ -218,7 +218,7 @@
       ["z", "order"]
     ],
     "content": "",
-    "sig": "76bfc5e9ce089757dd4074472e1df421da700ce133c874f40b1136607121eca8acfdd2b8b4b374adaa83fa0c7d99672eb21a1068b6b6b774742d5de5bfc932ba"
+    "sig": "&lt;Mostro's signature&gt;"
   }
 ]
 </code></pre>
@@ -238,7 +238,7 @@
       ["z", "dispute"]
     ],
     "content": "",
-    "sig": "6d7ca7bef7b696f1f6f8cfc33b3fe1beb2fdc6b7647efc93be669c6c1a9d4bafc770d9b0d25432c204dd487d48b39e589dfd7b03bf0e808483921b8937bd5367"
+    "sig": "&lt;Mostro's signature&gt;"
   }
 ]
 </code></pre>
@@ -272,6 +272,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 
