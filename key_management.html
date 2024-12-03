@@ -211,10 +211,9 @@
           "order": {
             "version": 1,
             "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+            "trade_index": 1,
             "action": "take-sell",
-            "content": {
-              "trade_key_index": 1
-            }
+            "content": null
           }
         },
         "&lt;index 1 signature of the sha256 hash of the serialized first element of content&gt;"
@@ -257,6 +256,7 @@
         {
           "order": {
             "version": 1,
+            "trade_index": 2,
             "action": "new-order",
             "content": {
               "order": {
@@ -267,8 +267,7 @@
                 "fiat_amount": 100,
                 "payment_method": "face to face",
                 "premium": 1,
-                "created_at": 1691518405,
-                "trade_key_index": 2
+                "created_at": 1691518405
               }
             }
           }
@@ -290,7 +289,46 @@
 </code></pre>
 <p>Now Alice waits for some seller to take her order, mostrod will show Alice's reputation but not Alice pubkey.</p>
 <h3 id="full-privacy-mode"><a class="header" href="#full-privacy-mode">Full privacy mode</a></h3>
-<p>Clients must offer a more private version where the client never ask for a challenge to mostrod, in that case mostrod can't link orders to users, the tradeoff is that users who choose this option cannot have a reputation.</p>
+<p>Clients must offer a more private version where the client never send the identity key to mostrod, in that case mostrod can't link orders to users, the tradeoff is that users who choose this option cannot have a reputation, let's see a <code>take-sell</code> example in an unencrypted gift wrap event:</p>
+<pre><code class="language-json">// external wrap layer
+{
+  "id": "&lt;id&gt;",
+  "kind": 1059,
+  "pubkey": "&lt;Buyer's ephemeral pubkey&gt;",
+  "content": {
+    // seal
+    "id": "&lt;seal's id&gt;",
+    "pubkey": "&lt;index N pubkey (trade key)&gt;",
+    "content": {
+      // rumor
+      "id": "&lt;rumor's id&gt;",
+      "pubkey": "&lt;index N pubkey (trade key)&gt;",
+      "kind": 1,
+      "content": [
+        {
+          "order": {
+            "version": 1,
+            "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+            // "trade_index": 1, // not needed
+            "action": "take-sell",
+            "content": null
+          }
+        },
+        null
+      ],
+      "created_at": 1691518405,
+      "tags": []
+    },
+    "kind": 13,
+    "created_at": 1686840217,
+    "tags": [],
+    "sig": "&lt;index N pubkey (trade key) signature&gt;"
+  },
+  "tags": [["p", "&lt;Mostro's pubkey&gt;"]],
+  "created_at": 1234567890,
+  "sig": "&lt;Buyer's ephemeral pubkey signature&gt;"
+}
+</code></pre>
 
                     </main>
 
@@ -321,22 +359,6 @@
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
 
