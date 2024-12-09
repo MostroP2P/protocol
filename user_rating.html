@@ -180,7 +180,7 @@
     "version": 1,
     "id": "7e44aa5d-855a-4b17-865e-8ca3834a91a3",
     "action": "rate",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -190,7 +190,7 @@
     "version": 1,
     "id": "7e44aa5d-855a-4b17-865e-8ca3834a91a3",
     "action": "rate-user",
-    "content": {
+    "payload": {
       "rating_user": 5 // User input
     }
   }
@@ -203,7 +203,7 @@
     "version": 1,
     "id": "7e44aa5d-855a-4b17-865e-8ca3834a91a3",
     "action": "rate-received",
-    "content": {
+    "payload": {
       "rating_user": 5
     }
   }
@@ -262,6 +262,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

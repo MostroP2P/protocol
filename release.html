@@ -180,7 +180,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "release",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -191,7 +191,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "hold-invoice-payment-settled",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -201,7 +201,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "released",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -212,7 +212,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "purchase-completed",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -301,6 +301,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

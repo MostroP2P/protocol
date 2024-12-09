@@ -179,7 +179,7 @@
   "order": {
     "version": 1,
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "kind": "sell",
         "status": "pending",
@@ -205,7 +205,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "sell",
@@ -282,6 +282,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

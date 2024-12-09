@@ -185,7 +185,7 @@
 <li><code>require_id</code>: (optional) Mostro daemon should send back this same id in the response</li>
 <li><code>trade_index</code>: (optional) This field is used by users who wants to maintain reputation, it should be the index of the trade in the user's trade history</li>
 <li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">action</a>: Action to be performed by Mostro daemon</li>
-<li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html">content</a> (optional): Content of the message, this field is optional and depends on the action</li>
+<li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html">payload</a> (optional): Payload of the message, this field is optional and depends on the action</li>
 </ul>
 </li>
 </ul>
@@ -197,7 +197,7 @@
     "require_id": "12345",
     "trade_index": 1,
     "action": "fiat-sent",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -225,6 +225,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

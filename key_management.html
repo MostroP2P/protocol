@@ -213,7 +213,7 @@
             "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
             "trade_index": 1,
             "action": "take-sell",
-            "content": null
+            "payload": null
           }
         },
         "&lt;index 1 signature of the sha256 hash of the serialized first element of content&gt;"
@@ -258,7 +258,7 @@
             "version": 1,
             "trade_index": 2,
             "action": "new-order",
-            "content": {
+            "payload": {
               "order": {
                 "kind": "buy",
                 "status": "pending",
@@ -311,7 +311,7 @@
             "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
             // "trade_index": 1, // not needed
             "action": "take-sell",
-            "content": null
+            "payload": null
           }
         },
         null
@@ -359,6 +359,22 @@
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 

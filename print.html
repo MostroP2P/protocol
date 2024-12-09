@@ -186,7 +186,7 @@
 <li><code>require_id</code>: (optional) Mostro daemon should send back this same id in the response</li>
 <li><code>trade_index</code>: (optional) This field is used by users who wants to maintain reputation, it should be the index of the trade in the user's trade history</li>
 <li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">action</a>: Action to be performed by Mostro daemon</li>
-<li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html">content</a> (optional): Content of the message, this field is optional and depends on the action</li>
+<li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html">payload</a> (optional): Payload of the message, this field is optional and depends on the action</li>
 </ul>
 </li>
 </ul>
@@ -198,7 +198,7 @@
     "require_id": "12345",
     "trade_index": 1,
     "action": "fiat-sent",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -242,7 +242,7 @@
             "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
             "trade_index": 1,
             "action": "take-sell",
-            "content": null
+            "payload": null
           }
         },
         "&lt;index 1 signature of the sha256 hash of the serialized first element of content&gt;"
@@ -287,7 +287,7 @@
             "version": 1,
             "trade_index": 2,
             "action": "new-order",
-            "content": {
+            "payload": {
               "order": {
                 "kind": "buy",
                 "status": "pending",
@@ -340,7 +340,7 @@
             "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
             // "trade_index": 1, // not needed
             "action": "take-sell",
-            "content": null
+            "payload": null
           }
         },
         null
@@ -364,7 +364,7 @@
   "order": {
     "version": 1,
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "kind": "sell",
         "status": "pending",
@@ -406,7 +406,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "sell",
@@ -457,7 +457,7 @@
   "order": {
     "version": 1,
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "kind": "sell",
         "status": "pending",
@@ -483,7 +483,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "sell",
@@ -536,7 +536,7 @@
   "order": {
     "version": 1,
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "kind": "buy",
         "status": "pending",
@@ -569,7 +569,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "buy",
@@ -634,7 +634,7 @@
   "order": {
     "version": 1,
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "kind": "buy",
         "status": "pending",
@@ -668,7 +668,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "new-order",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "buy",
@@ -755,7 +755,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-sell",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -777,7 +777,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "add-invoice",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "amount": 7851,
@@ -828,7 +828,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "add-invoice",
-    "content": {
+    "payload": {
       "payment_request": [
         null,
         "lnbcrt1pn9dvx0pp5935mskms2uf8wx90m8dlr60ytwn5vxy0e65ls42h7y7exweyvekqdqqcqzzsxqyz5vqsp5xjmllv4ta7jkuc5nfgqp8qjc3amzfewmlycpkkggr7q2y5mjfldq9qyyssqncpf3vm8hwujutqc99f0vy45zh8es54mn6u99q9t6rwm0q80dxszskzrp24y46lxqkc7ly9p80t6lalc8x8xhsn49yhy70a7wqyygugpv7chqs",
@@ -846,7 +846,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "waiting-seller-to-pay",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -883,7 +883,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-sell",
-    "content": {
+    "payload": {
       "payment_request": [null, "mostro_p2p@ln.tips"]
     }
   }
@@ -907,7 +907,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "waiting-seller-to-pay",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -947,7 +947,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-sell",
-    "content": {
+    "payload": {
       "amount": 15
     }
   }
@@ -960,7 +960,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "add-invoice",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "amount": 7851,
@@ -1016,7 +1016,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-sell",
-    "content": {
+    "payload": {
       "payment_request": [null, "mostro_p2p@ln.tips", 15]
     }
   }
@@ -1029,7 +1029,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-buy",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1051,7 +1051,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "pay-invoice",
-    "content": {
+    "payload": {
       "payment_request": [
         {
           "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
@@ -1105,7 +1105,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "waiting-seller-to-pay",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1116,7 +1116,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "waiting-buyer-invoice",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1155,7 +1155,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "add-invoice",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "status": "waiting-buyer-invoice",
@@ -1177,7 +1177,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "add-invoice",
-    "content": {
+    "payload": {
       "payment_request": [
         null,
         "lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e"
@@ -1223,7 +1223,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-buy",
-    "content": {
+    "payload": {
       "amount": 15
     }
   }
@@ -1238,7 +1238,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "pay-invoice",
-    "content": {
+    "payload": {
       "payment_request": [
         {
           "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
@@ -1263,7 +1263,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "buyer-took-order",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "sell",
@@ -1288,7 +1288,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "hold-invoice-payment-accepted",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "sell",
@@ -1340,7 +1340,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "waiting-buyer-invoice",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1350,7 +1350,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "add-invoice",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "sell",
@@ -1401,7 +1401,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "add-invoice",
-    "content": {
+    "payload": {
       "payment_request": [
         null,
         "lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e"
@@ -1418,7 +1418,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "fiat-sent",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1440,7 +1440,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "fiat-sent-ok",
-    "content": {
+    "payload": {
       "Peer": {
         "pubkey": "&lt;Seller's trade pubkey&gt;"
       }
@@ -1455,7 +1455,7 @@
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "pubkey": "&lt;Seller's trade pubkey&gt;",
     "action": "fiat-sent-ok",
-    "content": {
+    "payload": {
       "Peer": {
         "pubkey": "&lt;Buyer's trade pubkey&gt;"
       }
@@ -1499,7 +1499,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "release",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1510,7 +1510,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "hold-invoice-payment-settled",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1520,7 +1520,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "released",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1531,7 +1531,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "purchase-completed",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1597,7 +1597,7 @@
     "version": 1,
     "id": "7e44aa5d-855a-4b17-865e-8ca3834a91a3",
     "action": "rate",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1607,7 +1607,7 @@
     "version": 1,
     "id": "7e44aa5d-855a-4b17-865e-8ca3834a91a3",
     "action": "rate-user",
-    "content": {
+    "payload": {
       "rating_user": 5 // User input
     }
   }
@@ -1620,7 +1620,7 @@
     "version": 1,
     "id": "7e44aa5d-855a-4b17-865e-8ca3834a91a3",
     "action": "rate-received",
-    "content": {
+    "payload": {
       "rating_user": 5
     }
   }
@@ -1656,7 +1656,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "cancel",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1667,7 +1667,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "canceled",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1707,7 +1707,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "cancel",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1717,7 +1717,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "cooperative-cancel-initiated-by-you",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1727,7 +1727,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "cooperative-cancel-initiated-by-peer",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1763,7 +1763,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "cancel",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1773,7 +1773,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "cooperative-cancel-accepted",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1784,7 +1784,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "dispute",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1795,7 +1795,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "dispute-initiated-by-you",
-    "content": {
+    "payload": {
       "dispute": "efc75871-2568-40b9-a6ee-c382d4d6de01"
     }
   }
@@ -1807,7 +1807,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "dispute-initiated-by-peer",
-    "content": {
+    "payload": {
       "dispute": "efc75871-2568-40b9-a6ee-c382d4d6de01"
     }
   }
@@ -1841,7 +1841,7 @@
     "version": 1,
     "id": "efc75871-2568-40b9-a6ee-c382d4d6de01",
     "action": "admin-take-dispute",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1851,7 +1851,7 @@
     "version": 1,
     "id": "efc75871-2568-40b9-a6ee-c382d4d6de01",
     "action": "admin-took-dispute",
-    "content": {
+    "payload": {
       "order": {
         "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
         "kind": "sell",
@@ -1919,7 +1919,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "admin-settle",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -1930,7 +1930,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "admin-settled",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -2015,7 +2015,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "admin-cancel",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -2026,7 +2026,7 @@
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "admin-canceled",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -2086,7 +2086,7 @@
   "order": {
     "version": 1,
     "action": "admin-add-solver",
-    "content": {
+    "payload": {
       "text_message": "npub1qqq884wtp2jn96lqhqlnarl4kk3rmvrc9z2nmrvqujx3m4l2ea5qd5d0fq"
     }
   }
@@ -2098,7 +2098,7 @@
   "order": {
     "version": 1,
     "action": "admin-add-solver",
-    "content": null
+    "payload": null
   }
 }
 </code></pre>
@@ -2405,6 +2405,22 @@ The amount stated in the invoice is incorrect. Please send an invoice with an am
 
         </div>
 
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
 
 
 
