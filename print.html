@@ -183,7 +183,7 @@
 <ul>
 <li><code>version</code>: Version of the protocol, currently <code>1</code></li>
 <li><code>id</code>: (optional) Wrapper Id</li>
-<li><code>require_id</code>: (optional) Mostro daemon should send back this same id in the response</li>
+<li><code>request_id</code>: (optional) Mostro daemon should send back this same id in the response</li>
 <li><code>trade_index</code>: (optional) This field is used by users who wants to maintain reputation, it should be the index of the trade in the user's trade history</li>
 <li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html">action</a>: Action to be performed by Mostro daemon</li>
 <li><a href="https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html">payload</a> (optional): Payload of the message, this field is optional and depends on the action</li>
@@ -195,7 +195,7 @@
   "order": {
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
-    "require_id": "12345",
+    "request_id": "12345",
     "trade_index": 1,
     "action": "fiat-sent",
     "payload": null
@@ -1036,7 +1036,7 @@
 <p>The event to send to Mostro would look like this:</p>
 <pre><code class="language-json">{
   "id": "&lt;Event id&gt;",
-  "kind": 4,
+  "kind": 1059,
   "pubkey": "&lt;Seller's ephemeral pubkey&gt;",
   "content": "&lt;sealed-rumor-content&gt;",
   "tags": [["p", "Mostro's pubkey"]],
@@ -2405,22 +2405,6 @@ The amount stated in the invoice is incorrect. Please send an invoice with an am
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
 

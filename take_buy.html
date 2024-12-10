@@ -187,7 +187,7 @@
 <p>The event to send to Mostro would look like this:</p>
 <pre><code class="language-json">{
   "id": "&lt;Event id&gt;",
-  "kind": 4,
+  "kind": 1059,
   "pubkey": "&lt;Seller's ephemeral pubkey&gt;",
   "content": "&lt;sealed-rumor-content&gt;",
   "tags": [["p", "Mostro's pubkey"]],
@@ -397,22 +397,6 @@
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
 
