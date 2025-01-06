@@ -8,6 +8,7 @@ If the order fiat amount is a range like `10-20` the buyer must indicate a fiat 
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-sell",
+    "trade_index": 1,
     "payload": {
       "amount": 15
     }

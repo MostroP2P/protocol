@@ -8,6 +8,7 @@ If the order amount is `0` the buyer don't know the exact amount to create the i
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-sell",
+    "trade_index": 1,
     "payload": null
   }
 }
