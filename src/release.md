@@ -1,12 +1,13 @@
-# release
+# Release
 
-After confirming the buyer sent the fiat money, the seller should send a message to Mostro indicating that sats should be delivered to the buyer, the rumor's content of the message will look like this:
+After confirming the buyer sent the fiat money, the seller should send a message to Mostro indicating that sats should be delivered to the buyer, the message inside rumor's content will look like this:
 
 ```json
 {
   "order": {
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "request_id": "123456",
     "action": "release",
     "payload": null
   }
@@ -22,6 +23,7 @@ Here an example of the Mostro response to the seller:
   "order": {
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "request_id": "123456",
     "action": "hold-invoice-payment-settled",
     "payload": null
   }

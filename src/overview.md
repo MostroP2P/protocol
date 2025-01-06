@@ -14,16 +14,16 @@ All messages from/to Mostro should be [Gift wrap Nostr events](https://github.co
   - [action](https://docs.rs/mostro-core/latest/mostro_core/message/enum.Action.html): Action to be performed by Mostro daemon
   - [payload](https://docs.rs/mostro-core/latest/mostro_core/message/enum.Content.html) (optional): Payload of the message, this field is optional and depends on the action
 
-These fields are relative to the wrapper, here an example of a `fiat-sent` Order message, in this case `id` is the Order Id:
+These fields are relative to the wrapper, here an example of a `take-buy` order message:
 
 ```json
 {
   "order": {
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
-    "request_id": "12345",
+    "request_id": "123456",
     "trade_index": 1,
-    "action": "fiat-sent",
+    "action": "take-buy",
     "payload": null
   }
 }

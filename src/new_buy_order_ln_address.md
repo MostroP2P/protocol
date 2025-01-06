@@ -7,6 +7,7 @@ Creating buy order with a [lightning address](https://github.com/andrerfneves/li
   "order": {
     "version": 1,
     "action": "new-order",
+    "trade_index": 1,
     "payload": {
       "order": {
         "kind": "buy",

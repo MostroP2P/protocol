@@ -7,6 +7,7 @@ To create a new sell order the user should send a Gift wrap Nostr event to Mostr
   "order": {
     "version": 1,
     "action": "new-order",
+    "trade_index": 1,
     "payload": {
       "order": {
         "kind": "sell",
