@@ -7,6 +7,7 @@ To create a new range order the user should send a Gift wrap Nostr event to Most
   "order": {
     "version": 1,
     "action": "new-order",
+    "trade_index": 1,
     "payload": {
       "order": {
         "kind": "sell",

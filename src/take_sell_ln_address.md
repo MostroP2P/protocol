@@ -8,6 +8,7 @@ The buyer can use a [lightning address](https://github.com/andrerfneves/lightnin
     "version": 1,
     "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
     "action": "take-sell",
+    "trade_index": 1,
     "payload": {
       "payment_request": [null, "mostro_p2p@ln.tips"]
     }
