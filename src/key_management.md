@@ -31,7 +31,7 @@ Clients will always use the first key (zero) `m/44'/1237'/38383'/0/0` to identif
     "content": {
       // rumor
       "id": "<rumor's id>",
-      "pubkey": "<Index 1 pubkey>",
+      "pubkey": "<Index 1 pubkey (trade key)>",
       "kind": 1,
       "content": [
         {
@@ -78,7 +78,7 @@ Then Alice wants to create a new buy order:
     "content": {
       // rumor
       "id": "<rumor's id>",
-      "pubkey": "<Index 2 pubkey>",
+      "pubkey": "<Index 2 pubkey (trade key)>",
       "kind": 1,
       "content": [
         {
