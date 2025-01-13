@@ -16,7 +16,6 @@
 - [Seller pays hold invoice](./seller_pay_hold_invoice.md)
 - [Fiat sent](./fiatsent.md)
 - [Release](./release.md)
-- [Release a range order](./release_range_order.md)
 - [Rate user](./user_rating.md)
 - [Cancel](./cancel.md)
 - [Dispute](./dispute.md)

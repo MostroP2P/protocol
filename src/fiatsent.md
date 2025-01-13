@@ -1,6 +1,6 @@
 # Fiat sent
 
-After the buyer sends the fiat money to the seller, the buyer should send a message in a Gift wrap Nostr event to Mostro indicating that the fiat money was sent, the rumor's content would look like this:
+After the buyer sends the fiat money to the seller, the buyer should send a message in a Gift wrap Nostr event to Mostro indicating that the fiat money was sent, message in the first element of the rumor's content would look like this:
 
 ```json
 {
@@ -13,17 +13,20 @@ After the buyer sends the fiat money to the seller, the buyer should send a mess
 }
 ```
 
-The event to send to Mostro would look like this:
+## When the maker is the buyer on a range order
+
+In most of the cases after complete a range order, a child order needs to be created, the client is rotating keys favoring privacy so Mostro can't know which would be the next `trade pubkey` of the maker, to solve this the client needs to send `trade pubkey` and `trade index` of the child order on the `fiat-sent` message, the message looks like this:
 
 ```json
 {
-  "id": "<Event id>",
-  "kind": 1059,
-  "pubkey": "<Ephemeral pubkey>",
-  "content": "<sealed-rumor-content>",
-  "tags": [["p", "Mostro's pubkey"]],
-  "created_at": 1234567890,
-  "sig": "<Signature of ephemeral pubkey>"
+  "order": {
+    "version": 1,
+    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "action": "fiat-sent",
+    "payload": {
+      "next_trade": ["<trade pubkey>", <trade index>]
+    }
+  }
 }
 ```
 
