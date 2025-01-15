@@ -6,7 +6,7 @@ An admin can cancel an order, most of the time this is done when admin is solvin
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "admin-cancel",
     "payload": null
   }
@@ -21,7 +21,7 @@ Mostro will send this message to the both parties buyer/seller and to the admin:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "admin-canceled",
     "payload": null
   }
@@ -42,7 +42,7 @@ Mostro will publish two addressable events, one for the order to update the stat
     "created_at": 1703260182,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "canceled-by-admin"],

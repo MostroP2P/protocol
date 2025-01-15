@@ -20,7 +20,7 @@ These fields are relative to the wrapper, here an example of a `take-buy` order 
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "request_id": "123456",
     "trade_index": 1,
     "action": "take-buy",

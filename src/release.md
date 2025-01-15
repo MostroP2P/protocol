@@ -6,7 +6,7 @@ After confirming the buyer sent the fiat money, the seller should send a message
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "request_id": "123456",
     "action": "release",
     "payload": null
@@ -22,7 +22,7 @@ Here an example of the Mostro response to the seller:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "request_id": "123456",
     "action": "hold-invoice-payment-settled",
     "payload": null
@@ -36,7 +36,7 @@ And a message to the buyer to let him know that the sats were released:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "released",
     "payload": null
   }
@@ -51,14 +51,14 @@ Right after seller release sats Mostro will try to pay the buyer's lightning inv
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "purchase-completed",
     "payload": null
   }
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `settled-hold-invoice`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `settled-hold-invoice`:
 
 ```json
 [
@@ -70,7 +70,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "settled-hold-invoice"],
@@ -87,7 +87,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
 ]
 ```
 
-Mostro will then attempt to pay the buyer's invoice, if the payment successds Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `success`:
+Mostro will then attempt to pay the buyer's invoice, if the payment successds Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `success`:
 
 ```json
 [
@@ -99,7 +99,7 @@ Mostro will then attempt to pay the buyer's invoice, if the payment successds Mo
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "success"],

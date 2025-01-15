@@ -6,7 +6,7 @@ After the buyer sends the fiat money to the seller, the buyer should send a mess
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "fiat-sent",
     "payload": null
   }
@@ -21,7 +21,7 @@ In most of the cases after complete a range order, a child order needs to be cre
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "fiat-sent",
     "payload": {
       "next_trade": ["<trade pubkey>", <trade index>]
@@ -38,7 +38,7 @@ Mostro send messages to both parties confirming `fiat-sent` action and sending a
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "fiat-sent-ok",
     "payload": {
       "Peer": {
@@ -55,7 +55,7 @@ And here an example of the message from Mostro to the seller:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "pubkey": "<Seller's trade pubkey>",
     "action": "fiat-sent-ok",
     "payload": {
@@ -67,7 +67,7 @@ And here an example of the message from Mostro to the seller:
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `fiat-sent`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `fiat-sent`:
 
 ```json
 [
@@ -79,7 +79,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "fiat-sent"],

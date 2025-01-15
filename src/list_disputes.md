@@ -12,7 +12,7 @@ Mostro publishes new disputes with event kind `38383` and status `initiated`:
     "created_at": 1703016565,
     "kind": 38383,
     "tags": [
-      ["d", "efc75871-2568-40b9-a6ee-c382d4d6de01"],
+      ["d", "<Dispute Id>"],
       ["s", "initiated"],
       ["y", "mostrop2p"],
       ["z", "dispute"]

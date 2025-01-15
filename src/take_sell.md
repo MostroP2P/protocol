@@ -6,7 +6,7 @@ If the order amount is `0` the buyer don't know the exact amount to create the i
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "take-sell",
     "trade_index": 1,
     "payload": null
@@ -36,11 +36,11 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order Id>",
         "amount": 7851,
         "fiat_code": "VES",
         "fiat_amount": 100,
@@ -54,7 +54,7 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `waiting-buyer-invoice`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
 
 ```json
 [
@@ -66,7 +66,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "waiting-buyer-invoice"],
@@ -94,7 +94,7 @@ The buyer sends a Gift wrap Nostr event to Mostro with the lightning invoice, th
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
       "payment_request": [
@@ -117,14 +117,14 @@ Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the r
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "waiting-seller-to-pay",
     "payload": null
   }
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `waiting-payment`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-payment`:
 
 ```json
 [
@@ -136,7 +136,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "waiting-payment"],
