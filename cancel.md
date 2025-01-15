@@ -6,7 +6,7 @@ A user can cancel an order created by himself and with status `pending` sending 
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "cancel",
     "payload": null
   }
@@ -21,14 +21,14 @@ Mostro will send a message with action `cancel` confirming the order was cancele
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "canceled",
     "payload": null
   }
 }
 ```
 
-Mostro updates the parameterized replaceable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `canceled`:
+Mostro updates the parameterized replaceable event with `d` tag `<Order Id>` to change the status to `canceled`:
 
 ```json
 [
@@ -40,7 +40,7 @@ Mostro updates the parameterized replaceable event with `d` tag `ede61c96-4c13-4
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "canceled"],
@@ -68,7 +68,7 @@ A user can cancel an `active` order, but will need the counterparty to agree, le
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "cancel",
     "payload": null
   }
@@ -81,7 +81,7 @@ Mostro will send this message to the seller:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "cooperative-cancel-initiated-by-you",
     "payload": null
   }
@@ -94,14 +94,14 @@ And this message to the buyer:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "cooperative-cancel-initiated-by-peer",
     "payload": null
   }
 }
 ```
 
-Mostro updates the parameterized replaceable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `cooperatively-canceled`:
+Mostro updates the parameterized replaceable event with `d` tag `<Order Id>` to change the status to `cooperatively-canceled`:
 
 ```json
 [
@@ -113,7 +113,7 @@ Mostro updates the parameterized replaceable event with `d` tag `ede61c96-4c13-4
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "cooperatively-canceled"],
@@ -136,7 +136,7 @@ The buyer can accept the cooperative cancellation sending this message:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "cancel",
     "payload": null
   }
@@ -149,7 +149,7 @@ And Mostro will send this message to both parties:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "cooperative-cancel-accepted",
     "payload": null
   }

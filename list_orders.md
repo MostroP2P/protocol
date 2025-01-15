@@ -12,7 +12,7 @@ Mostro publishes new orders with event kind `38383` and status `pending`:
     "created_at": 1702548701,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "pending"],

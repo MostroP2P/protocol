@@ -6,7 +6,7 @@ The buyer can use a [lightning address](https://github.com/andrerfneves/lightnin
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "take-sell",
     "trade_index": 1,
     "payload": {
@@ -38,14 +38,14 @@ Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the r
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "waiting-seller-to-pay",
     "payload": null
   }
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `waiting-payment`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-payment`:
 
 ```json
 [
@@ -57,7 +57,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "waiting-payment"],

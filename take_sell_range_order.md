@@ -6,7 +6,7 @@ If the order fiat amount is a range like `10-20` the buyer must indicate a fiat 
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "take-sell",
     "trade_index": 1,
     "payload": {
@@ -24,11 +24,11 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order Id>",
         "amount": 7851,
         "fiat_code": "VES",
         "min_amount": 10,
@@ -47,7 +47,7 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `waiting-buyer-invoice`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
 
 ```json
 [
@@ -59,7 +59,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "waiting-buyer-invoice"],
@@ -87,7 +87,7 @@ The buyer can use a [lightning address](https://github.com/andrerfneves/lightnin
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "take-sell",
     "payload": {
       "payment_request": [null, "mostro_p2p@ln.tips", 15]

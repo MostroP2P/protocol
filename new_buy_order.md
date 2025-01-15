@@ -46,11 +46,11 @@ Mostro will send back a nip59 event as a confirmation message to the user like t
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order id>",
     "action": "new-order",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order id>",
         "kind": "buy",
         "status": "pending",
         "amount": 0,
@@ -80,7 +80,7 @@ Mostro publishes this order as an event kind `38383` with status `pending`:
     "created_at": 1702548701,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order id>"],
       ["k", "buy"],
       ["f", "VES"],
       ["s", "pending"],

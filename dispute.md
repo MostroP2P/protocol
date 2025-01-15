@@ -6,7 +6,7 @@ A use can start a dispute in an order with status `active` or `fiat-sent` sendin
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "dispute",
     "payload": null
   }
@@ -21,10 +21,10 @@ Mostro will send this message to the seller:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "dispute-initiated-by-you",
     "payload": {
-      "dispute": "efc75871-2568-40b9-a6ee-c382d4d6de01"
+      "dispute": "<Dispute Id>"
     }
   }
 }
@@ -36,16 +36,16 @@ And here is the message to the buyer:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "dispute-initiated-by-peer",
     "payload": {
-      "dispute": "efc75871-2568-40b9-a6ee-c382d4d6de01"
+      "dispute": "<Dispute Id>"
     }
   }
 }
 ```
 
-Mostro will not update the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `dispute`, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.
+Mostro will not update the addressable event with `d` tag `<Order Id>` to change the status to `dispute`, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.
 
 ## Mostro send a addressable event to show the dispute
 
@@ -61,7 +61,7 @@ Here is an example of the event sent by Mostro:
     "created_at": 1703016565,
     "kind": 38383,
     "tags": [
-      ["d", "efc75871-2568-40b9-a6ee-c382d4d6de01"],
+      ["d", "<Dispute Id>"],
       ["s", "initiated"],
       ["y", "mostrop2p"],
       ["z", "dispute"]
@@ -72,13 +72,13 @@ Here is an example of the event sent by Mostro:
 ]
 ```
 
-Mostro admin will see the dispute and can take it using the dispute `Id` from `d` tag, in this case `efc75871-2568-40b9-a6ee-c382d4d6de01`.
+Mostro admin will see the dispute and can take it using the dispute `Id` from `d` tag, here how should look the message sent by the admin:
 
 ```json
 {
   "dispute": {
     "version": 1,
-    "id": "efc75871-2568-40b9-a6ee-c382d4d6de01",
+    "id": "<Dispute Id>",
     "action": "admin-take-dispute",
     "payload": null
   }
@@ -91,11 +91,11 @@ Mostro will send a confirmation message to the admin with the order details:
 {
   "dispute": {
     "version": 1,
-    "id": "efc75871-2568-40b9-a6ee-c382d4d6de01",
+    "id": "<Dispute Id>",
     "action": "admin-took-dispute",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order Id>",
         "kind": "sell",
         "status": "active",
         "amount": 7851,
@@ -125,7 +125,7 @@ Also Mostro will broadcast a new addressable dispute event to update the dispute
     "created_at": 1703020540,
     "kind": 38383,
     "tags": [
-      ["d", "efc75871-2568-40b9-a6ee-c382d4d6de01"],
+      ["d", "<Dispute Id>"],
       ["s", "in-progress"],
       ["y", "mostrop2p"],
       ["z", "dispute"]

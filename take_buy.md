@@ -6,7 +6,7 @@ To take an order the seller will send to Mostro a message with the following rum
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "take-buy",
     "trade_index": 1,
     "payload": null
@@ -36,12 +36,12 @@ Mostro respond to the seller with a message with the following content:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "pay-invoice",
     "payload": {
       "payment_request": [
         {
-          "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+          "id": "<Order Id>",
           "kind": "buy",
           "status": "waiting-payment",
           "amount": 7851,
@@ -58,7 +58,7 @@ Mostro respond to the seller with a message with the following content:
 }
 ```
 
-Mostro updates the event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `WaitingPayment`:
+Mostro updates the event with `d` tag `<Order Id>` to change the status to `WaitingPayment`:
 
 ```json
 [
@@ -70,7 +70,7 @@ Mostro updates the event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to 
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "waiting-payment"],
@@ -96,7 +96,7 @@ And send a message to the buyer with the following content:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "waiting-seller-to-pay",
     "payload": null
   }
@@ -111,14 +111,14 @@ After seller pays the hold invoice Mostro send a message to the seller with the 
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "waiting-buyer-invoice",
     "payload": null
   }
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `waiting-buyer-invoice`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
 
 ```json
 [
@@ -130,7 +130,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "waiting-buyer-invoice"],
@@ -156,11 +156,11 @@ And sends a message to the buyer with the following content:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order Id>",
         "status": "waiting-buyer-invoice",
         "amount": 7851,
         "fiat_code": "VES",
@@ -182,7 +182,7 @@ Buyer sends the LN invoice to Mostro.
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
       "payment_request": [
@@ -196,7 +196,7 @@ Buyer sends the LN invoice to Mostro.
 
 Now both parties have an `active` order and they can keep going with the trade.
 
-Finally Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `active`:
+Finally Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `active`:
 
 ```json
 [
@@ -208,7 +208,7 @@ Finally Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "active"],
