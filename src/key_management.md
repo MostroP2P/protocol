@@ -37,7 +37,7 @@ Clients will always use the first key (zero) `m/44'/1237'/38383'/0/0` to identif
         {
           "order": {
             "version": 1,
-            "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+            "id": "<Order Id>",
             "trade_index": 1,
             "action": "take-sell",
             "payload": null
@@ -141,7 +141,7 @@ Clients must offer a more private version where the client never send the identi
         {
           "order": {
             "version": 1,
-            "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+            "id": "<Order Id>",
             // "trade_index": 1, // not needed
             "action": "take-sell",
             "payload": null
