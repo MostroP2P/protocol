@@ -6,12 +6,12 @@ When the seller is the maker and the order was taken by a buyer, Mostro will sen
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "pay-invoice",
     "payload": {
       "payment_request": [
         {
-          "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+          "id": "<Order Id>",
           "kind": "sell",
           "status": "waiting-payment",
           "amount": 7851,
@@ -34,11 +34,11 @@ After the hold invoice is paid and the buyer already sent the invoice to receive
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "buyer-took-order",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order Id>",
         "kind": "sell",
         "status": "active",
         "amount": 7851,
@@ -62,11 +62,11 @@ Mostro also send a message to the buyer, this way they can both write to each ot
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "hold-invoice-payment-accepted",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order Id>",
         "kind": "sell",
         "status": "active",
         "amount": 7851,
@@ -84,7 +84,7 @@ Mostro also send a message to the buyer, this way they can both write to each ot
 }
 ```
 
-Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `active`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `active`:
 
 ```json
 [
@@ -96,7 +96,7 @@ Mostro updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "active"],
@@ -121,7 +121,7 @@ Mostro send this message to the seller:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "waiting-buyer-invoice",
     "payload": null
   }
@@ -134,11 +134,11 @@ And this message to the buyer:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
       "order": {
-        "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+        "id": "<Order Id>",
         "kind": "sell",
         "status": "waiting-buyer-invoice",
         "amount": 7851,
@@ -153,7 +153,7 @@ And this message to the buyer:
 }
 ```
 
-And updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9d842` to change the status to `waiting-buyer-invoice`:
+And updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
 
 ```json
 [
@@ -165,7 +165,7 @@ And updates the addressable event with `d` tag `ede61c96-4c13-4519-bf3a-dcf7f1e9
     "created_at": 1702549437,
     "kind": 38383,
     "tags": [
-      ["d", "ede61c96-4c13-4519-bf3a-dcf7f1e9d842"],
+      ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
       ["s", "waiting-buyer-invoice"],
@@ -191,7 +191,7 @@ Now buyer sends the invoice to Mostro:
 {
   "order": {
     "version": 1,
-    "id": "ede61c96-4c13-4519-bf3a-dcf7f1e9d842",
+    "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
       "payment_request": [
