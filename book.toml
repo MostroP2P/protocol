@@ -4,3 +4,7 @@ language = "en"
 multilingual = false
 src = "src"
 title = "Mostro protocol"
+
+[output.html]
+git-repository-url = "https://github.com/MostroP2P/protocol"
+edit-url-template = "https://github.com/MostroP2P/protocol/edit/main/{path}"
