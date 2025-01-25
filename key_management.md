@@ -1,4 +1,4 @@
-# Key management
+# Keys management
 
 _It is required to read [NIP-59 (gift wrap)](https://github.com/nostr-protocol/nips/blob/master/59.md) and [NIP-06](https://github.com/nostr-protocol/nips/blob/master/06.md) to fully understand this document_
 
