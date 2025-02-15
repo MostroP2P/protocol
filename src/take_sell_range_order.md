@@ -3,17 +3,20 @@
 If the order fiat amount is a range like `10-20` the buyer must indicate a fiat amount to take the order, buyer will send a message in a Gift wrap Nostr event to Mostro with the following rumor's content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "take-sell",
-    "trade_index": 1,
-    "payload": {
-      "amount": 15
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "take-sell",
+      "trade_index": 1,
+      "payload": {
+        "amount": 15
+      }
     }
-  }
-}
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 ## Mostro response
@@ -21,30 +24,33 @@ If the order fiat amount is a range like `10-20` the buyer must indicate a fiat 
 In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is `0`, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the rumor's content of the message:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "add-invoice",
-    "payload": {
-      "order": {
-        "id": "<Order Id>",
-        "amount": 7851,
-        "fiat_code": "VES",
-        "min_amount": 10,
-        "max_amount": 20,
-        "fiat_amount": 15,
-        "payment_method": "face to face",
-        "premium": 1,
-        "master_buyer_pubkey": null,
-        "master_seller_pubkey": null,
-        "buyer_invoice": null,
-        "created_at": null,
-        "expires_at": null
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "add-invoice",
+      "payload": {
+        "order": {
+          "id": "<Order Id>",
+          "amount": 7851,
+          "fiat_code": "VES",
+          "min_amount": 10,
+          "max_amount": 20,
+          "fiat_amount": 15,
+          "payment_method": "face to face",
+          "premium": 1,
+          "master_buyer_pubkey": null,
+          "master_seller_pubkey": null,
+          "buyer_invoice": null,
+          "created_at": null,
+          "expires_at": null
+        }
       }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:

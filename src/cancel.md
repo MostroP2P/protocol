@@ -3,14 +3,17 @@
 A user can cancel an order created by himself and with status `pending` sending action `cancel`, the rumor's content of the message will look like this:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "cancel",
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "cancel",
+      "payload": null
+    }
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 ## Mostro response
@@ -18,14 +21,17 @@ A user can cancel an order created by himself and with status `pending` sending 
 Mostro will send a message with action `cancel` confirming the order was canceled, here an example of rumor's content of the message:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "canceled",
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "canceled",
+      "payload": null
+    }
+  },
+  null
+]
 ```
 
 Mostro updates the parameterized replaceable event with `d` tag `<Order Id>` to change the status to `canceled`:

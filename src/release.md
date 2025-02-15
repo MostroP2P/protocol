@@ -3,15 +3,18 @@
 After confirming the buyer sent the fiat money, the seller should send a message to Mostro indicating that sats should be delivered to the buyer, the message inside rumor's content will look like this:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "request_id": "123456",
-    "action": "release",
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "request_id": "123456",
+      "action": "release",
+      "payload": null
+    }
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 ## Mostro response
@@ -19,28 +22,34 @@ After confirming the buyer sent the fiat money, the seller should send a message
 Here an example of the Mostro response to the seller:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "request_id": "123456",
-    "action": "hold-invoice-payment-settled",
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "request_id": "123456",
+      "action": "hold-invoice-payment-settled",
+      "payload": null
+    }
+  },
+  null
+]
 ```
 
 And a message to the buyer to let him know that the sats were released:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "released",
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "released",
+      "payload": null
+    }
+  },
+  null
+]
 ```
 
 ## Buyer receives sats
