@@ -3,34 +3,37 @@
 To create a new sell order the user should send a Gift wrap Nostr event to Mostro, the rumor event should have the following rumor's content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "action": "new-order",
-    "trade_index": 1,
-    "payload": {
-      "order": {
-        "kind": "sell",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "min_amount": null,
-        "max_amount": null,
-        "fiat_amount": 100,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": 0
+[
+  {
+    "order": {
+      "version": 1,
+      "action": "new-order",
+      "trade_index": 1,
+      "payload": {
+        "order": {
+          "kind": "sell",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "min_amount": null,
+          "max_amount": null,
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": 0
+        }
       }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Let's explain some of the fields:
 
 - kind: `sell` or `buy`
 - status: Is always `pending` when creating a new order
-- amount: 0 for when we want to sell with at market price, otherwise the amount in satoshis
+- amount: `0` for when we want to sell with at market price, otherwise the amount in satoshis
 - created_at: No need to send the correct unix timestamp, Mostro will replace it with the current time
 
 The event to send to Mostro would look like this:
@@ -52,26 +55,29 @@ The event to send to Mostro would look like this:
 Mostro will send back a nip59 event as a confirmation message to the user like the following (unencrypted rumor's content example):
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order id>",
-    "action": "new-order",
-    "payload": {
-      "order": {
-        "id": "<Order id>",
-        "kind": "sell",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "fiat_amount": 100,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": 1698870173
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order id>",
+      "action": "new-order",
+      "payload": {
+        "order": {
+          "id": "<Order id>",
+          "kind": "sell",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": 1698870173
+        }
       }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Mostro publishes this order as an event kind `38383` with status `pending`:

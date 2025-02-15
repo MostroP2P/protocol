@@ -3,26 +3,29 @@
 Creating buy order with a [lightning address](https://github.com/andrerfneves/lightning-address) would make the process way faster and easy going, to acomplish the buyer should send a Gift wrap Nostr event to Mostro with the following rumor's content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "action": "new-order",
-    "trade_index": 1,
-    "payload": {
-      "order": {
-        "kind": "buy",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "fiat_amount": 100,
-        "payment_method": "face to face",
-        "premium": 1,
-        "buyer_invoice": "mostro_p2p@ln.tips",
-        "created_at": 0
+[
+  {
+    "order": {
+      "version": 1,
+      "action": "new-order",
+      "trade_index": 1,
+      "payload": {
+        "order": {
+          "kind": "buy",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1,
+          "buyer_invoice": "mostro_p2p@ln.tips",
+          "created_at": 0
+        }
       }
     }
-  }
-}
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 The nostr event will look like this:

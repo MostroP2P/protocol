@@ -16,16 +16,19 @@ After a successful trade Mostro send a Gift wrap Nostr event to both parties to 
 After a Mostro client receive this message, the user can rate the other party, the rating is a number between 1 and 5, to rate the client must receive user's input and create a new Gift wrap Nostr event to send to Mostro with this content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "rate-user",
-    "payload": {
-      "rating_user": 5 // User input
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "rate-user",
+      "payload": {
+        "rating_user": 5 // User input
+      }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 ## Confirmation message

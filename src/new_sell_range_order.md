@@ -3,27 +3,30 @@
 To create a new range order the user should send a Gift wrap Nostr event to Mostro with the following rumor's content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "action": "new-order",
-    "trade_index": 1,
-    "payload": {
-      "order": {
-        "kind": "sell",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "min_amount": 10,
-        "max_amount": 20,
-        "fiat_amount": 0,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": 0
+[
+  {
+    "order": {
+      "version": 1,
+      "action": "new-order",
+      "trade_index": 1,
+      "payload": {
+        "order": {
+          "kind": "sell",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "min_amount": 10,
+          "max_amount": 20,
+          "fiat_amount": 0,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": 0
+        }
       }
     }
-  }
-}
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 Here we have two new fields, `min_amount` and `max_amount`, to define the range of the order. The `fiat_amount` field is set to 0 to indicate that the order is for a range of amounts.
