@@ -3,14 +3,17 @@
 A use can start a dispute in an order with status `active` or `fiat-sent` sending action `dispute`, here is an example where the seller initiates a dispute:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "dispute",
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "dispute",
+      "payload": null
+    }
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 ## Mostro response
@@ -18,31 +21,37 @@ A use can start a dispute in an order with status `active` or `fiat-sent` sendin
 Mostro will send this message to the seller:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "dispute-initiated-by-you",
-    "payload": {
-      "dispute": "<Dispute Id>"
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "dispute-initiated-by-you",
+      "payload": {
+        "dispute": "<Dispute Id>"
+      }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 And here is the message to the buyer:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "dispute-initiated-by-peer",
-    "payload": {
-      "dispute": "<Dispute Id>"
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "dispute-initiated-by-peer",
+      "payload": {
+        "dispute": "<Dispute Id>"
+      }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Mostro will not update the addressable event with `d` tag `<Order Id>` to change the status to `dispute`, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.

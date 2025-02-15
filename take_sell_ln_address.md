@@ -3,17 +3,20 @@
 The buyer can use a [lightning address](https://github.com/andrerfneves/lightning-address) to receive funds and avoid to manually create and send lightning invoices on each trade, to acomplish this the buyer will send a message in a Gift wrap Nostr event to Mostro with the following rumor's content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "take-sell",
-    "trade_index": 1,
-    "payload": {
-      "payment_request": [null, "mostro_p2p@ln.tips"]
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "take-sell",
+      "trade_index": 1,
+      "payload": {
+        "payment_request": [null, "mostro_p2p@ln.tips"]
+      }
     }
-  }
-}
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 The event to send to Mostro would look like this:
@@ -35,14 +38,17 @@ The event to send to Mostro would look like this:
 Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the rumor's content, it would look like this:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "waiting-seller-to-pay",
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "waiting-seller-to-pay",
+      "payload": null
+    }
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-payment`:

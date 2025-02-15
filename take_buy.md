@@ -3,15 +3,18 @@
 To take an order the seller will send to Mostro a message with the following rumor's content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "take-buy",
-    "trade_index": 1,
-    "payload": null
-  }
-}
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "take-buy",
+      "trade_index": 1,
+      "payload": null
+    }
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>"
+]
 ```
 
 The event to send to Mostro would look like this:
