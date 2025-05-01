@@ -50,7 +50,7 @@ Mostro will publish two addressable events, one for the order to update the stat
       ["fa", "100"],
       ["pm", "face to face"],
       ["premium", "1"],
-      ["y", "mostrop2p"],
+      ["y", "mostro"],
       ["z", "order"]
     ],
     "content": "",
@@ -73,7 +73,7 @@ And updates addressable dispute event with status `seller-refunded`:
     "tags": [
       ["d", "efc75871-2568-40b9-a6ee-c382d4d6de01"],
       ["s", "seller-refunded"],
-      ["y", "mostrop2p"],
+      ["y", "mostro"],
       ["z", "dispute"]
     ],
     "content": "",

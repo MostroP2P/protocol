@@ -85,7 +85,7 @@ Mostro publishes this order as an event kind `38383` with status `pending`:
       ["network", "mainnet"],
       ["layer", "lightning"],
       ["expiration", "1719391096"],
-      ["y", "mostrop2p"],
+      ["y", "mostro"],
       ["z", "order"]
     ],
     "content": "",
