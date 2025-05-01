@@ -93,7 +93,7 @@ This event contains specific data about a Mostro instance. The instance is ident
       ],
       [
         "y",
-        "mostrop2p"
+        "mostro"
       ],
       [
         "z",

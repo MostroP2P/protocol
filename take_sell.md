@@ -69,7 +69,7 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
       ["network", "mainnet"],
       ["layer", "lightning"],
       ["expiration", "1719391096"],
-      ["y", "mostrop2p"],
+      ["y", "mostro"],
       ["z", "order"]
     ],
     "content": "",
@@ -142,7 +142,7 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
       ["fa", "100"],
       ["pm", "face to face"],
       ["premium", "1"],
-      ["y", "mostrop2p"],
+      ["y", "mostro"],
       ["z", "order"]
     ],
     "content": "",
