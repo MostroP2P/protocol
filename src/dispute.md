@@ -72,7 +72,7 @@ Here is an example of the event sent by Mostro:
     "tags": [
       ["d", "<Dispute Id>"],
       ["s", "initiated"],
-      ["y", "mostrop2p"],
+      ["y", "mostro"],
       ["z", "dispute"]
     ],
     "content": "",
@@ -136,7 +136,7 @@ Also Mostro will broadcast a new addressable dispute event to update the dispute
     "tags": [
       ["d", "<Dispute Id>"],
       ["s", "in-progress"],
-      ["y", "mostrop2p"],
+      ["y", "mostro"],
       ["z", "dispute"]
     ],
     "content": "",
