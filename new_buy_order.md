@@ -94,6 +94,7 @@ Mostro publishes this order as an event kind `38383` with status `pending`:
       ["fa", "100"],
       ["pm", "face to face"],
       ["premium", "1"],
+      ["rating", "[\"rating\",{\"days\":10,\"total_rating\":4.5,\"total_reviews\":7}]"],
       ["network", "mainnet"],
       ["layer", "lightning"],
       ["expiration", "1719391096"],
