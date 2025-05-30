@@ -59,7 +59,7 @@ Mostro will publish two addressable events, one for the order to update the stat
 ]
 ```
 
-The second event updates the addressable dispute event with status `canceled`:
+The second event updates the addressable dispute event with status `seller-refunded`:
 ```json
 [
   "EVENT",
