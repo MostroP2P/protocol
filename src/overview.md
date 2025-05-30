@@ -1,6 +1,6 @@
 ## Overview
 
-In order to have a shared order's book, Mostro daemon send [Addressable Events](https://github.com/nostr-protocol/nips/blob/master/01.md#kinds) with `38383` as event `kind`, you can find more details about that specific event [here](./order-event.md)
+In order to have a shared order's book, Mostro daemon send [Addressable Events](https://github.com/nostr-protocol/nips/blob/master/01.md#kinds) with `38383` as event `kind`, you can find more details about that specific event [here](./order_event.md)
 
 ## The Message
 

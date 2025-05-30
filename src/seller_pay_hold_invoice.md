@@ -93,35 +93,6 @@ Mostro also send a message to the buyer, this way they can both write to each ot
 ]
 ```
 
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `active`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "active"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```
-
 ## If the buyer didn't sent the invoice yet
 
 Mostro send this message to the seller:
@@ -162,38 +133,6 @@ And this message to the buyer:
 }
 ```
 
-And updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "waiting-buyer-invoice"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["network", "mainnet"],
-      ["layer", "lightning"],
-      ["expiration", "1719391096"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```
-
 Now buyer sends the invoice to Mostro:
 
 ```json
@@ -212,4 +151,4 @@ Now buyer sends the invoice to Mostro:
 }
 ```
 
-And both parties receives each other pubkeys to start a direct conversation
+And both parties receives each other pubkeys to start a direct conversation.

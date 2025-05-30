@@ -1,6 +1,6 @@
 # Taking a sell order
 
-If the order amount is `0` the buyer don't know the exact amount to create the invoice, buyer will send a message in a Gift wrap Nostr event to Mostro with the following rumor's content:
+If the order amount is `0` the buyer doesn't know the exact amount to create the invoice, buyer will send a message in a Gift wrap Nostr event to Mostro with the following rumor's content:
 
 ```json
 [
@@ -46,7 +46,7 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 ]
 ```
 
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `in-progress`:
 
 ```json
 [
@@ -61,10 +61,10 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
       ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
-      ["s", "waiting-buyer-invoice"],
+      ["s", "in-progress"],
       ["amt", "7851"],
       ["fa", "100"],
-      ["pm", "face to face"],
+      ["pm", "face to face", "bank transfer"],
       ["premium", "1"],
       ["network", "mainnet"],
       ["layer", "lightning"],
@@ -122,31 +122,3 @@ Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the r
 ]
 ```
 
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-payment`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "waiting-payment"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```

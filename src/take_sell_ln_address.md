@@ -51,7 +51,7 @@ Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the r
 ]
 ```
 
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-payment`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `in-progress`:
 
 ```json
 [
@@ -66,7 +66,7 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
       ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
-      ["s", "waiting-payment"],
+      ["s", "in-progress"],
       ["amt", "7851"],
       ["fa", "100"],
       ["pm", "face to face"],

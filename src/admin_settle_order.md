@@ -28,38 +28,9 @@ Mostro will send this message to the both parties buyer/seller and to the admin:
 }
 ```
 
-## Mostro updates addressable events
+## Mostro updates addressable dispute event
 
-Mostro will publish two addressable events, one for the order to update the status to `settled-by-admin`, this means that the hold invoice paid by the seller was settled:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "3d74ce3f10096d163603aa82beb5778bd1686226fdfcfba5d4c3a2c3137929ea",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1703260182,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "settled-by-admin"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```
-
-And updates addressable dispute event with status `settled`:
+Mostro updates the addressable dispute event with status `settled`:
 
 ```json
 [

@@ -107,35 +107,6 @@ And this message to the buyer:
 }
 ```
 
-Mostro updates the parameterized replaceable event with `d` tag `<Order Id>` to change the status to `cooperatively-canceled`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "cooperatively-canceled"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```
-
 The buyer can accept the cooperative cancellation sending this message:
 
 ```json
@@ -160,4 +131,32 @@ And Mostro will send this message to both parties:
     "payload": null
   }
 }
+```
+Mostro updates the parameterized replaceable event with `d` tag `<Order Id>` to change the status to `canceled`:
+
+```json
+[
+  "EVENT",
+  "RAND",
+  {
+    "id": "<Event id>",
+    "pubkey": "<Mostro's pubkey>",
+    "created_at": 1702549437,
+    "kind": 38383,
+    "tags": [
+      ["d", "<Order Id>"],
+      ["k", "sell"],
+      ["f", "VES"],
+      ["s", "canceled"],
+      ["amt", "7851"],
+      ["fa", "100"],
+      ["pm", "face to face"],
+      ["premium", "1"],
+      ["y", "mostro"],
+      ["z", "order"]
+    ],
+    "content": "",
+    "sig": "<Mostro's signature>"
+  }
+]
 ```

@@ -66,35 +66,3 @@ And here an example of the message from Mostro to the seller:
   }
 }
 ```
-
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `fiat-sent`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "fiat-sent"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["network", "mainnet"],
-      ["layer", "lightning"],
-      ["expiration", "1719391096"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```

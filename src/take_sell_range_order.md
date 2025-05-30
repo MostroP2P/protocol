@@ -53,7 +53,7 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 ]
 ```
 
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `in-progress`:
 
 ```json
 [
@@ -68,7 +68,7 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
       ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
-      ["s", "waiting-buyer-invoice"],
+      ["s", "in-progress"],
       ["amt", "7851"],
       ["fa", "15"],
       ["pm", "face to face"],
