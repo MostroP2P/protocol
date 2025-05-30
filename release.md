@@ -54,7 +54,7 @@ And a message to the buyer to let him know that the sats were released:
 
 ## Buyer receives sats
 
-Right after seller release sats Mostro will try to pay the buyer's lightning invoice, if the payment is successful Mostro will send a message to the buyer indicating that the purchase was completed:
+Right after seller release sats Mostro will attempt to pay the buyer's lightning invoice. When the payment succeeds, Mostro will send a message to the buyer indicating that the purchase was completed:
 
 ```json
 {
@@ -67,36 +67,7 @@ Right after seller release sats Mostro will try to pay the buyer's lightning inv
 }
 ```
 
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `settled-hold-invoice`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "settled-hold-invoice"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```
-
-Mostro will then attempt to pay the buyer's invoice, if the payment successds Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `success`:
+Mostro updates the addressable event with the `d` tag `<Order Id>` to change the status to `success`:
 
 ```json
 [
