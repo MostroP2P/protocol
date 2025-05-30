@@ -61,7 +61,7 @@ Mostro respond to the seller with a message with the following content:
 }
 ```
 
-Mostro updates the event with `d` tag `<Order Id>` to change the status to `WaitingPayment`:
+Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `in-progress`:
 
 ```json
 [
@@ -76,7 +76,7 @@ Mostro updates the event with `d` tag `<Order Id>` to change the status to `Wait
       ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
-      ["s", "waiting-payment"],
+      ["s", "in-progress"],
       ["amt", "7851"],
       ["fa", "100"],
       ["pm", "face to face"],
@@ -120,40 +120,7 @@ After seller pays the hold invoice Mostro send a message to the seller with the 
   }
 }
 ```
-
-Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `waiting-buyer-invoice`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "waiting-buyer-invoice"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["network", "mainnet"],
-      ["layer", "lightning"],
-      ["expiration", "1719391096"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```
-
-And sends a message to the buyer with the following content:
+Mostro sends a message to the buyer with the following content:
 
 ```json
 {
@@ -198,35 +165,3 @@ Buyer sends the LN invoice to Mostro.
 ```
 
 Now both parties have an `active` order and they can keep going with the trade.
-
-Finally Mostro updates the addressable event with `d` tag `<Order Id>` to change the status to `active`:
-
-```json
-[
-  "EVENT",
-  "RAND",
-  {
-    "id": "<Event id>",
-    "pubkey": "<Mostro's pubkey>",
-    "created_at": 1702549437,
-    "kind": 38383,
-    "tags": [
-      ["d", "<Order Id>"],
-      ["k", "sell"],
-      ["f", "VES"],
-      ["s", "active"],
-      ["amt", "7851"],
-      ["fa", "100"],
-      ["pm", "face to face"],
-      ["premium", "1"],
-      ["network", "mainnet"],
-      ["layer", "lightning"],
-      ["expiration", "1719391096"],
-      ["y", "mostro"],
-      ["z", "order"]
-    ],
-    "content": "",
-    "sig": "<Mostro's signature>"
-  }
-]
-```
