@@ -30,7 +30,7 @@ Mostro will send this message to the both parties buyer/seller and to the admin:
 
 ## Mostro updates addressable events
 
-Mostro will publish two addressable events, one for the order to update the status to `canceled-by-admin`, this means that the hold invoice was canceled and the seller's funds were returned:
+Mostro will publish two addressable events, one for the order to update the status to `canceled`, this means that the hold invoice was canceled and the seller's funds were returned:
 
 ```json
 [
@@ -45,7 +45,7 @@ Mostro will publish two addressable events, one for the order to update the stat
       ["d", "<Order Id>"],
       ["k", "sell"],
       ["f", "VES"],
-      ["s", "canceled-by-admin"],
+      ["s", "canceled"],
       ["amt", "7851"],
       ["fa", "100"],
       ["pm", "face to face"],
@@ -59,8 +59,7 @@ Mostro will publish two addressable events, one for the order to update the stat
 ]
 ```
 
-And updates addressable dispute event with status `seller-refunded`:
-
+The second event updates the addressable dispute event with status `seller-refunded`:
 ```json
 [
   "EVENT",
