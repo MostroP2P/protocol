@@ -18,7 +18,7 @@ To create a new sell order the user should send a Gift wrap Nostr event to Mostr
           "min_amount": null,
           "max_amount": null,
           "fiat_amount": 100,
-          "payment_method": "face to face",
+          "payment_method": "face to face,bank transfer,mobile",
           "premium": 1,
           "created_at": 0
         }
@@ -69,7 +69,7 @@ Mostro will send back a nip59 event as a confirmation message to the user like t
           "amount": 0,
           "fiat_code": "VES",
           "fiat_amount": 100,
-          "payment_method": "face to face",
+          "payment_method": "face to face,bank transfer,mobile",
           "premium": 1,
           "created_at": 1698870173
         }
@@ -98,7 +98,7 @@ Mostro publishes this order as an event kind `38383` with status `pending`:
       ["s", "pending"],
       ["amt", "0"],
       ["fa", "100"],
-      ["pm", "face to face", "bank transfer"],
+      ["pm", "face to face", "bank transfer", "mobile"],
       ["premium", "1"],
       ["rating", "[\"rating\",{\"days\":10,\"total_rating\":4.5,\"total_reviews\":7}]"],
       ["network", "mainnet"],
