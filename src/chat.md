@@ -65,7 +65,7 @@ Encryption is done following [NIP-44](https://github.com/nostr-protocol/nips/blo
 
 ## Other considerations
 
-Clients MUST attach a certain amount of proof-of-work to the wrapper event per [NIP-13](https://github.com/nostr-protocol/nips/blob/master/13.md) in a bid to demonstrate that the event is not spam or a denial-of-service attack.
+Clients optionally can attach a certain amount of proof-of-work to the wrapper event per [NIP-13](https://github.com/nostr-protocol/nips/blob/master/13.md) in a bid to demonstrate that the event is not spam or a denial-of-service attack to relays, this is not mandatory.
 
 The canonical `created_at` time belongs to the inner event. The wrapper timestamp SHOULD be tweaked to thwart time-analysis attacks. Note that some relays don't serve events dated in the future, so all timestamps SHOULD be in the past.
 
@@ -206,4 +206,4 @@ pub async fn mostro_unwrap(
 }
 ```
 
-More details about this implementation can be found in this [repository](https://github.com/grunch/mostro-mediator).
+More details about this implementation can be found in this [repository](https://github.com/MostroP2P/mostro-chat).
