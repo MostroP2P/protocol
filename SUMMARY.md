@@ -24,6 +24,7 @@
 - [Admin Settle order](./admin_settle_order.md)
 - [Admin Cancel order](./admin_cancel_order.md)
 - [Admin Add Solver](./admin_add_solver.md)
+- [Restore session](./restore_session.md)
 - [Actions](./actions.md)
   - [Message suggestions for actions](./message_suggestions_for_actions.md)
 - [P2P Order event. NIP-69](./order_event.md)
