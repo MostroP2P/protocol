@@ -8,7 +8,7 @@ Client sends a Gift wrap Nostr event to Mostro with the following rumor's conten
 
 ```json
 {
-  "order": {
+  "restore": {
     "version": 1,
     "action": "restore-session",
     "payload": null
@@ -22,7 +22,7 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
 
 ```json
 {
-  "order": {
+  "restore": {
     "version": 1,
     "action": "restore-session",
     "payload": {
@@ -73,7 +73,7 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
 
 ```json
 {
-  "order": {
+  "restore": {
     "version": 1,
     "action": "restore-session",
     "payload": {
