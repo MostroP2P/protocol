@@ -11,7 +11,7 @@ Client sends a Gift wrap Nostr event to Mostro with the following rumor's conten
   "restore": {
     "version": 1,
     "action": "restore-session",
-    "payload": "restore_request"
+    "payload": null
   }
 }
 ```
@@ -26,11 +26,34 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
     "version": 1,
     "action": "restore-session",
     "payload": {
-### Fields
-
-* `payload.restore_data`: Wrapper object that contains the session recovery data.
-* `payload.restore_data.orders`: An array of active or ongoing orders with their `id`, `trade_index`, and current `status`.
-* `payload.restore_data.disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index`.
+      "restore_data": {
+        "orders": [
+          {
+            "id": "<Order Id>",
+            "trade_index": 1,
+            "status": "pending"
+          },
+          {
+            "id": "<Order Id>",
+            "trade_index": 2,
+            "status": "active"
+          },
+          {
+            "id": "<Order Id>",
+            "trade_index": 3,
+            "status": "fiat-sent"
+          }
+        ],
+        "disputes": [
+          {
+            "dispute_id": "<Dispute Id>",
+            "order_id": "<Order Id>",
+            "trade_index": 4,
+            "status": "initiated"
+          }
+        ]
+      }
+    }
   }
 }
 ```
@@ -38,7 +61,7 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
 ### Fields
 
 * `orders`: An array of active or ongoing orders with their `id`, `trade_index`, and current `status`.
-* `disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index`.
+* `disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index` and current `status` of the dispute.
 
 ## Example Use Case
 
@@ -48,7 +71,7 @@ A user has the following:
 * One `active` order (trade index 3)
 * One active dispute (trade index 4)
 
-When switching to desktop, after restoring the mnemonic, the client sends `restore-session` with `restore_request` payload and receives:
+When switching to desktop, after restoring the mnemonic, the client sends `restore-session` and receives:
 
 ```json
 {
@@ -56,7 +79,7 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
     "version": 1,
     "action": "restore-session",
     "payload": {
-      "restore_data" : {
+      "restore_data": {
         "orders": [
           { "id": "abc-123", "trade_index": 1, "status": "pending" },
           { "id": "def-456", "trade_index": 2, "status": "pending" },
@@ -71,4 +94,3 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
   }
 }
 ```
-
