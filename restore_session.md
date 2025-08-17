@@ -26,34 +26,11 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
     "version": 1,
     "action": "restore-session",
     "payload": {
-      "restore_data": {
-        "orders": [
-          {
-            "id": "<Order Id>",
-            "trade_index": 1,
-            "status": "pending"
-          },
-          {
-            "id": "<Order Id>",
-            "trade_index": 2,
-            "status": "active"
-          },
-          {
-            "id": "<Order Id>",
-            "trade_index": 3,
-            "status": "fiat-sent"
-          }
-        ],
-        "disputes": [
-          {
-            "dispute_id": "<Dispute Id>",
-            "order_id": "<Order Id>",
-            "trade_index": 4,
-            "status": "initiated"
-          }
-        ]
-      }
-    }
+### Fields
+
+* `payload.restore_data`: Wrapper object that contains the session recovery data.
+* `payload.restore_data.orders`: An array of active or ongoing orders with their `id`, `trade_index`, and current `status`.
+* `payload.restore_data.disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index`.
   }
 }
 ```
