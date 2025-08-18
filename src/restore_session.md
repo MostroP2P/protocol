@@ -26,31 +26,33 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
     "version": 1,
     "action": "restore-session",
     "payload": {
-      "orders": [
-        {
-          "id": "<Order Id>",
-          "trade_index": 1,
-          "status": "pending"
-        },
-        {
-          "id": "<Order Id>",
-          "trade_index": 2,
-          "status": "active"
-        },
-        {
-          "id": "<Order Id>",
-          "trade_index": 3,
-          "status": "fiat-sent"
-        }
-      ],
-      "disputes": [
-        {
-          "dispute_id": "<Dispute Id>",
-          "order_id": "<Order Id>",
-          "trade_index": 4,
-          "status": "initiated"
-        }
-      ]
+      "restore_data": {
+        "orders": [
+          {
+            "id": "<Order Id>",
+            "trade_index": 1,
+            "status": "pending"
+          },
+          {
+            "id": "<Order Id>",
+            "trade_index": 2,
+            "status": "active"
+          },
+          {
+            "id": "<Order Id>",
+            "trade_index": 3,
+            "status": "fiat-sent"
+          }
+        ],
+        "disputes": [
+          {
+            "dispute_id": "<Dispute Id>",
+            "order_id": "<Order Id>",
+            "trade_index": 4,
+            "status": "initiated"
+          }
+        ]
+      }
     }
   }
 }
@@ -59,7 +61,7 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
 ### Fields
 
 * `orders`: An array of active or ongoing orders with their `id`, `trade_index`, and current `status`.
-* `disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index`.
+* `disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index` and current `status` of the dispute.
 
 ## Example Use Case
 
@@ -77,17 +79,18 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
     "version": 1,
     "action": "restore-session",
     "payload": {
-      "orders": [
-        { "id": "abc-123", "trade_index": 1, "status": "pending" },
-        { "id": "def-456", "trade_index": 2, "status": "pending" },
-        { "id": "ghi-789", "trade_index": 3, "status": "active" },
-        { "id": "xyz-999", "trade_index": 4, "status": "dispute" }
-      ],
-      "disputes": [
-        { "dispute_id": "dis-001", "order_id": "xyz-999", "trade_index": 4, "status": "initiated" }
-      ]
+      "restore_data": {
+        "orders": [
+          { "id": "abc-123", "trade_index": 1, "status": "pending" },
+          { "id": "def-456", "trade_index": 2, "status": "pending" },
+          { "id": "ghi-789", "trade_index": 3, "status": "active" },
+          { "id": "xyz-999", "trade_index": 4, "status": "dispute" }
+        ],
+        "disputes": [
+          { "dispute_id": "dis-001", "order_id": "xyz-999", "trade_index": 4, "status": "initiated" }
+        ]
+      }
     }
   }
 }
 ```
-
