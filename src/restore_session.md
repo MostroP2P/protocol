@@ -60,8 +60,9 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
 
 ### Fields
 
-* `orders`: An array of active or ongoing orders with their `id`, `trade_index`, and current `status`.
-* `disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index` and current `status` of the dispute.
+* `restore_data`: Wrapper object that contains the session recovery data.
+* `restore_data.orders`: An array of active or ongoing orders with their `id`, `trade_index`, and current `status`.
+* `restore_data.disputes`: An array of ongoing disputes with `dispute_id`, the associated `order_id`, and `trade_index` and current `status` of the dispute.
 
 ## Example Use Case
 
