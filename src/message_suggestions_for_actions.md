@@ -60,14 +60,14 @@ Below are suggestions for messages that clients can show to users when receiving
   Order ID: `id` has been successfully canceled.
 
 - **dispute-initiated-by-you:**  
-  You’ve initiated a dispute for order ID: `id`. A solver will be assigned soon. Once assigned, I will share their npub with you, and only they will be able to assist you. You may contact the solver directly, but if they reach out first, please ask them to provide the token for your dispute. Your dispute token is: `user-token`.
+  You’ve initiated a dispute for order ID: `id`. A solver will be assigned soon. Once assigned, I will share their npub with you, and only they will be able to assist you. You may contact the solver directly.
 
 - **dispute-initiated-by-peer:**  
-  Your counterparty initiated a dispute for order ID: `id`. A solver will be assigned soon. Once assigned, I will share their npub with you, and only they will be able to assist you. You may contact the solver directly, but if they reach out first, please ask them to provide the token for your dispute. Your dispute token is: `user-token`.
+  Your counterparty initiated a dispute for order ID: `id`. A solver will be assigned soon. Once assigned, I will share their npub with you, and only they will be able to assist you. You may contact the solver directly.
 
 - **admin-took-dispute:**  
   - _Admin:_ Here are the details of the dispute: `details`. You need to determine which user is correct and decide whether to cancel or complete the order. Please note that your decision will be final and cannot be reversed.
-  - _Users:_ Solver `admin-npub` will handle your dispute. You can contact them directly, but if they reach out to you first, make sure to ask them for your dispute token.
+  - _Users:_ Solver `admin-npub` will handle your dispute. You can contact them directly.
 
 - **admin-canceled:**  
   - _Admin:_ You have canceled order ID: `id`.  
