@@ -139,9 +139,7 @@ Mostro will send to the maker the newly child order created with the same `trade
         "payment_method": "face to face",
         "premium": 1,
         "created_at": 123456789,
-        "expires_at": 123456789,
-        "buyer_token": null,
-        "seller_token": null
+        "expires_at": 123456789
       }
     }
   }
