@@ -122,6 +122,26 @@ Mostro will send a confirmation message to the admin with the order details:
 }
 ```
 
+Then mostrod send messages to each trade participat, the buyer and seller for them to know the pubkey of the admin who took the dispute, that way the client can start listening events from that specific pubkey, by default clients should discard any messages received from any pubkey different than Mostro node or dispute solver, the message looks like this:
+
+```json
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "admin-took-dispute",
+      "payload": {
+        "peer": {
+          "pubkey": "<Solver's pubkey>"
+        }
+      }
+    }
+  },
+  null
+]
+```
+
 Also Mostro will broadcast a new addressable dispute event to update the dispute `status` to `in-progress`:
 
 ```json
