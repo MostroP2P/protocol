@@ -41,7 +41,7 @@ Mostro send messages to both parties confirming `fiat-sent` action and sending a
     "id": "<Order Id>",
     "action": "fiat-sent-ok",
     "payload": {
-      "Peer": {
+      "peer": {
         "pubkey": "<Seller's trade pubkey>"
       }
     }
@@ -59,7 +59,7 @@ And here an example of the message from Mostro to the seller:
     "pubkey": "<Seller's trade pubkey>",
     "action": "fiat-sent-ok",
     "payload": {
-      "Peer": {
+      "peer": {
         "pubkey": "<Buyer's trade pubkey>"
       }
     }
