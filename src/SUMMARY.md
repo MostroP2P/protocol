@@ -8,6 +8,7 @@
 - [Creating a Buy order](./new_buy_order.md)
 - [Creating a Buy order with a LN address](./new_buy_order_ln_address.md)
 - [List orders](./list_orders.md)
+- [Request order details](./orders.md)
 - [Take sell order](./take_sell.md)
 - [Take sell order with a LN address](./take_sell_ln_address.md)
 - [Take range sell order](./take_sell_range_order.md)
