@@ -4,7 +4,7 @@ Clients can request detailed information for existing orders by sending a nip59 
 
 ## Request message
 
-The client sends a message where the payload is an array of order IDs. At least one ID must be provided, Mostro may reject the request if it exceeds its configured limits.
+The client sends a message where the payload object includes an `ids` array of order IDs. At least one ID must be provided, and Mostro may reject the request if the array exceeds its configured limits.
 
 ```json
 {
