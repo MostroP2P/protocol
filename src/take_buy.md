@@ -74,7 +74,7 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
     "kind": 38383,
     "tags": [
       ["d", "<Order Id>"],
-      ["k", "sell"],
+      ["k", "buy"],
       ["f", "VES"],
       ["s", "in-progress"],
       ["amt", "7851"],

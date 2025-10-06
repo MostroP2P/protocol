@@ -152,6 +152,9 @@ Mostro updates the parameterized replaceable event with `d` tag `<Order Id>` to 
       ["fa", "100"],
       ["pm", "face to face"],
       ["premium", "1"],
+      ["network", "mainnet"],
+      ["layer", "lightning"],
+      ["expiration", "1719391096"],
       ["y", "mostro"],
       ["z", "order"]
     ],
