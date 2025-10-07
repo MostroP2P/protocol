@@ -1,10 +1,10 @@
-# Sync Trade Index
+# Last Trade Index
 
-Defines the `synch-trade-index` action used to retrieve the user's last `trade_index`.
+Defines the `last-trade-index` action used to retrieve the user's last `trade_index`.
 
 ## Request
 
-Client sends a Gift wrap Nostr event to Mostro with the following rumor's content. The request uses a `null` payload to indicate that the client is querying for the last trade index.
+Client sends a Gift wrap Nostr event to Mostro with the following rumor's content. The request sends a `null` payload to indicate that the client is querying for the last trade index.
 
 ```json
 {
@@ -18,7 +18,7 @@ Client sends a Gift wrap Nostr event to Mostro with the following rumor's conten
 
 ## Response
 
-Mostro responds with the user's last trade index as a u32 directly in the `trade-index` field. If the user has never created a trade, the value SHOULD be `1`.
+Mostro responds with the user's last trade index as a u32 directly in the `trade_index` field. If the user has never created a trade, the value SHOULD be `1`.
 
 ```json
 {
@@ -52,5 +52,3 @@ Client requests the last trade index and receives `7`, meaning the next trade th
   }
 }
 ```
-
-
