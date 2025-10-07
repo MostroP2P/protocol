@@ -57,14 +57,16 @@ And a message to the buyer to let him know that the sats were released:
 Right after seller release sats Mostro will attempt to pay the buyer's lightning invoice. When the payment succeeds, Mostro will send a message to the buyer indicating that the purchase was completed:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "<Order Id>",
     "action": "purchase-completed",
     "payload": null
-  }
-}
+  },
+  null
+]
 ```
 
 Mostro updates the addressable event with the `d` tag `<Order Id>` to change the status to `success`:
@@ -104,23 +106,26 @@ Mostro updates the addressable event with the `d` tag `<Order Id>` to change the
 If the order is a range order probably after release a child order would need to be created, Mostro can't know which would be the next `trade pubkey`, so the client of the maker must send this information, here how the message must look like:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
     "action": "release",
     "payload": {
       "next_trade": ["<trade pubkey>", <trade index>]
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Mostro will send to the maker the newly child order created with the same `trade_index` received in the payload, if the maker is the buyer the `trade_index` would be the one sent in the payload of the `fiat-sent` message by the buyer, the `trade_index` will be used by the client to get the next key, the message will look like this:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
     "action": "new-order",
@@ -142,6 +147,7 @@ Mostro will send to the maker the newly child order created with the same `trade
         "expires_at": 123456789
       }
     }
-  }
-}
+  },
+  null
+]
 ```

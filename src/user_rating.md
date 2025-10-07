@@ -3,14 +3,16 @@
 After a successful trade Mostro send a Gift wrap Nostr event to both parties to let them know they can rate each other, here an example how the message look like:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "<Order Id>",
     "action": "rate",
     "payload": null
-  }
-}
+  },
+  null
+]
 ```
 
 After a Mostro client receive this message, the user can rate the other party, the rating is a number between 1 and 5, to rate the client must receive user's input and create a new Gift wrap Nostr event to send to Mostro with this content:
@@ -36,16 +38,18 @@ After a Mostro client receive this message, the user can rate the other party, t
 If Mostro received the correct message, it will send back a confirmation message to the user with the action `rate-received`:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "<Order Id>",
     "action": "rate-received",
     "payload": {
       "rating_user": 5
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Mostro updates the addressable rating event, in this event the `d` tag will be the user pubkey `<Seller's trade pubkey>` and looks like this:

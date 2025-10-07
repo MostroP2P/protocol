@@ -9,15 +9,17 @@ The administrator can also solve disputes.
 To add a solver the admin will need to send an `order` message to Mostro with action `admin-add-solver`:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "action": "admin-add-solver",
     "payload": {
       "text_message": "npub1qqq884wtp2jn96lqhqlnarl4kk3rmvrc9z2nmrvqujx3m4l2ea5qd5d0fq"
     }
-  }
-}
+  },
+  null
+]
 ```
 
 ## Mostro response
@@ -25,11 +27,13 @@ To add a solver the admin will need to send an `order` message to Mostro with ac
 Mostro will send this message to the admin:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "action": "admin-add-solver",
     "payload": null
-  }
-}
+  },
+  null
+]
 ```

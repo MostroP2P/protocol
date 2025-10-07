@@ -7,8 +7,9 @@ Clients can request detailed information for existing orders by sending a nip59 
 The client sends a message where the payload object includes an `ids` array of order IDs. At least one ID must be provided, and Mostro may reject the request if the array exceeds its configured limits.
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "request_id": 8721,
     "action": "orders",
@@ -18,8 +19,9 @@ The client sends a message where the payload object includes an `ids` array of o
         "751bc178-801a-4cc4-983c-68682e6fb6af"
       ]
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Field:
@@ -32,8 +34,9 @@ The client only can request their own orders; mostrod will not provide informati
 Mostro replies with the same action and includes a structured payload describing each order that could be resolved, here is how the message look like:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "request_id": 8721,
     "action": "orders",
@@ -77,8 +80,9 @@ Mostro replies with the same action and includes a structured payload describing
         },
       ]
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Orders that are missing or unauthorized for the requesting user are not listed in the orders array.

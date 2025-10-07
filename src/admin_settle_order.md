@@ -3,14 +3,16 @@
 An admin can settle an order, most of the time this is done when admin is solving a dispute, for this the admin will need to send an `order` message to Mostro with action `admin-settle` with the `id` of the order like this:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "<Order Id>",
     "action": "admin-settle",
     "payload": null
-  }
-}
+  },
+  null
+]
 ```
 
 ## Mostro response
@@ -18,14 +20,16 @@ An admin can settle an order, most of the time this is done when admin is solvin
 Mostro will send this message to the both parties buyer/seller and to the admin:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "<Order Id>",
     "action": "admin-settled",
     "payload": null
-  }
-}
+  },
+  null
+]
 ```
 
 ## Mostro updates addressable dispute event

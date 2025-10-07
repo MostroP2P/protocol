@@ -7,13 +7,15 @@ To restore a session from the mnemonic seed on a new device (e.g., moving from m
 Client sends a Gift wrap Nostr event to Mostro with the following rumor's content:
 
 ```json
-{
-  "restore": {
+[
+  {
+    "restore": {
     "version": 1,
     "action": "restore-session",
     "payload": null
-  }
-}
+  },
+  null
+]
 ```
 
 ## Response
@@ -21,8 +23,9 @@ Client sends a Gift wrap Nostr event to Mostro with the following rumor's conten
 Mostro will respond with a message containing all non-finalized orders (e.g., statuses such as `pending`, `active`, `fiat-sent`, `waiting-buyer-invoice`, `waiting-payment`, `settled-hold-invoice`) and any active disputes. The response format will be:
 
 ```json
-{
-  "restore": {
+[
+  {
+    "restore": {
     "version": 1,
     "action": "restore-session",
     "payload": {
@@ -54,8 +57,9 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
         ]
       }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 ### Fields
@@ -75,8 +79,9 @@ A user has the following:
 When switching to desktop, after restoring the mnemonic, the client sends `restore-session` and receives:
 
 ```json
-{
-  "restore": {
+[
+  {
+    "restore": {
     "version": 1,
     "action": "restore-session",
     "payload": {
@@ -92,6 +97,7 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
         ]
       }
     }
-  }
-}
+  },
+  null
+]
 ```

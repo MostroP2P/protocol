@@ -43,8 +43,9 @@ The nostr event will look like this:
 Mostro will send back a nip59 event as a confirmation message, the message in the rumor looks like the following:
 
 ```json
-{
-  "order": {
+[
+  {
+    "order": {
     "version": 1,
     "id": "<Order id>",
     "action": "new-order",
@@ -64,8 +65,9 @@ Mostro will send back a nip59 event as a confirmation message, the message in th
         "created_at": 1698870173
       }
     }
-  }
-}
+  },
+  null
+]
 ```
 
 Mostro publishes this order as an event kind `38383` with status `pending`:
