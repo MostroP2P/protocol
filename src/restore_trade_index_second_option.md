@@ -25,7 +25,8 @@ Mostro responds with the user's last trade index as a u32 directly in the `paylo
   "restore": {
     "version": 1,
     "action": "last-trade-index",
-    "payload": 42
+    "trade_index": 42,
+    "payload": null
   }
 }
 ```
