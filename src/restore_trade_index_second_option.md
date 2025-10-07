@@ -18,7 +18,7 @@ Client sends a Gift wrap Nostr event to Mostro with the following rumor's conten
 
 ## Response
 
-Mostro responds with the user's last trade index as a u32 directly in the `payload` field. If the user has never created a trade, the value SHOULD be `1`.
+Mostro responds with the user's last trade index as a u32 directly in the `trade-index` field. If the user has never created a trade, the value SHOULD be `1`.
 
 ```json
 {
