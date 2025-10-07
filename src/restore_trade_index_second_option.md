@@ -35,8 +35,8 @@ Mostro responds with the user's last trade index as a u32 directly in the `paylo
 
 * `restore.version`: Protocol version. Current is `1`.
 * `restore.action`: Must be `last-trade-index`.
-* `restore.payload` (request): Must be `null` when querying.
-* `restore.payload` (response): u32 representing the last `trade_index` for the user. `1` if none.
+* `restore.trade_index` (response): u32 representing the last `trade_index` for the user. `1` if none.
+* `restore.payload` (response): Must be `null`.
 
 ## Example
 
@@ -47,7 +47,8 @@ Client requests the last trade index and receives `7`, meaning the next trade th
   "restore": {
     "version": 1,
     "action": "last-trade-index",
-    "payload": 7
+    "trade_index": 7,
+    "payload": null
   }
 }
 ```
