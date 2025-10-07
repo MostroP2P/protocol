@@ -10,7 +10,7 @@ Client sends a Gift wrap Nostr event to Mostro with the following rumor's conten
 {
   "restore": {
     "version": 1,
-    "action": "synch-trade-index",
+    "action": "last-trade-index",
     "payload": null
   }
 }
@@ -24,7 +24,7 @@ Mostro responds with the user's last trade index as a u32 directly in the `paylo
 {
   "restore": {
     "version": 1,
-    "action": "synch-trade-index",
+    "action": "last-trade-index",
     "payload": 42
   }
 }
@@ -33,7 +33,7 @@ Mostro responds with the user's last trade index as a u32 directly in the `paylo
 ### Fields
 
 * `restore.version`: Protocol version. Current is `1`.
-* `restore.action`: Must be `synch-trade-index`.
+* `restore.action`: Must be `last-trade-index`.
 * `restore.payload` (request): Must be `null` when querying.
 * `restore.payload` (response): u32 representing the last `trade_index` for the user. `1` if none.
 
@@ -45,7 +45,7 @@ Client requests the last trade index and receives `7`, meaning the next trade th
 {
   "restore": {
     "version": 1,
-    "action": "synch-trade-index",
+    "action": "last-trade-index",
     "payload": 7
   }
 }
