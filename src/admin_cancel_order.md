@@ -6,10 +6,11 @@ An admin can cancel an order, most of the time this is done when admin is solvin
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "admin-cancel",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "admin-cancel",
+      "payload": null
+    }
   },
   null
 ]
@@ -23,10 +24,11 @@ Mostro will send this message to the both parties buyer/seller and to the admin:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "admin-canceled",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "admin-canceled",
+      "payload": null
+    }
   },
   null
 ]

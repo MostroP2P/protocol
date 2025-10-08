@@ -38,22 +38,23 @@ Mostro will send back a nip59 event as a confirmation message to the user like t
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order id>",
-    "action": "new-order",
-    "payload": {
-      "order": {
-        "id": "<Order id>",
-        "kind": "sell",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "min_amount": 10,
-        "max_amount": 20,
-        "fiat_amount": 0,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": 1698870173
+      "version": 1,
+      "id": "<Order id>",
+      "action": "new-order",
+      "payload": {
+        "order": {
+          "id": "<Order id>",
+          "kind": "sell",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "min_amount": 10,
+          "max_amount": 20,
+          "fiat_amount": 0,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": 1698870173
+        }
       }
     }
   },

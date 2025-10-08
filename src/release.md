@@ -13,7 +13,7 @@ After confirming the buyer sent the fiat money, the seller should send a message
       "payload": null
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  null
 ]
 ```
 
@@ -60,10 +60,11 @@ Right after seller release sats Mostro will attempt to pay the buyer's lightning
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "purchase-completed",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "purchase-completed",
+      "payload": null
+    }
   },
   null
 ]
@@ -109,11 +110,12 @@ If the order is a range order probably after release a child order would need to
 [
   {
     "order": {
-    "version": 1,
-    "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
-    "action": "release",
-    "payload": {
-      "next_trade": ["<trade pubkey>", <trade index>]
+      "version": 1,
+      "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
+      "action": "release",
+      "payload": {
+        "next_trade": ["<trade pubkey>", <trade index>]
+      }
     }
   },
   null
@@ -126,25 +128,26 @@ Mostro will send to the maker the newly child order created with the same `trade
 [
   {
     "order": {
-    "version": 1,
-    "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
-    "action": "new-order",
-    "trade_index": <trade index>,
-    "request_id": "123456",
-    "payload": {
-      "order": {
-        "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
-        "kind": "sell",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "min_amount": <min amount>,
-        "max_amount": <max amount>,
-        "fiat_amount": 0,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": 123456789,
-        "expires_at": 123456789
+      "version": 1,
+      "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
+      "action": "new-order",
+      "trade_index": <trade index>,
+      "request_id": "123456",
+      "payload": {
+        "order": {
+          "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
+          "kind": "sell",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "min_amount": <min amount>,
+          "max_amount": <max amount>,
+          "fiat_amount": 0,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": 123456789,
+          "expires_at": 123456789
+        }
       }
     }
   },

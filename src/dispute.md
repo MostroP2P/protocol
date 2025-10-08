@@ -87,10 +87,11 @@ Mostro admin will see the dispute and can take it using the dispute `Id` from `d
 [
   {
     "dispute": {
-    "version": 1,
-    "id": "<Dispute Id>",
-    "action": "admin-take-dispute",
-    "payload": null
+      "version": 1,
+      "id": "<Dispute Id>",
+      "action": "admin-take-dispute",
+      "payload": null
+    }
   },
   null
 ]
@@ -102,23 +103,24 @@ Mostro will send a confirmation message to the admin with the order details:
 [
   {
     "dispute": {
-    "version": 1,
-    "id": "<Dispute Id>",
-    "action": "admin-took-dispute",
-    "payload": {
-      "order": {
-        "id": "<Order Id>",
-        "kind": "sell",
-        "status": "active",
-        "amount": 7851,
-        "fiat_code": "VES",
-        "fiat_amount": 100,
-        "payment_method": "face to face",
-        "premium": 1,
-        "buyer_trade_pubkey": "<Buyer's trade pubkey>",
-        "seller_trade_pubkey": "<Seller's trade pubkey>",
-        "buyer_invoice": "lnbcrt11020n1pjcypj3pp58m3d9gcu4cc8l3jgkpfn7zhqv2jfw7p3t6z3tq2nmk9cjqam2c3sdqqcqzzsxqyz5vqsp5mew44wzjs0a58d9sfpkrdpyrytswna6gftlfrv8xghkc6fexu6sq9qyyssqnwfkqdxm66lxjv8z68ysaf0fmm50ztvv773jzuyf8a5tat3lnhks6468ngpv3lk5m7yr7vsg97jh6artva5qhd95vafqhxupyuawmrcqnthl9y",
-        "created_at": 1698870173
+      "version": 1,
+      "id": "<Dispute Id>",
+      "action": "admin-took-dispute",
+      "payload": {
+        "order": {
+          "id": "<Order Id>",
+          "kind": "sell",
+          "status": "active",
+          "amount": 7851,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1,
+          "buyer_trade_pubkey": "<Buyer's trade pubkey>",
+          "seller_trade_pubkey": "<Seller's trade pubkey>",
+          "buyer_invoice": "lnbcrt11020n1pjcypj3pp58m3d9gcu4cc8l3jgkpfn7zhqv2jfw7p3t6z3tq2nmk9cjqam2c3sdqqcqzzsxqyz5vqsp5mew44wzjs0a58d9sfpkrdpyrytswna6gftlfrv8xghkc6fexu6sq9qyyssqnwfkqdxm66lxjv8z68ysaf0fmm50ztvv773jzuyf8a5tat3lnhks6468ngpv3lk5m7yr7vsg97jh6artva5qhd95vafqhxupyuawmrcqnthl9y",
+          "created_at": 1698870173
+        }
       }
     }
   },

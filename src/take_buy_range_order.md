@@ -15,7 +15,7 @@ If the order fiat amount is a range like `10-20` the seller must indicate a fiat
       }
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  null
 ]
 ```
 

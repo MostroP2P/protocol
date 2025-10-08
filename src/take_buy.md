@@ -39,24 +39,25 @@ Mostro respond to the seller with a message with the following content:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "pay-invoice",
-    "payload": {
-      "payment_request": [
-        {
-          "id": "<Order Id>",
-          "kind": "buy",
-          "status": "waiting-payment",
-          "amount": 7851,
-          "fiat_code": "VES",
-          "fiat_amount": 100,
-          "payment_method": "face to face",
-          "premium": 1,
-          "created_at": 1698957793
-        },
-        "lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e"
-      ]
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "pay-invoice",
+      "payload": {
+        "payment_request": [
+          {
+            "id": "<Order Id>",
+            "kind": "buy",
+            "status": "waiting-payment",
+            "amount": 7851,
+            "fiat_code": "VES",
+            "fiat_amount": 100,
+            "payment_method": "face to face",
+            "premium": 1,
+            "created_at": 1698957793
+          },
+          "lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e"
+        ]
+      }
     }
   },
   null
@@ -101,10 +102,11 @@ And send a message to the buyer with the following content:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "waiting-seller-to-pay",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "waiting-seller-to-pay",
+      "payload": null
+    }
   },
   null
 ]
@@ -118,10 +120,11 @@ After seller pays the hold invoice Mostro send a message to the seller with the 
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "waiting-buyer-invoice",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "waiting-buyer-invoice",
+      "payload": null
+    }
   },
   null
 ]
@@ -132,19 +135,20 @@ Mostro sends a message to the buyer with the following content:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "add-invoice",
-    "payload": {
-      "order": {
-        "id": "<Order Id>",
-        "status": "waiting-buyer-invoice",
-        "amount": 7851,
-        "fiat_code": "VES",
-        "fiat_amount": 100,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "add-invoice",
+      "payload": {
+        "order": {
+          "id": "<Order Id>",
+          "status": "waiting-buyer-invoice",
+          "amount": 7851,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": null
+        }
       }
     }
   },
@@ -160,14 +164,15 @@ Buyer sends the LN invoice to Mostro.
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "add-invoice",
-    "payload": {
-      "payment_request": [
-        null,
-        "lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e"
-      ]
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "add-invoice",
+      "payload": {
+        "payment_request": [
+          null,
+          "lnbcrt78510n1pj59wmepp50677g8tffdqa2p8882y0x6newny5vtz0hjuyngdwv226nanv4uzsdqqcqzzsxqyz5vqsp5skn973360gp4yhlpmefwvul5hs58lkkl3u3ujvt57elmp4zugp4q9qyyssqw4nzlr72w28k4waycf27qvgzc9sp79sqlw83j56txltz4va44j7jda23ydcujj9y5k6k0rn5ms84w8wmcmcyk5g3mhpqepf7envhdccp72nz6e"
+        ]
+      }
     }
   },
   null
