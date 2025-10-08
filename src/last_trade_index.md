@@ -7,13 +7,16 @@ Defines the `last-trade-index` action used to retrieve the user's last `trade_in
 Client sends a Gift wrap Nostr event to Mostro with the following rumor's content. The request sends a `null` payload to indicate that the client is querying for the last trade index.
 
 ```json
-{
-  "restore": {
-    "version": 1,
-    "action": "last-trade-index",
-    "payload": null
-  }
-}
+[
+  {
+    "restore": {
+      "version": 1,
+      "action": "last-trade-index",
+      "payload": null
+    }
+  },
+  null
+]
 ```
 
 ## Response

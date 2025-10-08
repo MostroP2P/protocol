@@ -93,11 +93,12 @@ The buyer can use a [lightning address](https://github.com/andrerfneves/lightnin
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "take-sell",
-    "payload": {
-      "payment_request": [null, "mostro_p2p@ln.tips", 15]
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "take-sell",
+      "payload": {
+        "payment_request": [null, "mostro_p2p@ln.tips", 15]
+      }
     }
   },
   null

@@ -74,10 +74,11 @@ A user can cancel an `active` order, but will need the counterparty to agree, le
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "cancel",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "cancel",
+      "payload": null
+    }
   },
   null
 ]
@@ -89,10 +90,11 @@ Mostro will send this message to the seller:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "cooperative-cancel-initiated-by-you",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "cooperative-cancel-initiated-by-you",
+      "payload": null
+    }
   },
   null
 ]
@@ -104,10 +106,11 @@ And this message to the buyer:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "cooperative-cancel-initiated-by-peer",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "cooperative-cancel-initiated-by-peer",
+      "payload": null
+    }
   },
   null
 ]
@@ -119,10 +122,11 @@ The buyer can accept the cooperative cancellation sending this message:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "cancel",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "cancel",
+      "payload": null
+    }
   },
   null
 ]
@@ -134,10 +138,11 @@ And Mostro will send this message to both parties:
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "cooperative-cancel-accepted",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "cooperative-cancel-accepted",
+      "payload": null
+    }
   },
   null
 ]

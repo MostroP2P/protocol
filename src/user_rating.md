@@ -6,10 +6,11 @@ After a successful trade Mostro send a Gift wrap Nostr event to both parties to 
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "rate",
-    "payload": null
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "rate",
+      "payload": null
+    }
   },
   null
 ]
@@ -41,11 +42,12 @@ If Mostro received the correct message, it will send back a confirmation message
 [
   {
     "order": {
-    "version": 1,
-    "id": "<Order Id>",
-    "action": "rate-received",
-    "payload": {
-      "rating_user": 5
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "rate-received",
+      "payload": {
+        "rating_user": 5
+      }
     }
   },
   null
