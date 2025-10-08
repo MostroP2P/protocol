@@ -78,7 +78,7 @@ Mostro replies with the same action and includes a structured payload describing
               "created_at": 1759168820,
               "expires_at": 1759255220
             }
-          },
+          }
         ]
       }
     }
