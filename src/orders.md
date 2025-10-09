@@ -44,40 +44,36 @@ Mostro replies with the same action and includes a structured payload describing
       "payload": {
         "orders": [
           {
-            "order": {
-              "id": "c7dba9db-f13f-4c3f-a77f-3b82e43c2b1a",
-              "kind": "sell",
-              "status": "active",
-              "amount": 3307,
-              "fiat_code": "ARS",
-              "min_amount": 1000,
-              "max_amount": 5000,
-              "fiat_amount": 5000,
-              "payment_method": "Mercado Pago,Lemon",
-              "premium": 2,
-              "buyer_trade_pubkey": "<trade pubkey>",
-              "seller_trade_pubkey": "<trade pubkey>",
-              "created_at": 1758889527,
-              "expires_at": 1758975927
-            }
+            "id": "c7dba9db-f13f-4c3f-a77f-3b82e43c2b1a",
+            "kind": "sell",
+            "status": "active",
+            "amount": 3307,
+            "fiat_code": "ARS",
+            "min_amount": 1000,
+            "max_amount": 5000,
+            "fiat_amount": 5000,
+            "payment_method": "Mercado Pago,Lemon",
+            "premium": 2,
+            "buyer_trade_pubkey": "<trade pubkey>",
+            "seller_trade_pubkey": "<trade pubkey>",
+            "created_at": 1758889527,
+            "expires_at": 1758975927
           },
           {
-            "order": {
-              "id": "751bc178-801a-4cc4-983c-68682e6fb6af",
-              "kind": "sell",
-              "status": "fiat-sent",
-              "amount": 1201,
-              "fiat_code": "ARS",
-              "min_amount": null,
-              "max_amount": null,
-              "fiat_amount": 2000,
-              "payment_method": "MODO",
-              "premium": 0,
-              "buyer_trade_pubkey": "<trade pubkey>",
-              "seller_trade_pubkey": "<trade pubkey>",
-              "created_at": 1759168820,
-              "expires_at": 1759255220
-            }
+            "id": "751bc178-801a-4cc4-983c-68682e6fb6af",
+            "kind": "sell",
+            "status": "fiat-sent",
+            "amount": 1201,
+            "fiat_code": "ARS",
+            "min_amount": null,
+            "max_amount": null,
+            "fiat_amount": 2000,
+            "payment_method": "MODO",
+            "premium": 0,
+            "buyer_trade_pubkey": "<trade pubkey>",
+            "seller_trade_pubkey": "<trade pubkey>",
+            "created_at": 1759168820,
+            "expires_at": 1759255220
           }
         ]
       }
