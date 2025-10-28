@@ -1,6 +1,6 @@
 # Dispute
 
-A use can start a dispute in an order with status `active` or `fiat-sent` sending action `dispute`, here is an example where the seller initiates a dispute:
+A user can start a dispute in an order with status `active` or `fiat-sent` sending action `dispute`, here is an example where the seller initiates a dispute:
 
 ```json
 [
@@ -56,7 +56,7 @@ And here is the message to the buyer:
 
 Mostro will not update the addressable event with `d` tag `<Order Id>` to change the status to `dispute`, this is because the order is still active, the dispute is just a way to let the admins and the other party know that there is a problem with the order.
 
-## Mostro send a addressable event to show the dispute
+## Mostro sends an addressable event to show the dispute
 
 Here is an example of the event sent by Mostro:
 
@@ -128,7 +128,7 @@ Mostro will send a confirmation message to the admin with the order details:
 ]
 ```
 
-Then mostrod send messages to each trade participat, the buyer and seller for them to know the pubkey of the admin who took the dispute, that way the client can start listening events from that specific pubkey, by default clients should discard any messages received from any pubkey different than Mostro node or dispute solver, the message looks like this:
+Then mostrod send messages to each trade participant, the buyer and seller for them to know the pubkey of the admin who took the dispute, that way the client can start listening events from that specific pubkey, by default clients should discard any messages received from any pubkey different than Mostro node or dispute solver, the message looks like this:
 
 ```json
 [
