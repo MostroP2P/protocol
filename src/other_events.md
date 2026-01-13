@@ -154,3 +154,52 @@ The operator of a Mostro instance decides which relays the events from that inst
 ```
 
 The `r` label indicates the relays through which the Mostro instance is publishing its events.
+
+# Development Fee
+
+The development fee mechanism provides sustainable funding for Mostro development by automatically sending a configurable percentage of the Mostro fee to a lightning address on each successful order, this a regular event with kind 8383 which is expected to be stored by relays.
+
+```json
+[
+  "EVENT",
+  "RAND",
+  {
+    "id": "<Event id>",
+    "tags": [
+      [
+        "order-id",
+        "<Order id>"
+      ],
+      [
+        "amount",
+        "8" // sats amount
+      ],
+      [
+        "hash",
+        "ca2f47b7c2169b8c42ef135e8ee32706e1fd3722b65e5a16f21ce675d2affb6b"
+      ],
+      [
+        "destination",
+        "dev@mostro.network"
+      ],
+      [
+        "network",
+        "mainnet"
+      ],
+      [
+        "y",
+        "mostro"
+      ],
+      [
+        "z",
+        "dev-fee-payment"
+      ]
+    ],
+    "content": "",
+    "sig": "<Mostro's signature>",
+    "pubkey": "<Mostro's pubkey>",
+    "created_at": 1768256716,
+    "kind": 8383
+  }
+]
+```
