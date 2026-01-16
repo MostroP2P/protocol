@@ -13,7 +13,7 @@ This event contains specific data about a Mostro instance. The instance is ident
   {
     "id": "<Event id>",
     "pubkey": "<Mostro's pubkey>",
-    "kind": 38383
+    "kind": 38385,
     "tags": [
       [
         "d",

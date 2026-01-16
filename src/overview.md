@@ -1,6 +1,15 @@
 ## Overview
 
-In order to have a shared order's book, Mostro daemon send [Addressable Events](https://github.com/nostr-protocol/nips/blob/master/01.md#kinds) with `38383` as event `kind`, you can find more details about that specific event [here](./order_event.md)
+Mostro uses [Addressable Events](https://github.com/nostr-protocol/nips/blob/master/01.md#kinds) to publish different types of information. Each event type has its own `kind`:
+
+| Event Type | Kind  | Description |
+|------------|-------|-------------|
+| Orders     | 38383 | P2P order events for the shared order book |
+| Ratings    | 38384 | User rating events |
+| Info       | 38385 | Mostro instance status and information |
+| Disputes   | 38386 | Dispute events |
+
+You can find more details about the order event [here](./order_event.md)
 
 ## The Message
 

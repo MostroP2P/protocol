@@ -64,7 +64,7 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
     "id": "<Event id>",
     "pubkey": "<Mostro's pubkey>",
     "created_at": 1702637077,
-    "kind": 38383,
+    "kind": 38384,
     "tags": [
       ["d", "<Seller's trade pubkey>"],
       ["total_reviews", "1"],
@@ -72,6 +72,7 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
       ["last_rating", "1"],
       ["max_rate", "2"],
       ["min_rate", "5"],
+      ["y", "mostro"],
       ["z", "rating"]
     ],
     "content": "",

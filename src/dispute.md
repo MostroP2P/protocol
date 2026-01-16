@@ -68,7 +68,7 @@ Here is an example of the event sent by Mostro:
     "id": "<Event id>",
     "pubkey": "<Mostro's pubkey>",
     "created_at": 1703016565,
-    "kind": 38383,
+    "kind": 38386,
     "tags": [
       ["d", "<Dispute Id>"],
       ["s", "initiated"],
@@ -159,7 +159,7 @@ Also Mostro will broadcast a new addressable dispute event to update the dispute
     "id": "<Event id>",
     "pubkey": "<Mostro's pubkey>",
     "created_at": 1703020540,
-    "kind": 38383,
+    "kind": 38386,
     "tags": [
       ["d", "<Dispute Id>"],
       ["s", "in-progress"],

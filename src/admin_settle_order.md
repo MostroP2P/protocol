@@ -46,7 +46,7 @@ Mostro updates the addressable dispute event with status `settled`:
     "id": "098e8622eae022a79bc793984fccbc5ea3f6641bdcdffaa031c00d3bd33ca5a0",
     "pubkey": "<Mostro's pubkey>",
     "created_at": 1703274022,
-    "kind": 38383,
+    "kind": 38386,
     "tags": [
       ["d", "efc75871-2568-40b9-a6ee-c382d4d6de01"],
       ["s", "settled"],

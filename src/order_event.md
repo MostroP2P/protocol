@@ -1,5 +1,18 @@
 # Peer-to-peer Order events. NIP-69
 
+## Mostro Event Kinds
+
+Mostro uses different event kinds for different types of data:
+
+| Event Type | Kind  | Document (`z` tag) |
+|------------|-------|--------------------|
+| Orders     | 38383 | `order`            |
+| Ratings    | 38384 | `rating`           |
+| Info       | 38385 | `info`             |
+| Disputes   | 38386 | `dispute`          |
+
+This document focuses on the **Order** event (kind `38383`), which is used for the P2P order book.
+
 ## Abstract
 
 Peer-to-peer (P2P) platforms have seen an upturn in recent years, while having more and more options is positive, in the specific case of p2p, having several options contributes to the liquidity split, meaning sometimes there's not enough assets available for trading. If we combine all these individual solutions into one big pool of orders, it will make them much more competitive compared to centralized systems, where a single authority controls the liquidity.
