@@ -44,6 +44,14 @@ This event contains specific data about a Mostro instance. The instance is ident
         "900"
       ],
       [
+        "fiat_currencies_accepted",
+        "USD,EUR,ARS,CUP,VES"
+      ],
+      [
+        "max_orders_per_response",
+        "10"
+      ],
+      [
         "fee",
         "0.006"
       ],
@@ -115,6 +123,8 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `min_order_amount`: The minimum amount of Satoshis allowed for exchange.
 - `expiration_hours`: The maximum time, in hours, that an order can remain in `pending` status before it expires.
 - `expiration_seconds`: The maximum time, in seconds, that an order can remain in `waiting-payment` or `waiting-buyer-invoice` status before being canceled or reverted to `pending` status.
+- `fiat_currencies_accepted`: Fiat currencies accepted by the Mostro. If no currency is specified, all are accepted.
+- `max_orders_per_response`: Maximum complete orders data per response in orders action.
 - `fee`: The fee percentage charged by the instance. For example, "0.006" means a 0.6% fee.
 - `pow`: The Proof of Work required of incoming events.
 - `hold_invoice_expiration_window`: The maximum time, in seconds, for the hold invoice issued by Mostro to be paid by the seller.
