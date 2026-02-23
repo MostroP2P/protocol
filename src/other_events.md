@@ -211,7 +211,7 @@ The operator of a Mostro instance decides which relays the events from that inst
     "kind": 10002,
     "tags": [
       ["r", "wss://relay.mostro.network/"],
-      ["r", "wss://nostr.bilthon.dev/"]
+      ["r", "wss://nos.lol/"]
     ],
     "content": "",
     "sig": "<Mostro's signature>",
