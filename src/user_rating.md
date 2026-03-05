@@ -72,6 +72,7 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
       ["last_rating", "1"],
       ["max_rate", "2"],
       ["min_rate", "5"],
+      ["days", "21"],
       ["y", "mostro"],
       ["z", "rating"]
     ],
@@ -80,3 +81,15 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
   }
 ]
 ```
+
+## Tags
+
+- `d` < User trade pubkey >: The trade pubkey of the rated user.
+- `total_reviews` < Total reviews >: The total number of reviews the user has received.
+- `total_rating` < Total rating >: The overall reputation rating of the user.
+- `last_rating` < Last rating >: The rating received in the most recent review.
+- `max_rate` < Max rate >: The highest rating the user has received.
+- `min_rate` < Min rate >: The lowest rating the user has received.
+- `days` < Days >: The number of days since the user's first trade.
+- `y` < Platform >: The platform that created the rating.
+- `z` < Document >: `rating`.
