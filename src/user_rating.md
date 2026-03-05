@@ -71,7 +71,7 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
       ["total_rating", "2"],
       ["last_rating", "1"],
       ["max_rate", "5"],
-      ["min_rate", "2"],
+      ["min_rate", "1"],
       ["days", "21"],
       ["y", "mostro"],
       ["z", "rating"]
