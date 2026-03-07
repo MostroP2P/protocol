@@ -2,6 +2,14 @@
 
 [Home](./overview.md)
 
+---
+
+- [User Guide (English)](https://mostro.network/docs-english/)
+- [Guía de Usuario (Español)](https://mostro.network/docs-spanish/)
+- [Run Your Own Node](https://mostro.community/guide)
+
+---
+
 - [Keys management](./key_management.md)
 - [Creating a Sell order](./new_sell_order.md)
 - [Creating a Sell range order](./new_sell_range_order.md)
