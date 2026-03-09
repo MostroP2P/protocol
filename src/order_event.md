@@ -40,7 +40,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
     ["premium", "1"],
     [
       "rating",
-      "{\"total_reviews\":1,\"total_rating\":3.0,\"last_rating\":3,\"max_rate\":5,\"min_rate\":1}"
+      "{\"total_reviews\":1,\"total_rating\":3.0,\"last_rating\":3,\"max_rate\":5,\"min_rate\":1,\"days\":21}"
     ],
     ["source", "https://t.me/p2plightning/xxxxxxx"],
     ["network", "mainnet"],
