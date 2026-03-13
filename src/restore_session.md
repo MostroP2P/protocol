@@ -33,17 +33,17 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
         "restore_data": {
           "orders": [
             {
-              "id": "<Order Id>",
+              "order_id": "<Order Id>",
               "trade_index": 1,
               "status": "pending"
             },
             {
-              "id": "<Order Id>",
+              "order_id": "<Order Id>",
               "trade_index": 2,
               "status": "active"
             },
             {
-              "id": "<Order Id>",
+              "order_id": "<Order Id>",
               "trade_index": 3,
               "status": "fiat-sent"
             }
@@ -90,10 +90,10 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
       "payload": {
         "restore_data": {
           "orders": [
-            { "id": "abc-123", "trade_index": 1, "status": "pending" },
-            { "id": "def-456", "trade_index": 2, "status": "pending" },
-            { "id": "ghi-789", "trade_index": 3, "status": "active" },
-            { "id": "xyz-999", "trade_index": 4, "status": "dispute" }
+            { "order_id": "abc-123", "trade_index": 1, "status": "pending" },
+            { "order_id": "def-456", "trade_index": 2, "status": "pending" },
+            { "order_id": "ghi-789", "trade_index": 3, "status": "active" },
+            { "order_id": "xyz-999", "trade_index": 4, "status": "dispute" }
           ],
           "disputes": [
             { "dispute_id": "dis-001", "order_id": "xyz-999", "trade_index": 4, "status": "initiated", "initiator": "seller" }

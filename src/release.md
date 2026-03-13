@@ -93,7 +93,7 @@ Mostro updates the addressable event with the `d` tag `<Order Id>` to change the
       ["network", "mainnet"],
       ["layer", "lightning"],
       ["expiration", "1719391096"],
-      ["y", "mostro"],
+      ["y", "mostro", "[Mostro instance name]"],
       ["z", "order"]
     ],
     "content": "",

@@ -2,6 +2,8 @@
 
 [Home](./overview.md)
 
+---
+
 - [Keys management](./key_management.md)
 - [Creating a Sell order](./new_sell_order.md)
 - [Creating a Sell range order](./new_sell_range_order.md)
@@ -19,9 +21,9 @@
 - [Release](./release.md)
 - [Rate user](./user_rating.md)
 - [Cancel](./cancel.md)
+- [Peer-to-peer Chat](./chat.md)
 - [Dispute](./dispute.md)
 - [Dispute Chat](./dispute_chat.md)
-- [Peer-to-peer Chat](./chat.md)
 - [List disputes](./list_disputes.md)
 - [Admin Settle order](./admin_settle_order.md)
 - [Admin Cancel order](./admin_cancel_order.md)
