@@ -1,0 +1,22 @@
+/* Fix section title colors for better readability */
+
+/* Main section titles (Introduction, Orders, Trading, etc.) */
+.sidebar ol.chapter > li > a {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.sidebar ol.chapter > li > div {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Expandable section parent items */
+.sidebar .chapter li.chapter-item > a {
+    color: #e2e8f0 !important;
+}
+
+/* Part titles */
+.sidebar .chapter li.part-title {
+    color: #ffffff !important;
+}
