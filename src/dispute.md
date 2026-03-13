@@ -73,7 +73,7 @@ Here is an example of the event sent by Mostro:
       ["d", "<Dispute Id>"],
       ["s", "initiated"],
       ["initiator", "seller"], // seller or buyer
-      ["y", "mostro"],
+      ["y", "mostro", "[Mostro instance name]"],
       ["z", "dispute"]
     ],
     "content": "",
@@ -164,7 +164,7 @@ Also Mostro will broadcast a new addressable dispute event to update the dispute
       ["d", "<Dispute Id>"],
       ["s", "in-progress"],
       ["initiator", "seller"], // seller or buyer
-      ["y", "mostro"],
+      ["y", "mostro", "[Mostro instance name]"],
       ["z", "dispute"]
     ],
     "content": "",

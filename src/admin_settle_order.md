@@ -50,7 +50,7 @@ Mostro updates the addressable dispute event with status `settled`:
     "tags": [
       ["d", "efc75871-2568-40b9-a6ee-c382d4d6de01"],
       ["s", "settled"],
-      ["y", "mostro"],
+      ["y", "mostro", "[Mostro instance name]"],
       ["z", "dispute"]
     ],
     "content": "",
@@ -81,7 +81,7 @@ At this point Mostro is trying to pay the buyer's invoice, right after complete 
       ["fa", "100"],
       ["pm", "face to face"],
       ["premium", "1"],
-      ["y", "mostro"],
+      ["y", "mostro", "[Mostro instance name]"],
       ["z", "order"]
     ],
     "content": "",

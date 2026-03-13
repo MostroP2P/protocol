@@ -73,7 +73,7 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
       ["max_rate", "5"],
       ["min_rate", "1"],
       ["days", "21"],
-      ["y", "mostro"],
+      ["y", "mostro", "[Mostro instance name]"],
       ["z", "rating"]
     ],
     "content": "",
@@ -91,5 +91,5 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
 - `max_rate` < Max rate >: The highest rating the user has received.
 - `min_rate` < Min rate >: The lowest rating the user has received.
 - `days` < Days >: The number of days since the user's first trade.
-- `y` < Platform >: The platform that created the rating.
+- `y` < Platform >: Platform identifier tag values. Mostro publishes `"mostro"` and MAY include a second value with the Mostro instance name from settings.
 - `z` < Document >: `rating`.
