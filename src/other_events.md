@@ -159,7 +159,8 @@ This event contains specific data about a Mostro instance. The instance is ident
       ],
       [
         "y",
-        "mostro"
+        "mostro",
+        "[Mostro instance name]"
       ],
       [
         "z",
@@ -195,7 +196,7 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `lnd_chains`: The chains supported by the LND node.
 - `lnd_networks`: The networks supported by the LND node.
 - `lnd_uris`: The URIs of the LND node.
-- `y`: The platform which is publishing its events.
+- `y`: Platform identifier tag values. Mostro publishes `"mostro"` and MAY include a second value with the Mostro instance name from settings.
 - `z`: The type of event.
 
 ## Information about the Relays Where Events Are Published
@@ -256,7 +257,8 @@ The development fee mechanism provides sustainable funding for Mostro developmen
       ],
       [
         "y",
-        "mostro"
+        "mostro",
+        "[Mostro instance name]"
       ],
       [
         "z",
