@@ -40,7 +40,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
     ["premium", "1"],
     [
       "rating",
-      "{\"total_reviews\":1,\"total_rating\":3.0,\"last_rating\":3,\"max_rate\":5,\"min_rate\":1}"
+      "{\"total_reviews\":1,\"total_rating\":3.0,\"last_rating\":3,\"max_rate\":5,\"min_rate\":1,\"days\":21}"
     ],
     ["source", "https://t.me/p2plightning/xxxxxxx"],
     ["network", "mainnet"],
@@ -50,7 +50,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
     ["bond", "0"],
     ["expires_at", "1719391096"],
     ["expiration", "1719995896"],
-    ["y", "lnp2pbot"],
+    ["y", "lnp2pbot", "[Platform instance name]"],
     ["z", "order"]
   ],
   "content": "",
@@ -77,7 +77,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
 - `bond` [Bond]: The bond amount, the bond is a security deposit that both parties must pay.
 - `expires_at` < Expires At\>: The expiration date of the event being published in `pending` status, after this time the event status SHOULD be changed to `expired`.
 - `expiration` < Expiration\>: The expiration date of the event, after this time the relay SHOULD delete it ([NIP-40](40.md)).
-- `y` < Platform >: The platform that created the order.
+- `y` < Platform >: Platform identifier tag values. For Mostro this is always `"mostro"` and MAY include a second value with the Mostro instance name from settings.
 - `z` < Document >: `order`.
 
 Mandatory tags are enclosed with `<tag>`, optional tags are enclosed with `[tag]`.

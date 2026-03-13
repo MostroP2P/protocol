@@ -1,5 +1,7 @@
 ## Overview
 
+**See also:** [User Guide (English)](https://mostro.network/docs-english/) | [Guía de Usuario (Español)](https://mostro.network/docs-spanish/) | [Run Your Own Node](https://mostro.community/guide)
+
 Mostro uses [Addressable Events](https://github.com/nostr-protocol/nips/blob/master/01.md#kinds) to publish different types of information. Each event type has its own `kind`:
 
 | Event Type | Kind  | Description |

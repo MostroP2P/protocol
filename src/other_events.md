@@ -1,5 +1,63 @@
 # Other events published by Mostro
 
+Each Mostro instance publishes several types of events to Nostr relays. These include identity metadata, instance status, relay lists, and development fee records. Below, we provide details on each of these events.
+
+## Node Identity (NIP-01 Kind 0)
+
+Each Mostro instance publishes a [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md) kind 0 metadata event on startup so that Nostr clients can display the node's profile information. This is the standard Nostr profile mechanism — every relay-aware client already knows how to fetch and display kind 0 metadata.
+
+The event is a **replaceable event**, meaning relays keep only the latest version. It is re-published on every restart, ensuring the profile stays fresh.
+
+The `content` field contains a stringified JSON object with the following optional fields:
+
+```json
+{
+  "name": "Mostro P2P",
+  "about": "A peer-to-peer Bitcoin trading daemon over the Lightning Network",
+  "picture": "https://example.com/mostro-avatar.png",
+  "website": "https://mostro.network"
+}
+```
+
+The full event looks like this:
+
+```json
+[
+  "EVENT",
+  "RAND",
+  {
+    "id": "<Event id>",
+    "pubkey": "<Mostro's pubkey>",
+    "kind": 0,
+    "tags": [],
+    "content": "{\"name\":\"Mostro P2P\",\"about\":\"A peer-to-peer Bitcoin trading daemon over the Lightning Network\",\"picture\":\"https://example.com/mostro-avatar.png\",\"website\":\"https://mostro.network\"}",
+    "sig": "<Mostro's signature>",
+    "created_at": 1731701441
+  }
+]
+```
+
+### Fields
+
+- `name`: Human-readable name for the Mostro instance (e.g., "LatAm Mostro", "Bitcoin Munich Exchange").
+- `about`: Short description of the instance and the community it serves.
+- `picture`: URL to an avatar image. Recommended: square, max 128×128 pixels, PNG or JPEG.
+- `website`: Operator's website URL.
+
+All fields are optional. If no metadata fields are configured, no kind 0 event is published. These fields are configured in the `[mostro]` section of `settings.toml`:
+
+```toml
+[mostro]
+name = "Mostro P2P"
+about = "A peer-to-peer Bitcoin trading daemon over the Lightning Network"
+picture = "https://example.com/mostro-avatar.png"
+website = "https://mostro.network"
+```
+
+This allows clients like Mostro Mobile to display meaningful information about each Mostro instance — its name, description, avatar, and website — so users know which node they are trading on.
+
+## Mostro Instance Status
+
 Each Mostro instance periodically publishes events with relevant information about its status, such as the code version it is using, the latest commit, the fees it charges, allowed exchange limits, the relays it publishes to, and much more. Below, we provide details on these events.
 
 ## Mostro Instance Status
@@ -101,7 +159,8 @@ This event contains specific data about a Mostro instance. The instance is ident
       ],
       [
         "y",
-        "mostro"
+        "mostro",
+        "[Mostro instance name]"
       ],
       [
         "z",
@@ -137,7 +196,7 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `lnd_chains`: The chains supported by the LND node.
 - `lnd_networks`: The networks supported by the LND node.
 - `lnd_uris`: The URIs of the LND node.
-- `y`: The platform which is publishing its events.
+- `y`: Platform identifier tag values. Mostro publishes `"mostro"` and MAY include a second value with the Mostro instance name from settings.
 - `z`: The type of event.
 
 ## Information about the Relays Where Events Are Published
@@ -153,7 +212,7 @@ The operator of a Mostro instance decides which relays the events from that inst
     "kind": 10002,
     "tags": [
       ["r", "wss://relay.mostro.network/"],
-      ["r", "wss://nostr.bilthon.dev/"]
+      ["r", "wss://nos.lol/"]
     ],
     "content": "",
     "sig": "<Mostro's signature>",
@@ -198,7 +257,8 @@ The development fee mechanism provides sustainable funding for Mostro developmen
       ],
       [
         "y",
-        "mostro"
+        "mostro",
+        "[Mostro instance name]"
       ],
       [
         "z",

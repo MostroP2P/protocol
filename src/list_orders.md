@@ -24,7 +24,7 @@ Mostro publishes new orders with event kind `38383` and status `pending`:
       ["network", "mainnet"],
       ["layer", "lightning"],
       ["expiration", "1719391096"],
-      ["y", "mostro"],
+      ["y", "mostro", "[Mostro instance name]"],
       ["z", "order"]
     ],
     "content": "",
