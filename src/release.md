@@ -54,7 +54,9 @@ And a message to the buyer to let him know that the sats were released:
 
 ## Buyer receives sats
 
-Right after seller release sats Mostro will attempt to pay the buyer's lightning invoice. When the payment succeeds, Mostro will send a message to the buyer indicating that the purchase was completed:
+Right after seller releases sats, Mostro will attempt to pay the buyer's Lightning invoice. When the payment succeeds, Mostro will send a message to the buyer indicating that the purchase was completed:
+
+> **Note:** If the Lightning payment fails, Mostro will retry automatically. See [Payment Failed](./payment_failed.md) for details on how payment failures are handled.
 
 ```json
 [
