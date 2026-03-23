@@ -19,6 +19,7 @@
 - [Seller pays hold invoice](./seller_pay_hold_invoice.md)
 - [Fiat sent](./fiatsent.md)
 - [Release](./release.md)
+- [Payment Failed](./payment_failed.md)
 - [Rate user](./user_rating.md)
 - [Cancel](./cancel.md)
 - [Peer-to-peer Chat](./chat.md)
