@@ -224,6 +224,60 @@ The operator of a Mostro instance decides which relays the events from that inst
 
 The `r` label indicates the relays through which the Mostro instance is publishing its events.
 
+## Exchange Rates
+
+Each Mostro instance publish Bitcoin/fiat exchange rates to Nostr relays as addressable events (kind 30078):
+
+### Event Structure
+
+```json
+[
+  "EVENT",
+  "RAND",
+  {
+    "id": "<Event id>",
+    "pubkey": "<Mostro's pubkey>",
+    "kind": 30078,
+    "tags": [
+      ["d", "mostro-rates"],
+      ["published_at", "1732546800"],
+      ["source", "yadio"],
+      ["expiration", "1732550400"]
+    ],
+    "content": "{\"BTC\": {\"USD\": 50000.0, \"EUR\": 45000.0, \"VES\": 850000000.0, \"ARS\": 105000000.0, ...}}",
+    "sig": "<Mostro's signature>",
+    "created_at": 1732546800
+  }
+]
+```
+
+### Tags
+
+- **d**: `"mostro-rates"` — NIP-01 identifier that makes this event replaceable. Each new rate update replaces the previous one.
+- **published_at**: Unix timestamp when the daemon published the event (daemon time, not source timestamp).
+- **source**: Rate source identifier (e.g., `"yadio"`).
+- **expiration**: Unix timestamp for event expiration ([NIP-40](https://github.com/nostr-protocol/nips/blob/master/40.md)). Prevents stale rates from being served.
+
+### Content Format
+
+The `content` field contains the full rate response in JSON format matching the source API structure (Yadio format):
+
+```json
+{
+  "BTC": {
+    "BTC": 1,
+    "USD": 50000.0,
+    "EUR": 45000.0,
+    "VES": 850000000.0,
+    "ARS": 105000000.0,
+    "AED": 260491.35,
+    "..."
+  }
+}
+```
+
+**Rate semantics**: Each value under `"BTC"` represents the price of 1 BTC in that currency.
+
 # Development Fee
 
 The development fee mechanism provides sustainable funding for Mostro development by automatically sending a configurable percentage of the Mostro fee to a lightning address on each successful order, this a regular event with kind 8383 which is expected to be stored by relays.
