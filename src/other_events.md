@@ -199,6 +199,12 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `y`: Platform identifier tag values. Mostro publishes `"mostro"` and MAY include a second value with the Mostro instance name from settings.
 - `z`: The type of event.
 
+### Upcoming: anti-abuse bond tags
+
+A future Mostro release will publish bond-related tags in this event so clients can detect bond-enabled nodes ahead of a take. The tag set is still being finalized; at minimum it will include a `bond` tag with the value `enabled` or `disabled`. Additional tags describing the bond size policy (percentage, floor) may be added.
+
+Clients that take orders on a node advertising `bond` `enabled` should be prepared to handle the [`pay-bond-invoice`](./pay_bond_invoice.md) action and the `waiting-taker-bond` order status. Until this tag is finalized and shipped, clients should treat the absence of bond tags as "behaviour unknown" and surface a clear error if the node sends `pay-bond-invoice` to a take they cannot handle.
+
 ## Information about the Relays Where Events Are Published
 
 The operator of a Mostro instance decides which relays the events from that instance are published to. This information can be accessed in events [kind 10002](https://github.com/nostr-protocol/nips/blob/master/65.md), which are published by the Mostro instances.
