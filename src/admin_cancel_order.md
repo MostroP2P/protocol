@@ -16,6 +16,39 @@ An admin can cancel an order, most of the time this is done when admin is solvin
 ]
 ```
 
+## Bond resolution payload
+
+When solving a dispute, the admin can optionally slash one or both parties' bonds independently from the trade outcome (settle vs. cancel). To do this, the `payload` is set to a `bond_resolution` object with two booleans, `slash_seller` and `slash_buyer`:
+
+```json
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "admin-cancel",
+      "payload": {
+        "bond_resolution": {
+          "slash_seller": true,
+          "slash_buyer": false
+        }
+      }
+    }
+  },
+  null
+]
+```
+
+Accepted combinations on `admin-cancel`:
+
+- `{ "slash_seller": false, "slash_buyer": false }` — cancel without slashing any bond
+- `{ "slash_seller": true,  "slash_buyer": false }` — cancel and slash the seller's bond
+- `{ "slash_seller": false, "slash_buyer": true }`  — cancel and slash the buyer's bond
+- `{ "slash_seller": true,  "slash_buyer": true }`  — cancel and slash both bonds
+- `payload: null` — legacy clients; interpreted server-side as "no slash"
+
+`bond_resolution` is only valid on `admin-cancel` and `admin-settle`; it is rejected on every other action.
+
 ## Mostro response
 
 Mostro will send this message to the both parties buyer/seller and to the admin:
