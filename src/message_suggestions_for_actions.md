@@ -13,6 +13,9 @@ Below are suggestions for messages that clients can show to users when receiving
 - **pay-invoice:**  
   Please pay this hold invoice of `amount` Sats for `fiat_code` `fiat_amount` to start the operation. If you do not pay it within `expiration_seconds`, the trade will be canceled.
 
+- **pay-bond-invoice:**  
+  Please pay this **bond** hold invoice of `amount` Sats as a security deposit before the trade begins. The bond is separate from the trade escrow and is released when the trade completes normally. If you do not pay it within `expiration_seconds`, the take will be canceled — the order remains visible on the order book as `pending` and may be taken again by anyone.
+
 - **add-invoice:**  
   Please send me an invoice for `amount` satoshis equivalent to `fiat_code` `fiat_amount`. This is where I will send the funds upon trade completion. If you don’t provide the invoice within `expiration_seconds`, the trade will be canceled.
 

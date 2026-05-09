@@ -17,6 +17,10 @@ If the order amount is `0` the buyer doesn't know the exact amount to create the
 ]
 ```
 
+## Optional: anti-abuse bond step
+
+When the receiving Mostro node has bonds enabled, the buyer (taker) first receives a [`pay-bond-invoice`](./pay_bond_invoice.md) message; the published NIP-33 order event remains `pending` (re-takeability is preserved — see [order event](./order_event.md)) and the DM payload echoes the internal status `waiting-taker-bond`. Only after the bond HTLC is `Accepted` does Mostro send the `add-invoice` message described below. Clients that do not recognise `pay-bond-invoice` should expect the take to time out and surface a clear error to the user — do not silently retry the take.
+
 ## Mostro response
 
 In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is `0`, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the rumor's content of the message:

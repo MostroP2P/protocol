@@ -66,6 +66,10 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
 ]
 ```
 
+## Bond race during take
+
+A client that sent `take-buy` / `take-sell` and is waiting for [`pay-bond-invoice`](./pay_bond_invoice.md) may receive `Action::Canceled` instead — meaning another user paid their bond first on the same order (whichever bond locks first wins; see [pay bond invoice](./pay_bond_invoice.md)). Surface this clearly to the user, e.g. *"Order was taken by another user before you locked the bond."* Do not silently retry the take — the order may not be available anymore, and the supersede mechanism on the daemon side has already discarded the prior bond request.
+
 ## Cancel cooperatively
 
 A user can cancel an `active` order, but will need the counterparty to agree, let's look at an example where the seller initiates a cooperative cancellation:

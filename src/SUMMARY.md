@@ -16,6 +16,7 @@
 - [Take range sell order](./take_sell_range_order.md)
 - [Take buy order](./take_buy.md)
 - [Take range buy order](./take_buy_range_order.md)
+- [Pay bond invoice](./pay_bond_invoice.md)
 - [Seller pays hold invoice](./seller_pay_hold_invoice.md)
 - [Fiat sent](./fiatsent.md)
 - [Release](./release.md)
