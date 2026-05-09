@@ -8,7 +8,7 @@ The bond is **independent from the trade escrow**: it is a second hold invoice w
 
 - **Direction:** Mostro → user (the taker).
 - **Trigger:** Sent immediately after a successful `take-buy` / `take-sell` when the operator has bonds enabled.
-- **Order status:** Transitions to `waiting-taker-bond` at this point. See [statuses](./order_event.md#tags) for context — `waiting-taker-bond` is a sub-state of the publicly advertised `in-progress` status on the addressable order event.
+- **Order status:** The published NIP-33 order event keeps the `s` tag at `pending` while the bond is outstanding (per NIP-69's four-bucket model — see [Peer-to-peer Order events. NIP-69](./order_event.md)). The DM payload's embedded `SmallOrder` echo carries the daemon-internal status `waiting-taker-bond` so the recipient client can render the bond-payment phase distinctly, but external observers (other potential takers, order-book aggregators) continue to see the order as `pending` and may still attempt to take it. This is deliberate: a taker who never pays the bond cannot park the order off the book.
 
 ## Mostro message to the taker
 
@@ -43,6 +43,8 @@ The rumor's content has the same shape as `pay-invoice`; only the action discrim
 ]
 ```
 
+> Note: the `status` value `"waiting-taker-bond"` here is the daemon-internal state echoed in the DM payload. The corresponding NIP-33 addressable order event's `s` tag is still `pending`.
+
 ## Expected client behaviour
 
 - Decode the bolt11 and surface it to the user **explicitly as a bond**, not as the trade escrow. Do not reuse the same wording or UI step that you use for `pay-invoice`.
@@ -58,35 +60,25 @@ Once the bond HTLC is `Accepted`, Mostro proceeds with the normal trade flow:
 
 > **Important — buy order taken (seller-as-taker):** this is the only flow on which a single user pays **two hold invoices in sequence on the same order** — first the bond (`pay-bond-invoice`), then the trade escrow (`pay-invoice`). They arrive as distinct actions and must be presented to the user as separate steps. Do not auto-pay either, do not coalesce them, and make the distinction obvious in the UI; this is the most error-prone path for client developers.
 
-## Order status: `waiting-taker-bond`
+## Daemon status `waiting-taker-bond` (DM payloads only)
 
-`waiting-taker-bond` is a sub-state of the publicly advertised `in-progress` status on the addressable order event. It means: a taker has been matched to this order, but Mostro is waiting for them to pay the anti-abuse bond hold invoice before the trade flow begins.
+In addition to the NIP-69 wire status (`pending` while the bond is outstanding), Mostro tags the order's internal state as `waiting-taker-bond` so it can route subsequent messages correctly. Clients see this value in the `SmallOrder` echo embedded in `pay-bond-invoice` payloads and may use it to drive UI ("Waiting for bond payment"). It does **not** appear on the addressable NIP-33 order event — that one continues to advertise the order as `pending`.
 
-It sits between two existing statuses:
+Internal transitions (visible only in DM payload echoes):
 
-- `pending` — order is advertised, no taker matched yet.
-- `waiting-taker-bond` — taker matched, waiting on the bond payment.
-- `waiting-payment` — trade hold invoice expected from the seller.
-- `waiting-buyer-invoice` — payout invoice expected from the buyer.
-
-Transitions in:
-
-- From `pending`, after a successful `take-buy` / `take-sell` when bonds are enabled.
-
-Transitions out:
-
-- To `waiting-payment` (buy order taken) or `waiting-buyer-invoice` (sell order taken) — once the bond HTLC is `Accepted`.
-- Back to `pending` — if the bond bolt11 is never paid and expires, or the taker cancels before locking the bond.
+- From `pending` → `waiting-taker-bond`, after a successful `take-buy` / `take-sell` when bonds are enabled.
+- From `waiting-taker-bond` → `waiting-payment` (buy order taken) or → `waiting-buyer-invoice` (sell order taken), once the bond HTLC is `Accepted`.
+- From `waiting-taker-bond` → `pending`, if the bond bolt11 is never paid and expires, or the taker cancels before locking. The published `s` tag was `pending` throughout — observers see only that the take attempt left no trace.
 
 ## Failure modes
 
-- The user never pays the bond bolt11 → the invoice expires, the order is rolled back to `pending`, and the take is undone.
+- The user never pays the bond bolt11 → the invoice expires; the order's NIP-33 status was `pending` throughout, so the rollback only undoes the daemon-internal take state. The order remains takeable.
 - The user pays the bond and then cancels before trade completion → the bond HTLC is cancelled and the funds return to the taker.
 - Slashing conditions (solver-directed dispute resolution, or timeout while in a waiting state) can settle the bond rather than release it. These paths are documented under [Admin Settle order](./admin_settle_order.md) and [Admin Cancel order](./admin_cancel_order.md), and in the Mostro daemon's anti-abuse bond specification.
 
 ## Backwards compatibility
 
-Clients that do not recognise `pay-bond-invoice` will silently drop the message. From the user's perspective the take will appear stuck and eventually time out. Clients should:
+Clients running an older `mostro-core` version that does not yet know `pay-bond-invoice` will fail to deserialize the message and silently drop it; from the user's perspective the take stalls and eventually times out without surfacing a useful error. Operators are responsible for not enabling bonds in production until clients in the wild have adopted the `mostro-core` release that ships `Action::PayBondInvoice`. Clients should:
 
 - Recognise the action explicitly and surface it to the user.
 - If unable to handle it (e.g. an older build talking to a bond-enabled node), present a clear error rather than silently retrying the take.
