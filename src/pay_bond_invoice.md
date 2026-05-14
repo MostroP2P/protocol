@@ -74,7 +74,7 @@ Internal transitions (visible only in DM payload echoes):
 
 - The user never pays the bond bolt11 → the invoice expires; the order's NIP-33 status was `pending` throughout, so the rollback only undoes the daemon-internal take state. The order remains takeable.
 - The user pays the bond and then cancels before trade completion → the bond HTLC is cancelled and the funds return to the taker.
-- Slashing conditions (solver-directed dispute resolution, or timeout while in a waiting state) can settle the bond rather than release it. These paths are documented under [Admin Settle order](./admin_settle_order.md) and [Admin Cancel order](./admin_cancel_order.md), and in the Mostro daemon's anti-abuse bond specification.
+- Slashing conditions (solver-directed dispute resolution, or timeout while in a waiting state) can settle the bond rather than release it. The solver directs slashing via the `bond_resolution` payload documented under [Admin Settle order](./admin_settle_order.md) and [Admin Cancel order](./admin_cancel_order.md), and the non-slashed counterparty is then asked for their share of the bond via [Bond payout invoice](./add_bond_invoice.md).
 
 ## Backwards compatibility
 

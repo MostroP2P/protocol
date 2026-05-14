@@ -49,6 +49,8 @@ Accepted combinations on `admin-cancel`:
 
 `bond_resolution` is only valid on `admin-cancel` and `admin-settle`; it is rejected on every other action.
 
+Whenever a side is slashed and the operator has configured `slash_node_share_pct < 1.0`, the non-slashed counterparty is subsequently asked to provide a Lightning invoice for their share of the bond via [Bond payout invoice](./add_bond_invoice.md).
+
 ## Mostro response
 
 Mostro will send this message to the both parties buyer/seller and to the admin:
