@@ -158,6 +158,34 @@ This event contains specific data about a Mostro instance. The instance is ident
         "0220e4558a8d9af4988ef6c8def0e73b05403819e49b7fb2db79d322ac3be1547e@172.26.0.2:9735"
       ],
       [
+        "bond_enabled",
+        "true"
+      ],
+      [
+        "bond_apply_to",
+        "take"
+      ],
+      [
+        "bond_slash_on_waiting_timeout",
+        "false"
+      ],
+      [
+        "bond_amount_pct",
+        "0.01"
+      ],
+      [
+        "bond_base_amount_sats",
+        "1000"
+      ],
+      [
+        "bond_slash_node_share_pct",
+        "0.5"
+      ],
+      [
+        "bond_payout_claim_window_days",
+        "15"
+      ],
+      [
         "y",
         "mostro",
         "[Mostro instance name]"
@@ -199,11 +227,19 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `y`: Platform identifier tag values. Mostro publishes `"mostro"` and MAY include a second value with the Mostro instance name from settings.
 - `z`: The type of event.
 
-### Upcoming: anti-abuse bond tags
+### Anti-abuse bond policy tags
 
-A future Mostro release will publish bond-related tags in this event so clients can detect bond-enabled nodes ahead of a take. The tag set is still being finalized; at minimum it will include a `bond` tag with the value `enabled` or `disabled`. Additional tags describing the bond size policy (percentage, floor) may be added.
+These tags advertise the node's anti-abuse-bond configuration so clients can show users — *before* they enter a trade — whether a bond is required, how much it will cost, and under what conditions it can be slashed. `bond_enabled` is always emitted on daemons that support the feature; the remaining six tags are present only when `bond_enabled = "true"`.
 
-Clients that take orders on a node advertising `bond` `enabled` should be prepared to handle the [`pay-bond-invoice`](./pay_bond_invoice.md) action and the `waiting-taker-bond` order status. Until this tag is finalized and shipped, clients should treat the absence of bond tags as "behaviour unknown" and surface a clear error if the node sends `pay-bond-invoice` to a take they cannot handle.
+- `bond_enabled`: `"true"` if the node enforces an anti-abuse bond on at least one trade side, otherwise `"false"`.
+- `bond_apply_to`: which side must lock a bond — `"take"`, `"make"`, or `"both"`.
+- `bond_slash_on_waiting_timeout`: `"true"` if a bonded user's bond is slashed when a waiting-state timeout elapses, `"false"` if such timeouts only release the bond.
+- `bond_amount_pct`: bond size as a fraction of the trade amount (e.g. `"0.01"` = 1%). The actual bond is `max(bond_amount_pct × order_amount_sats, bond_base_amount_sats)`.
+- `bond_base_amount_sats`: minimum bond size in satoshis. Floor applied to `bond_amount_pct × order_amount_sats` so small trades still carry a non-trivial bond.
+- `bond_slash_node_share_pct`: fraction of a slashed bond the node retains. The remainder is paid out to the winning counterparty as a Lightning payment. Always within `[0.0, 1.0]`.
+- `bond_payout_claim_window_days`: number of days the winning counterparty has, from the slash moment, to submit a Lightning invoice for their share of a slashed bond. After this window the share is forfeited to the node. Clients use this together with the `slashed_at` field carried on `add-bond-invoice` messages (see [Bond payout invoice](./add_bond_invoice.md)) to render the forfeit deadline locally.
+
+**Disambiguation.** When `bond_enabled` is absent from the event, the daemon predates the bond feature; treat the node as not enforcing bonds. When `bond_enabled = "false"`, the daemon supports the feature but the operator has not enabled it on this instance. When `bond_enabled = "true"`, the remaining six bond tags are present and clients should expect bond messages on this node — [`pay-bond-invoice`](./pay_bond_invoice.md) for the bonded user and [`add-bond-invoice`](./add_bond_invoice.md) for the payout recipient on a slashed trade.
 
 ## Information about the Relays Where Events Are Published
 
