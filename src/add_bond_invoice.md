@@ -39,7 +39,6 @@ Mostro sends a single `add-bond-invoice` message to the non-slashed counterparty
 ]
 ```
 
-- `bond_payout_request.order.amount` is the counterparty's share of the slashed bond in sats. The reply's bolt11 principal must match this value exactly.
 - `bond_payout_request.slashed_at` is the Unix timestamp (seconds, UTC) at which the slash was recorded — see [Forfeit deadline](#forfeit-deadline).
 
 The message carries no hardcoded human-readable deadline text; the client renders that warning locally in the user's own locale from `slashed_at` and the info-event window tag.
@@ -59,7 +58,7 @@ deadline = slashed_at + bond_payout_claim_window_days * 86_400
 
 ## Counterparty → Mostro (reply)
 
-The counterparty replies with a Gift wrap Nostr event whose rumor content carries the bolt11 inside the standard `payment_request` 3-tuple. The third element is `null` because the invoice carries its own amount:
+The counterparty replies with a Gift wrap Nostr event whose rumor content carries the bolt11 inside the standard `payment_request` array. The invoice carries its own amount, so the array has two elements (per [Payment Request Array Structure](./overview.md#payment-request-array-structure)):
 
 ```json
 [
@@ -71,8 +70,7 @@ The counterparty replies with a Gift wrap Nostr event whose rumor content carrie
       "payload": {
         "payment_request": [
           null,
-          "lnbcrt5u1pj59wmepp5...",
-          null
+          "lnbcrt5u1pj59wmepp5..."
         ]
       }
     }
@@ -81,11 +79,11 @@ The counterparty replies with a Gift wrap Nostr event whose rumor content carrie
 ]
 ```
 
-The reply is signed with the **trade key** of the counterparty side — the side that was *not* slashed — exactly as in any other order-scoped action; see [Keys management](./key_management.md).
+The reply is signed with the **trade key** of the counterparty side, the side that was *not* slashed, exactly as in any other order-scoped action; see [Keys management](./key_management.md).
 
 ## Recipient resolution
 
-The recipient of the request DM is the non-slashed counterparty of the trade, derived from the order's `buyer_pubkey` / `seller_pubkey` and the side the solver flagged in [`bond_resolution`](./admin_settle_order.md#bond-resolution-payload):
+The recipient of the request message is the non-slashed counterparty of the trade, derived from the order's `buyer_pubkey` / `seller_pubkey` and the side the solver flagged in [`bond_resolution`](./admin_settle_order.md#bond-resolution-payload):
 
 | Order kind | Solver flag                | Bond on … | Recipient        |
 |------------|----------------------------|-----------|------------------|
