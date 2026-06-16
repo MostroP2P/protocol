@@ -16,7 +16,7 @@ The `bond_apply_to` tag in the Mostro info event (kind 38385) tells clients whic
 
 ### Mostro message to the taker
 
-The rumor's content has the same shape as `pay-invoice`; only the action discriminator differs:
+The message's content has the same shape as `pay-invoice`; only the action discriminator differs:
 
 ```json
 [
@@ -94,7 +94,7 @@ When `apply_to` is `"make"` or `"both"`, the **maker** must lock a bond before t
 
 ### Mostro message to the maker
 
-The action and wire shape are identical to the taker case; only the embedded `status` field in the `SmallOrder` differs:
+The action and wire shape are identical to the taker case:
 
 ```json
 [
@@ -108,7 +108,7 @@ The action and wire shape are identical to the taker case; only the embedded `st
           {
             "id": "<Order Id>",
             "kind": "sell",
-            "status": "waiting-maker-bond",
+            "status": "pending",
             "amount": 7851,
             "fiat_code": "VES",
             "fiat_amount": 100,
@@ -125,7 +125,7 @@ The action and wire shape are identical to the taker case; only the embedded `st
 ]
 ```
 
-> Note: `"waiting-maker-bond"` is the daemon-internal status echoed in the DM payload. No NIP-33 order event has been emitted yet at this point.
+> Note: the `SmallOrder` echo always carries `"status": "pending"` — this is the NIP-69 wire bucket the order will appear in once the bond locks and the order is published. The daemon-internal state `waiting-maker-bond` is tracked only in the daemon's database and is never emitted in DM payloads. No NIP-33 order event has been emitted yet at this point.
 
 For **range sell orders**, the bond is sized against `max_amount` (not the individual fiat_amount). The `SmallOrder` echo will reflect the range order fields (`min_amount`, `max_amount`).
 
