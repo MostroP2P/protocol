@@ -47,6 +47,16 @@ The event to send to Mostro would look like this:
 }
 ```
 
+## Optional: anti-abuse maker bond
+
+When the Mostro node has bonds enabled and `apply_to` is `"make"` or `"both"`, the maker must lock a bond **before** the order is published. Instead of a `new-order` confirmation, Mostro first responds with a [`pay-bond-invoice`](./pay_bond_invoice.md#maker-bond) message asking the maker to pay a small hold invoice (typically ~1% of the trade amount). The order is **not visible on Nostr** until the bond HTLC is accepted.
+
+Only after the maker pays the bond does Mostro:
+1. Publish the order to Nostr with status `pending`.
+2. Send the `new-order` confirmation (shown below).
+
+If the maker never pays the bond invoice it expires and no order is created. See [Pay bond invoice — Maker bond](./pay_bond_invoice.md#maker-bond) for details.
+
 ## Confirmation message
 
 Mostro will send back a nip59 event as a confirmation message to the user like the following (unencrypted rumor's content example):
