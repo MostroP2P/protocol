@@ -30,6 +30,14 @@ Here we have two new fields, `min_amount` and `max_amount`, to define the range 
 
 When a taker takes the order, the amount will be set on the message.
 
+## Optional: anti-abuse maker bond
+
+When the Mostro node has bonds enabled and `apply_to` is `"make"` or `"both"`, the maker of a range order must lock a bond **before** the order is published — same as non-range orders, with one key difference: **the bond is sized against `max_amount`**, not the minimum.
+
+Mostro responds to the `new-order` with a [`pay-bond-invoice`](./pay_bond_invoice.md#maker-bond) instead of the confirmation below. The order is not published to Nostr until the bond HTLC is accepted.
+
+When a taker takes a slice of the range order, the bond obligation is reduced proportionally (the slice's fiat amount relative to `max_amount`). The bond hold invoice remains `Locked` for the lifetime of the range order and is settled once in full when the range closes; partial slashes are tracked as child bond rows rather than early partial settlements. See [Pay bond invoice — Maker bond](./pay_bond_invoice.md#maker-bond) for details.
+
 ## Confirmation message
 
 Mostro will send back a nip59 event as a confirmation message to the user like the following:

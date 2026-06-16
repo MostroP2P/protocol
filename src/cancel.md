@@ -68,7 +68,26 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
 
 ## Bond race during take
 
-A client that sent `take-buy` / `take-sell` and is waiting for [`pay-bond-invoice`](./pay_bond_invoice.md) may receive `Action::Canceled` instead — meaning another user paid their bond first on the same order (whichever bond locks first wins; see [pay bond invoice](./pay_bond_invoice.md)). Surface this clearly to the user, e.g. *"Order was taken by another user before you locked the bond."* Do not silently retry the take — the order may not be available anymore, and the supersede mechanism on the daemon side has already discarded the prior bond request.
+Multiple takers may simultaneously attempt to take the same order: each creates their own bond hold invoice (a `Requested` bond row) and whichever HTLC is accepted first by LND wins. When a bond locks, all other concurrent `Requested` bonds on the same order are released and their takers each receive `Action::Canceled`.
+
+A client that sent `take-buy` / `take-sell` and is waiting for [`pay-bond-invoice`](./pay_bond_invoice.md) may therefore receive `canceled` instead — meaning another taker's bond locked first. Surface this clearly to the user, e.g. *"Order was taken by another user before you locked the bond."* Do not silently retry the take — the order may no longer be available.
+
+## Cancel during `waiting-taker-bond`
+
+An order remains in the daemon-internal `waiting-taker-bond` state (NIP-33 `s` tag still `pending`) while one or more taker bonds are outstanding. Cancels during this window are routed differently from cancels on `pending` orders.
+
+### Taker self-cancel
+
+A taker who has a `Requested` (unpaid) bond on an order may cancel it by sending `cancel`. Mostro releases **only that taker's bond** (LND invoice cancelled, funds returned). Other concurrent takers' bonds are unaffected and continue racing.
+
+- If the cancelling taker was the only prospective taker, the order drops back to `pending` and is visible on the order book again.
+- If other takers' bonds are still `Requested`, the order remains in `waiting-taker-bond` with those bonds still racing.
+
+The maker is not notified; the NIP-33 order event stays `pending` throughout.
+
+### Maker cancel
+
+The maker can cancel the order at any point before trade flow starts (i.e. while in `pending` or `waiting-taker-bond`). Sending `cancel` releases **all** concurrent taker bonds on the order, notifies each prospective taker with `canceled`, transitions the order to `canceled`, and publishes the updated NIP-33 event.
 
 ## Cancel cooperatively
 

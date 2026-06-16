@@ -18,6 +18,7 @@
 - [Take range buy order](./take_buy_range_order.md)
 - [Pay bond invoice](./pay_bond_invoice.md)
 - [Bond payout invoice](./add_bond_invoice.md)
+- [Bond slashed notification](./bond_slashed.md)
 - [Seller pays hold invoice](./seller_pay_hold_invoice.md)
 - [Fiat sent](./fiatsent.md)
 - [Release](./release.md)

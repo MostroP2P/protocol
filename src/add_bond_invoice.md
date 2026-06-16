@@ -99,11 +99,78 @@ The recipient of the request message is the non-slashed counterparty of the trad
 - **Treat re-deliveries as idempotent reminders.** The same outstanding request is being repeated; do not re-prompt the user for a fresh invoice on every retry. `slashed_at` is re-emitted unchanged, so the deadline the client shows must not shift across retries.
 - **Sign the reply with the non-slashed side's trade key.** See [Keys management](./key_management.md).
 
+## Payout confirmations (Phase 3.5)
+
+After the counterparty submits their payout invoice, Mostro acknowledges receipt and later confirms payment with two dedicated actions.
+
+### `bond-invoice-accepted`
+
+Sent by Mostro to the counterparty immediately after successfully receiving and validating their payout bolt11. This confirms Mostro has the invoice on file and is attempting the Lightning payment.
+
+```json
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "bond-invoice-accepted",
+      "payload": {
+        "order": {
+          "id": "<Order Id>",
+          "kind": "sell",
+          "amount": 500,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1
+        }
+      }
+    }
+  },
+  null
+]
+```
+
+Clients should surface this as a reassurance: *"Your bond payout invoice has been received and the payment is being processed."*
+
+### `bond-payout-completed`
+
+Sent by Mostro to the counterparty when the Lightning payment to their invoice has been confirmed as settled. The `amount` in the payload reflects the amount paid.
+
+```json
+[
+  {
+    "order": {
+      "version": 1,
+      "id": "<Order Id>",
+      "action": "bond-payout-completed",
+      "payload": {
+        "order": {
+          "id": "<Order Id>",
+          "kind": "sell",
+          "amount": 500,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1
+        }
+      }
+    }
+  },
+  null
+]
+```
+
+Clients should surface this as a terminal success: *"Your bond payout of `amount` Sats has been completed!"*
+
+Both actions carry `Payload::Order` (the `SmallOrder` context) and are serde-additive: a client that does not recognise them ignores the message and falls back to the `add-bond-invoice` reply it already handles — no funds at risk.
+
 ## Failure modes
 
 - The counterparty never replies before the deadline → no Lightning payment arrives and the share is forfeited; the slashed funds remain with the node.
 - A reply arrives after the deadline, or from a sender other than the resolved recipient, or after another reply already won the race → Mostro responds with a `cant-do` action carrying reason `not-allowed-by-status`.
 - The bolt11 principal does not match the requested counterparty share, or the invoice is otherwise undecodable / expired → Mostro responds with `cant-do` reason `invalid-invoice`.
 - On a node where the operator retains 100% of slashed bonds, **no `add-bond-invoice` message is emitted at all**. Clients should not surface a phantom payout request.
+- If `send_payment` retries are exhausted (see `payout_max_retries` in the info event) the counterparty is re-prompted with a fresh `add-bond-invoice` request, provided the claim window has not yet elapsed. If the window has passed, the share is forfeited and no further messages are sent.
 
 On success, the counterparty receives their share as a Lightning payment from the node's wallet. The routing fee is paid separately from that wallet and is not deducted from the principal.

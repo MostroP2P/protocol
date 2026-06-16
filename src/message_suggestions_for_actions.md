@@ -19,6 +19,15 @@ Below are suggestions for messages that clients can show to users when receiving
 - **add-bond-invoice:**  
   Please send me a Lightning invoice for `amount` Sats — this is your share of a slashed bond on order `id`. You have until `deadline` to submit it, or your share will be forfeited and the entire bond will be retained by the node.
 
+- **bond-invoice-accepted:**  
+  Your bond payout invoice has been received. The payment is being processed — you'll be notified once it completes.
+
+- **bond-payout-completed:**  
+  Your bond payout of `amount` Sats has been sent successfully. The funds should arrive in your Lightning wallet shortly.
+
+- **bond-slashed:**  
+  Your anti-abuse bond of `amount` Sats has been forfeited. This happened because the waiting-state timeout elapsed before you completed your required action on order `id`. The bond has been settled into the node's wallet.
+
 - **add-invoice:**  
   Please send me an invoice for `amount` satoshis equivalent to `fiat_code` `fiat_amount`. This is where I will send the funds upon trade completion. If you don’t provide the invoice within `expiration_seconds`, the trade will be canceled.
 
