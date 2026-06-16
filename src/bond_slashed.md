@@ -2,7 +2,7 @@
 
 The `bond-slashed` action is a notification Mostro sends to a bonded party when their anti-abuse bond has been **settled due to a waiting-state timeout**. It is a forfeiture notice: the bond HTLC has already been claimed into Mostro's wallet by the time this message is sent.
 
-> **Scope.** This action is only emitted on the **timeout slash** path (scheduler-driven, gated by `bond_slash_on_waiting_timeout = "true"` in the Mostro info event — see [Other events published by Mostro](./other_events.md#anti-abuse-bond-policy-tags)). It is **not** sent on the dispute-slash path — when a solver slashes a bond via [`admin-settle`](./admin_settle_order.md) or [`admin-cancel`](./admin_cancel_order.md), the slashed party receives the `admin-settled` / `admin-canceled` confirmation instead.
+> **Scope.** This action is emitted on the **timeout slash** path (scheduler-driven, gated by `bond_slash_on_waiting_timeout = "true"` in the Mostro info event — see [Other events published by Mostro](./other_events.md#anti-abuse-bond-policy-tags)). It is **also** sent on the dispute-slash path — when a solver slashes a bond via [`admin-settle`](./admin_settle_order.md) or [`admin-cancel`](./admin_cancel_order.md), the slashed party receives a `bond-slashed` notice **in addition to** the `admin-settled` / `admin-canceled` confirmation.
 
 ## Direction and trigger
 
@@ -58,4 +58,4 @@ After `bond-slashed` is sent to the responsible party, Mostro also:
 
 ## Note on cancels vs. slashes
 
-A cancel sent by either party **before** the timeout elapses never triggers `bond-slashed`. Bonds are always released (never slashed) on user-initiated cancels. Only the automated scheduler-driven timeout slash path emits this action, and only when `slash_on_waiting_timeout = true` is set by the operator.
+A cancel sent by either party **before** the timeout elapses never triggers `bond-slashed`. Bonds are always released (never slashed) on user-initiated cancels. This action is emitted by the automated scheduler-driven timeout slash path (when `slash_on_waiting_timeout = true` is set by the operator) and by a solver's slash directive on a dispute.

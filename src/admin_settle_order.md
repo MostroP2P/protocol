@@ -51,6 +51,8 @@ Accepted combinations on `admin-settle`:
 
 Whenever a side is slashed and the operator has configured `slash_node_share_pct < 1.0`, the non-slashed counterparty is subsequently asked to provide a Lightning invoice for their share of the bond via [Bond payout invoice](./add_bond_invoice.md).
 
+Each slashed party is also sent a [`bond-slashed`](./bond_slashed.md) forfeiture notice for the slashed bond amount, in addition to the `admin-settled` confirmation below.
+
 ## Mostro response
 
 Mostro will send this message to the both parties buyer/seller and to the admin:
