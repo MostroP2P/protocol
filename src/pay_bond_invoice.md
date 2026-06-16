@@ -30,7 +30,7 @@ The message's content has the same shape as `pay-invoice`; only the action discr
           {
             "id": "<Order Id>",
             "kind": "sell",
-            "status": "waiting-taker-bond",
+            "status": "pending",
             "amount": 7851,
             "fiat_code": "VES",
             "fiat_amount": 100,
@@ -47,7 +47,7 @@ The message's content has the same shape as `pay-invoice`; only the action discr
 ]
 ```
 
-> Note: the `status` value `"waiting-taker-bond"` here is the daemon-internal state echoed in the DM payload. The corresponding NIP-33 addressable order event's `s` tag is still `pending`.
+> Note: the `SmallOrder` echo carries `"status": "pending"` — the NIP-69 wire bucket the order is advertised in while the bond is outstanding. The daemon-internal state `waiting-taker-bond` (which Mostro uses to route subsequent messages) is tracked only in the daemon's database and is **never** emitted in the DM payload. Clients should dispatch on the `pay-bond-invoice` action, not on a status field.
 
 ### Expected client behaviour
 
@@ -64,11 +64,11 @@ Once the bond HTLC is `Accepted`, Mostro proceeds with the normal trade flow:
 
 > **Important — buy order taken (seller-as-taker):** this is the only flow on which a single user pays **two hold invoices in sequence on the same order** — first the bond (`pay-bond-invoice`), then the trade escrow (`pay-invoice`). They arrive as distinct actions and must be presented to the user as separate steps. Do not auto-pay either, do not coalesce them, and make the distinction obvious in the UI; this is the most error-prone path for client developers.
 
-### Daemon status `waiting-taker-bond` (DM payloads only)
+### Daemon status `waiting-taker-bond` (internal only)
 
-In addition to the NIP-69 wire status (`pending` while the bond is outstanding), Mostro tags the order's internal state as `waiting-taker-bond` so it can route subsequent messages correctly. Clients see this value in the `SmallOrder` echo embedded in `pay-bond-invoice` payloads and may use it to drive UI ("Waiting for bond payment"). It does **not** appear on the addressable NIP-33 order event — that one continues to advertise the order as `pending`.
+Mostro tags the order's internal state as `waiting-taker-bond` so it can route subsequent messages correctly while one or more taker bonds are outstanding. This status lives **only in the daemon's database** — it is neither published on the NIP-33 order event (whose `s` tag stays `pending`) nor echoed in any DM payload (the `pay-bond-invoice` `SmallOrder` carries `pending`, as shown above). It is documented here only to describe the daemon's lifecycle; clients never observe the literal `waiting-taker-bond` value on the wire.
 
-Internal transitions (visible only in DM payload echoes):
+Internal transitions (not visible to clients):
 
 - From `pending` → `waiting-taker-bond`, after a successful `take-buy` / `take-sell` when bonds are enabled.
 - From `waiting-taker-bond` → `waiting-payment` (buy order taken) or → `waiting-buyer-invoice` (sell order taken), once the bond HTLC is `Accepted`.
@@ -90,7 +90,7 @@ When `apply_to` is `"make"` or `"both"`, the **maker** must lock a bond before t
 
 - **Direction:** Mostro → user (the maker).
 - **Trigger:** Sent in response to a `new-order` message when the operator has bonds enabled for makers, **before** the order is published.
-- **Order visibility:** The order is **not published** to Nostr while the maker bond is outstanding. External observers see nothing — no `pending` order event, no order in the book. This differs from the taker bond, where the order remains visible and re-takeable throughout. The daemon tracks this internally as `waiting-maker-bond`, a status visible only in DM payload echoes.
+- **Order visibility:** The order is **not published** to Nostr while the maker bond is outstanding. External observers see nothing — no `pending` order event, no order in the book. This differs from the taker bond, where the order remains visible and re-takeable throughout. The daemon tracks this internally as `waiting-maker-bond`, a status kept in its database only — it is never emitted on the wire (the `SmallOrder` echo carries `pending`, as shown below).
 
 ### Mostro message to the maker
 
@@ -136,9 +136,11 @@ Once the maker's bond HTLC is `Accepted`:
 1. Mostro publishes the order to Nostr with status `pending` for the first time.
 2. Mostro sends the maker the `new-order` confirmation message (same as in the no-bond flow — see [Creating a new sell order](./new_sell_order.md) and [Creating a new buy order](./new_buy_order.md)).
 
-### Daemon status `waiting-maker-bond` (DM payloads only)
+### Daemon status `waiting-maker-bond` (internal only)
 
-Internal transitions (visible only in DM payload echoes):
+Like `waiting-taker-bond`, this status lives **only in the daemon's database** — it is never published on a NIP-33 event (none exists yet) nor echoed in any DM payload (the `pay-bond-invoice` `SmallOrder` carries `pending`). It is documented here only to describe the daemon's lifecycle.
+
+Internal transitions (not visible to clients):
 
 - On `new-order` receipt → `waiting-maker-bond`, before any NIP-33 event is emitted.
 - `waiting-maker-bond` → `pending` (and order published), once the bond HTLC is `Accepted`.

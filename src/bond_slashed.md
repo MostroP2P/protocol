@@ -23,13 +23,13 @@ The `bond-slashed` action is a notification Mostro sends to a bonded party when 
         "order": {
           "id": "<Order Id>",
           "kind": "sell",
-          "status": "canceled",
+          "status": null,
           "amount": 785,
           "fiat_code": "VES",
           "fiat_amount": 100,
           "payment_method": "face to face",
           "premium": 1,
-          "created_at": 1698937797
+          "created_at": null
         }
       }
     }
@@ -38,7 +38,7 @@ The `bond-slashed` action is a notification Mostro sends to a bonded party when 
 ]
 ```
 
-The `amount` field in the embedded `SmallOrder` is the **slashed bond amount** (not the original trade amount). For a range-order maker bond, this is the proportional slice amount for the taken sub-order.
+The `amount` field in the embedded `SmallOrder` is the **slashed bond amount** (not the original trade amount). For a range-order maker bond, this is the proportional slice amount for the taken sub-order. The `status` field is `null` on this message — the `SmallOrder` carries only the bond context (id, kind, amounts), not an order status; clients should rely on the `bond-slashed` action itself, and on the separate order-status messages that follow (`canceled` for the order, plus a republished NIP-33 event when the order returns to the book).
 
 ## What happens next
 

@@ -33,7 +33,7 @@ The event to send to Mostro would look like this:
 
 ## Optional: anti-abuse bond step
 
-When the receiving Mostro node has bonds enabled, the seller (taker) first receives a [`pay-bond-invoice`](./pay_bond_invoice.md) message; the published NIP-33 order event remains `pending` (re-takeability is preserved — see [order event](./order_event.md)) and the DM payload echoes the internal status `waiting-taker-bond`. Only after the bond HTLC is `Accepted` does Mostro send the `pay-invoice` message described below.
+When the receiving Mostro node has bonds enabled, the seller (taker) first receives a [`pay-bond-invoice`](./pay_bond_invoice.md) message; the published NIP-33 order event remains `pending` (re-takeability is preserved — see [order event](./order_event.md)) and the bond message's embedded `SmallOrder` carries `status: pending` (the daemon tracks the internal `waiting-taker-bond` state in its database only — it is never emitted on the wire). Only after the bond HTLC is `Accepted` does Mostro send the `pay-invoice` message described below.
 
 This is the **only flow on which a single user pays two hold invoices in sequence on the same order**: the bond first, then the trade hold invoice. They arrive as distinct actions (`pay-bond-invoice` then `pay-invoice`) and clients **must** present them as separate steps. Clients that do not recognise `pay-bond-invoice` should expect the take to time out and surface a clear error to the user — do not silently retry the take.
 
