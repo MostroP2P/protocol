@@ -113,7 +113,7 @@ identity proof, NIP-44 encrypted inside a signed kind-`14` event:
 | element | meaning |
 |---|---|
 | 1 | the logical message (the `version: 2` wrapper shown above) |
-| 2 | the trade key's signature over the serialized first element, or `null` (Mostro's own messages, and full-privacy mode, are unsigned — as in v1) |
+| 2 | the trade key's signature over the serialized first element, or `null` (Mostro replies and full-privacy mode set this element to `null`; the outer kind-14 event is still signed, as in v1) |
 | 3 | the identity proof `["<identity pubkey>", "<identity signature>"]`, or `null` for full-privacy mode (where the identity is the trade key itself) |
 
 In v1 the identity key is carried, authenticated, by the gift-wrap *seal*.
