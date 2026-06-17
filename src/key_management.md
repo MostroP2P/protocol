@@ -166,7 +166,7 @@ Clients must offer a more private version where the client never send the identi
 ## Protocol v2 — NIP-44 direct messages
 
 Everything above describes **protocol v1** (NIP-59 gift wrap, kind `1059`),
-which is **DEPRECATED**. Nodes that advertise `protocol_versions = "2"` in
+which is **DEPRECATED**. Nodes that advertise `protocol_version = "2"` in
 their [instance-info event](./other_events.md#mostro-instance-status) speak
 **protocol v2** instead: a single signed [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md)
 direct message of kind `14`, with no gift-wrap or seal layer. The key

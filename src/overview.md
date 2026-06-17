@@ -20,7 +20,7 @@ You can find more details about the order event [here](./order_event.md)
 Mostro messages travel over one of two interchangeable wire transports. A
 given node speaks **exactly one** of them — there is no dual mode — and
 advertises which in its [instance-info event](./other_events.md#mostro-instance-status)
-(kind `38385`) through the `protocol_versions` tag (`"1"` or `"2"`):
+(kind `38385`) through the `protocol_version` tag (`"1"` or `"2"`):
 
 | Protocol | Transport | Event kind | Status |
 |----------|-----------|------------|--------|
@@ -30,7 +30,7 @@ advertises which in its [instance-info event](./other_events.md#mostro-instance-
 Both transports carry the **same logical message** and, once unwrapped,
 yield the same structure to the daemon's handlers — only the envelope and
 how the identity key is proven differ. Client developers should support
-both during the transition and pick per node from the `protocol_versions`
+both during the transition and pick per node from the `protocol_version`
 tag; see the [client migration guide](./transport_migration.md).
 
 The logical message itself (the first tuple element described below) is
