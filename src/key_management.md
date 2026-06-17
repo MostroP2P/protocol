@@ -162,3 +162,141 @@ Clients must offer a more private version where the client never send the identi
   "sig": "<Buyer's ephemeral pubkey signature>"
 }
 ```
+
+## Protocol v2 — NIP-44 direct messages
+
+Everything above describes **protocol v1** (NIP-59 gift wrap, kind `1059`),
+which is **DEPRECATED**. Nodes that advertise `protocol_versions = "2"` in
+their [instance-info event](./other_events.md#mostro-instance-status) speak
+**protocol v2** instead: a single signed [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md)
+direct message of kind `14`, with no gift-wrap or seal layer. The key
+derivation, indexing and rotation rules are **unchanged** — the same
+identity key (index `0`) and per-trade keys (index `1`, `2`, …); only the
+envelope and how the identity key is proven differ.
+
+What changes on the wire:
+
+- **The trade key authors the event.** The visible `pubkey`/`sig` are the
+  trade key's (not a throwaway ephemeral key as in v1). This is deliberate:
+  it lets relays rate-limit by sender and lets the node cheaply pre-filter
+  spam before decrypting. The exposure is bounded because trade keys are
+  single-trade and rotated.
+- **`content` is NIP-44 ciphertext** of the message array. The conversation
+  key is derived from the trade key ↔ Mostro pair, so only those two can
+  decrypt.
+- **The array gains a third element**, the identity proof — because there is
+  no seal to carry the identity key authenticated. See below.
+- **An `expiration` tag** ([NIP-40](https://github.com/nostr-protocol/nips/blob/master/40.md))
+  is always present so trade messages do not linger on relays forever
+  (default 30 days, the node's `dm_days` setting).
+- **`version` is `2`** in the message.
+
+> **Note (deliberate NIP-17 deviation):** [NIP-17](https://github.com/nostr-protocol/nips/blob/master/17.md)
+> defines kind `14` as an *unsigned* rumor that only ever travels inside a
+> gift wrap. Mostro publishes it *signed*, because the author is an
+> ephemeral single-trade key — the association NIP-17 protects against is
+> here intentional and bounded. These are not standard NIP-17 chat messages.
+
+### Reputation mode (`take-sell` example)
+
+Reusing Alice's `take-sell` from above (trade key index `1`, identity key
+index `0`), the v2 event looks like this:
+
+```json
+{
+  "id": "<id>",
+  "kind": 14,
+  "pubkey": "<index 1 pubkey (trade key)>",
+  "content": "<NIP-44 ciphertext of the array below>",
+  "tags": [
+    ["p", "<Mostro's pubkey>"],
+    ["expiration", "<unix timestamp>"]
+  ],
+  "created_at": 1691518405,
+  "sig": "<index 1 (trade key) signature>"
+}
+```
+
+The decrypted `content` is the message array — the same first two elements
+as v1, plus the identity proof as a third element:
+
+```json
+[
+  {
+    "order": {
+      "version": 2,
+      "id": "<Order Id>",
+      "trade_index": 1,
+      "action": "take-sell",
+      "payload": null
+    }
+  },
+  "<index 1 signature of the sha256 hash of the serialized first element>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
+]
+```
+
+### Identity proof
+
+The identity signature (third element) is **not** taken over the message
+alone. The identity key signs a domain-tagged payload that binds the proof
+to the *specific trade key* authoring the event:
+
+```text
+mostro-transport-v2-identity:<trade pubkey hex>:<message JSON>
+```
+
+where `<message JSON>` is the serialized first element and `<trade pubkey
+hex>` is this event's `pubkey`. The receiver recomputes the payload from
+`event.pubkey`, so a proof grafted onto an event authored by a different
+trade key fails verification. This binding is what the gift-wrap seal
+signature provided implicitly in v1. The signing scheme is the existing
+Schnorr-over-sha256 `Message::sign` / `verify_signature`, and the identity
+key signs once per message — the same custody model as v1, where it signs
+every seal.
+
+### Full privacy mode
+
+As in v1, a client that does not want to maintain reputation never sends
+the identity key. In v2 that means **both** the trade signature and the
+identity proof are `null`, and the identity is taken to be the trade key
+itself:
+
+```json
+{
+  "id": "<id>",
+  "kind": 14,
+  "pubkey": "<index N pubkey (trade key)>",
+  "content": "<NIP-44 ciphertext of the array below>",
+  "tags": [
+    ["p", "<Mostro's pubkey>"],
+    ["expiration", "<unix timestamp>"]
+  ],
+  "created_at": 1691518405,
+  "sig": "<index N (trade key) signature>"
+}
+```
+
+Decrypted `content`:
+
+```json
+[
+  {
+    "order": {
+      "version": 2,
+      "id": "<Order Id>",
+      "action": "take-sell",
+      "payload": null
+    }
+  },
+  null,
+  null
+]
+```
+
+### Messages from Mostro
+
+Mostro authors its replies with its own well-known key and NIP-44 encrypts
+them to the user's trade key (`p`-tagged). As in v1, Mostro's own messages
+are unsigned: the trade signature and identity proof are both `null`.
+Clients can subscribe with `authors=[mostro] AND #p=[their trade keys]`.

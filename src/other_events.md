@@ -118,6 +118,10 @@ This event contains specific data about a Mostro instance. The instance is ident
         "0"
       ],
       [
+        "protocol_versions",
+        "1"
+      ],
+      [
         "hold_invoice_expiration_window",
         "120"
       ],
@@ -214,6 +218,7 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `max_orders_per_response`: Maximum complete orders data per response in orders action.
 - `fee`: The fee percentage charged by the instance. For example, "0.006" means a 0.6% fee.
 - `pow`: The Proof of Work required of incoming events.
+- `protocol_versions`: The Mostro protocol (wire transport) this node speaks — `"1"` for NIP-59 gift wrap (kind `1059`, DEPRECATED) or `"2"` for NIP-44 direct messages (kind `14`). A node speaks exactly one; clients read this tag to pick the matching wire format. See the [client migration guide](./transport_migration.md).
 - `hold_invoice_expiration_window`: The maximum time, in seconds, for the hold invoice issued by Mostro to be paid by the seller.
 - `hold_invoice_cltv_delta`: The number of blocks in which the Mostro hold invoice will expire.
 - `invoice_expiration_window`: The maximum time, in seconds, for a buyer to submit an invoice to Mostro.
