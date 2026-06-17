@@ -166,7 +166,7 @@ Clients must offer a more private version where the client never send the identi
 ## Protocol v2 — NIP-44 direct messages
 
 Everything above describes **protocol v1** (NIP-59 gift wrap, kind `1059`),
-which is **DEPRECATED**. Nodes that advertise `protocol_versions = "2"` in
+which is **DEPRECATED**. Nodes that advertise `protocol_version = "2"` in
 their [instance-info event](./other_events.md#mostro-instance-status) speak
 **protocol v2** instead: a single signed [NIP-44](https://github.com/nostr-protocol/nips/blob/master/44.md)
 direct message of kind `14`, with no gift-wrap or seal layer. The key
@@ -187,8 +187,9 @@ What changes on the wire:
 - **The array gains a third element**, the identity proof — because there is
   no seal to carry the identity key authenticated. See below.
 - **An `expiration` tag** ([NIP-40](https://github.com/nostr-protocol/nips/blob/master/40.md))
-  is always present so trade messages do not linger on relays forever
-  (default 30 days, the node's `dm_days` setting).
+  is always present so trade messages do not linger on relays forever. The
+  concrete expiration window is chosen by the node and is not part of the
+  protocol.
 - **`version` is `2`** in the message.
 
 > **Note (deliberate NIP-17 deviation):** [NIP-17](https://github.com/nostr-protocol/nips/blob/master/17.md)

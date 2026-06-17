@@ -28,10 +28,10 @@ pre-validation before decryption. See the threat model in
 
 A node speaks **exactly one** transport — there is no dual mode. It
 advertises which in its [instance-info event](./other_events.md#mostro-instance-status)
-(kind `38385`) via the `protocol_versions` tag:
+(kind `38385`) via the `protocol_version` tag:
 
-- `["protocol_versions", "1"]` → gift wrap (kind `1059`)
-- `["protocol_versions", "2"]` → NIP-44 direct (kind `14`)
+- `["protocol_version", "1"]` → gift wrap (kind `1059`)
+- `["protocol_version", "2"]` → NIP-44 direct (kind `14`)
 
 A client should read this tag **before** sending anything and use the
 matching wire format. Old daemons that predate the tag emit nothing; treat
@@ -39,7 +39,7 @@ their absence as v1.
 
 ## What a client must change
 
-1. **Read `protocol_versions`** from the node's kind-`38385` event and
+1. **Read `protocol_version`** from the node's kind-`38385` event and
    branch on it.
 2. **Subscribe to the right kind**: `1059` for v1, `14` for v2 (authored by
    the node, `#p`-tagged to your trade keys for node replies).
@@ -72,6 +72,6 @@ include them to maintain reputation.
   longer accept kind-`1059` traffic.
 
 The recommendation is therefore: **keep both wrap paths now** and select per
-node from `protocol_versions`. A client that supports both will work against
+node from `protocol_version`. A client that supports both will work against
 every node throughout the transition, and against v2-only nodes after the
 v0.19.0 cutover with no further change.
