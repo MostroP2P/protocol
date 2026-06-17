@@ -5,6 +5,7 @@
 ---
 
 - [Keys management](./key_management.md)
+- [Transport migration (v1 → v2)](./transport_migration.md)
 - [Creating a Sell order](./new_sell_order.md)
 - [Creating a Sell range order](./new_sell_range_order.md)
 - [Creating a Buy order](./new_buy_order.md)
