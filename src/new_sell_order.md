@@ -1,11 +1,11 @@
 # Creating a new sell order
 
-To create a new sell order the user should send a Gift wrap Nostr event to Mostro, the message should look like this:
+To create a new sell order the user should send a message to Mostro (wrapped in the [active transport](./overview.md#transports)), the message should look like this:
 
 ```json
 {
   "order": {
-    "version": 1,
+    "version": 2,
     "action": "new-order",
     "trade_index": 1,
     "payload": {
@@ -38,14 +38,22 @@ The event to send to Mostro would look like this:
 ```json
 {
   "id": "<Event id>",
-  "kind": 1059,
-  "pubkey": "<Seller's ephemeral pubkey>",
-  "content": "<sealed-rumor-content>",
-  "tags": [["p", "Mostro's pubkey"]],
+  "kind": 14,
+  "pubkey": "<Seller's trade pubkey>",
+  "content": "<NIP-44 ciphertext of the content array>",
+  "tags": [
+    ["p", "<Mostro's pubkey>"],
+    ["expiration", "<unix timestamp>"]
+  ],
   "created_at": 1234567890,
-  "sig": "<Signature of ephemeral pubkey>"
+  "sig": "<Signature by the trade key>"
 }
 ```
+
+On the deprecated v1 transport the same content array travels inside a
+[NIP-59 gift wrap](https://github.com/nostr-protocol/nips/blob/master/59.md)
+(kind `1059`) instead — see [Keys management](./key_management.md) for the
+v1 envelope.
 
 ## Optional: anti-abuse maker bond
 
@@ -59,13 +67,13 @@ If the maker never pays the bond invoice it expires and no order is created. See
 
 ## Confirmation message
 
-Mostro will send back a nip59 event as a confirmation message to the user like the following (unencrypted rumor's content example):
+Mostro will send back a confirmation message to the user like the following (unencrypted decrypted content example):
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order id>",
       "action": "new-order",
       "payload": {
@@ -83,6 +91,7 @@ Mostro will send back a nip59 event as a confirmation message to the user like t
       }
     }
   },
+  null,
   null
 ]
 ```

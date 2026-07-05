@@ -2,6 +2,12 @@
 
 The dispute chat uses the same shared key encryption scheme as the [Peer-to-peer Chat](./chat.md). Instead of computing a shared key between buyer and seller, each party computes an independent shared key with the admin who took the dispute.
 
+> **Scope note:** like the peer-to-peer chat, the dispute chat events
+> below keep the kind-`1059` scheme and are **not** affected by the
+> [v1 → v2 transport migration](./transport_migration.md) — only the
+> `admin-took-dispute` message from Mostro (next section) travels over
+> the daemon transport.
+
 ## Establishing the shared key
 
 When an admin takes a dispute, Mostro sends an `admin-took-dispute` message to each party (buyer and seller) containing the admin's pubkey:
@@ -10,7 +16,7 @@ When an admin takes a dispute, Mostro sends an `admin-took-dispute` message to e
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-took-dispute",
       "payload": {
@@ -20,6 +26,7 @@ When an admin takes a dispute, Mostro sends an `admin-took-dispute` message to e
       }
     }
   },
+  null,
   null
 ]
 ```

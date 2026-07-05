@@ -4,17 +4,18 @@ Defines the `last-trade-index` action used to retrieve the user's last `trade_in
 
 ## Request
 
-Client sends a Gift wrap Nostr event to Mostro with the following rumor's content. The request sends a `null` payload to indicate that the client is querying for the last trade index.
+Client sends a message to Mostro (wrapped in the [active transport](./overview.md#transports)) with the following decrypted content. The request sends a `null` payload to indicate that the client is querying for the last trade index.
 
 ```json
 [
   {
     "restore": {
-      "version": 1,
+      "version": 2,
       "action": "last-trade-index",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -26,7 +27,7 @@ Mostro responds with the user's last trade index as a u32 directly in the `trade
 ```json
 {
   "restore": {
-    "version": 1,
+    "version": 2,
     "action": "last-trade-index",
     "trade_index": 42,
     "payload": null
@@ -48,7 +49,7 @@ Client requests the last trade index and receives `7`, meaning the next trade th
 ```json
 {
   "restore": {
-    "version": 1,
+    "version": 2,
     "action": "last-trade-index",
     "trade_index": 7,
     "payload": null

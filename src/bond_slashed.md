@@ -16,7 +16,7 @@ The `bond-slashed` action is a notification Mostro sends to a bonded party when 
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "bond-slashed",
       "payload": {
@@ -34,6 +34,7 @@ The `bond-slashed` action is a notification Mostro sends to a bonded party when 
       }
     }
   },
+  null,
   null
 ]
 ```

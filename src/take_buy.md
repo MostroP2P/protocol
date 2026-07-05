@@ -1,19 +1,20 @@
 # Taking a buy order
 
-To take an order the seller will send to Mostro a message with the following rumor's content:
+To take an order the seller will send to Mostro a message with the following decrypted content:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-buy",
       "trade_index": 1,
       "payload": null
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<identity pubkey>", "<identity signature>"]
 ]
 ```
 
@@ -22,14 +23,22 @@ The event to send to Mostro would look like this:
 ```json
 {
   "id": "<Event id>",
-  "kind": 1059,
-  "pubkey": "<Seller's ephemeral pubkey>",
-  "content": "<sealed-rumor-content>",
-  "tags": [["p", "Mostro's pubkey"]],
+  "kind": 14,
+  "pubkey": "<Seller's trade pubkey>",
+  "content": "<NIP-44 ciphertext of the content array>",
+  "tags": [
+    ["p", "<Mostro's pubkey>"],
+    ["expiration", "<unix timestamp>"]
+  ],
   "created_at": 1234567890,
-  "sig": "<Signature of ephemeral pubkey>"
+  "sig": "<Signature by the trade key>"
 }
 ```
+
+On the deprecated v1 transport the same content array travels inside a
+[NIP-59 gift wrap](https://github.com/nostr-protocol/nips/blob/master/59.md)
+(kind `1059`) instead — see [Keys management](./key_management.md) for the
+v1 envelope.
 
 ## Optional: anti-abuse bond step
 
@@ -45,7 +54,7 @@ Mostro respond to the seller with a message with the following content:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "pay-invoice",
       "payload": {
@@ -66,6 +75,7 @@ Mostro respond to the seller with a message with the following content:
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -108,12 +118,13 @@ And send a message to the buyer with the following content:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "waiting-seller-to-pay",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -126,12 +137,13 @@ After seller pays the hold invoice Mostro send a message to the seller with the 
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "waiting-buyer-invoice",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -141,7 +153,7 @@ Mostro sends a message to the buyer with the following content:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -158,6 +170,7 @@ Mostro sends a message to the buyer with the following content:
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -170,7 +183,7 @@ Buyer sends the LN invoice to Mostro.
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -181,6 +194,7 @@ Buyer sends the LN invoice to Mostro.
       }
     }
   },
+  null,
   null
 ]
 ```

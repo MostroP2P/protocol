@@ -2,6 +2,12 @@
 
 To communicate directly, both the buyer and the seller do not use the current `Message` scheme explained [here](https://mostro.network/protocol/overview.html), as this communication excludes the Mostro daemon. To preserve user privacy, we use a simplified version of NIP-59 that allows us to hide the metadata of both parties from outside observers. However, this variant only contains a single event inside the wrapper. The inner event includes the sender’s trade pubkey and the corresponding signature to maintain the authenticity of the sender.
 
+> **Scope note:** the [v1 → v2 transport migration](./transport_migration.md)
+> applies only to messages exchanged **with the Mostro daemon**. This
+> peer-to-peer chat never goes through the daemon, so it keeps the
+> kind-`1059` scheme described below and is **not** affected by the
+> v0.19.0 removal of the v1 transport.
+
 ## Shared Key
 
 The messages between parties have a unique feature: instead of directing the events containing these messages to the counterparty’s trade pubkey, we direct them to a unique pubkey known only to both parties.

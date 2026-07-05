@@ -1,35 +1,37 @@
 # Cancel Order
 
-A user can cancel an order created by himself and with status `pending` sending action `cancel`, the rumor's content of the message will look like this:
+A user can cancel an order created by himself and with status `pending` sending action `cancel`, the decrypted content of the message will look like this:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cancel",
       "payload": null
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<identity pubkey>", "<identity signature>"]
 ]
 ```
 
 ## Mostro response
 
-Mostro will send a message with action `cancel` confirming the order was canceled, here an example of rumor's content of the message:
+Mostro will send a message with action `cancel` confirming the order was canceled, here an example of decrypted content of the message:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "canceled",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -97,12 +99,13 @@ A user can cancel an `active` order, but will need the counterparty to agree, le
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cancel",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -113,12 +116,13 @@ Mostro will send this message to the seller:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cooperative-cancel-initiated-by-you",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -129,12 +133,13 @@ And this message to the buyer:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cooperative-cancel-initiated-by-peer",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -145,12 +150,13 @@ The buyer can accept the cooperative cancellation sending this message:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cancel",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -161,12 +167,13 @@ And Mostro will send this message to both parties:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cooperative-cancel-accepted",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```

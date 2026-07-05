@@ -1,19 +1,20 @@
 # Taking a sell order
 
-If the order amount is `0` the buyer doesn't know the exact amount to create the invoice, buyer will send a message in a Gift wrap Nostr event to Mostro with the following rumor's content:
+If the order amount is `0` the buyer doesn't know the exact amount to create the invoice, buyer will send a message to Mostro (wrapped in the [active transport](./overview.md#transports)) with the following decrypted content:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-sell",
       "trade_index": 1,
       "payload": null
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<identity pubkey>", "<identity signature>"]
 ]
 ```
 
@@ -23,13 +24,13 @@ When the receiving Mostro node has bonds enabled, the buyer (taker) first receiv
 
 ## Mostro response
 
-In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is `0`, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the rumor's content of the message:
+In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is `0`, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the decrypted content of the message:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -46,6 +47,7 @@ In order to continue the buyer needs to send a lightning network invoice to Most
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -84,13 +86,13 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
 
 ## Buyer sends LN invoice
 
-The buyer sends a Gift wrap Nostr event to Mostro with the lightning invoice, the action should be the same the buyer just received in the last message from Mostro (`add-invoice`), here the rumor's content of the event for an invoice with no amount:
+The buyer sends a message to Mostro with the lightning invoice, the action should be the same the buyer just received in the last message from Mostro (`add-invoice`), here the decrypted content of the event for an invoice with no amount:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -102,7 +104,8 @@ The buyer sends a Gift wrap Nostr event to Mostro with the lightning invoice, th
       }
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<identity pubkey>", "<identity signature>"]
 ]
 ```
 
@@ -110,18 +113,19 @@ If the invoice includes an amount, the last element of the `payment_request` arr
 
 ## Mostro response
 
-Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the rumor's content, it would look like this:
+Mostro sends a message to the buyer with a wrapped `order` in the decrypted content, it would look like this:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "waiting-seller-to-pay",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
