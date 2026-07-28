@@ -6,7 +6,7 @@ An admin can settle an order, most of the time this is done when admin is solvin
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-settle",
       "payload": null
@@ -24,7 +24,7 @@ When solving a dispute, the admin can optionally slash one or both parties' bond
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-settle",
       "payload": {
@@ -61,7 +61,7 @@ Mostro will send this message to the both parties buyer/seller and to the admin:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-settled",
       "payload": null

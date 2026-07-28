@@ -6,7 +6,7 @@ If the order fiat amount is a range like `10-20` the buyer must indicate a fiat 
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-sell",
       "trade_index": 1,
@@ -27,7 +27,7 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -93,7 +93,7 @@ The buyer can use a [lightning address](https://github.com/andrerfneves/lightnin
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-sell",
       "payload": {

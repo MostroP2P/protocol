@@ -6,7 +6,7 @@ The buyer can use a [lightning address](https://github.com/andrerfneves/lightnin
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-sell",
       "trade_index": 1,
@@ -41,7 +41,7 @@ Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the r
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "waiting-seller-to-pay",
       "payload": null

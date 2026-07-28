@@ -6,7 +6,7 @@ If the order fiat amount is a range like `10-20` the seller must indicate a fiat
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-buy",
       "trade_index": 1,

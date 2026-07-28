@@ -63,7 +63,7 @@ Here an example of a `new-order` order **_message_**:
 ```json
 {
   "order": {
-    "version": 1,
+    "version": 2,
     "id": "<Order id>",
     "request_id": 123456,
     "trade_index": 1,

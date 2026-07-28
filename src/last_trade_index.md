@@ -10,7 +10,7 @@ Client sends a Gift wrap Nostr event to Mostro with the following rumor's conten
 [
   {
     "restore": {
-      "version": 1,
+      "version": 2,
       "action": "last-trade-index",
       "payload": null
     }
@@ -26,7 +26,7 @@ Mostro responds with the user's last trade index as a u32 directly in the `trade
 ```json
 {
   "restore": {
-    "version": 1,
+    "version": 2,
     "action": "last-trade-index",
     "trade_index": 42,
     "payload": null
@@ -36,7 +36,7 @@ Mostro responds with the user's last trade index as a u32 directly in the `trade
 
 ### Fields
 
-* `restore.version`: Protocol version. Current is `1`.
+* `restore.version`: Protocol version — `1` on the gift-wrap transport (DEPRECATED), `2` on the NIP-44 direct transport. Current is `2`.
 * `restore.action`: Must be `last-trade-index`.
 * `restore.trade_index` (response): u32 representing the last `trade_index` for the user. `1` if none.
 * `restore.payload` (response): Must be `null`.
@@ -48,7 +48,7 @@ Client requests the last trade index and receives `7`, meaning the next trade th
 ```json
 {
   "restore": {
-    "version": 1,
+    "version": 2,
     "action": "last-trade-index",
     "trade_index": 7,
     "payload": null

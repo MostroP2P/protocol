@@ -6,7 +6,7 @@ A user can cancel an order created by himself and with status `pending` sending 
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cancel",
       "payload": null
@@ -24,7 +24,7 @@ Mostro will send a message with action `cancel` confirming the order was cancele
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "canceled",
       "payload": null
@@ -97,7 +97,7 @@ A user can cancel an `active` order, but will need the counterparty to agree, le
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cancel",
       "payload": null
@@ -113,7 +113,7 @@ Mostro will send this message to the seller:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cooperative-cancel-initiated-by-you",
       "payload": null
@@ -129,7 +129,7 @@ And this message to the buyer:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cooperative-cancel-initiated-by-peer",
       "payload": null
@@ -145,7 +145,7 @@ The buyer can accept the cooperative cancellation sending this message:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cancel",
       "payload": null
@@ -161,7 +161,7 @@ And Mostro will send this message to both parties:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "cooperative-cancel-accepted",
       "payload": null

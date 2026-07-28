@@ -10,7 +10,7 @@ The client sends a message where the payload object includes an `ids` array of o
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "request_id": 8721,
       "action": "orders",
       "payload":  {
@@ -38,7 +38,7 @@ Mostro replies with the same action and includes a structured payload describing
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "request_id": 8721,
       "action": "orders",
       "payload": {

@@ -6,7 +6,7 @@ An admin can cancel an order, most of the time this is done when admin is solvin
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-cancel",
       "payload": null
@@ -24,7 +24,7 @@ When solving a dispute, the admin can optionally slash one or both parties' bond
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-cancel",
       "payload": {
@@ -61,7 +61,7 @@ Mostro will send this message to the both parties buyer/seller and to the admin:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-canceled",
       "payload": null

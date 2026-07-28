@@ -12,7 +12,7 @@ When Mostro cannot pay the buyer's Lightning invoice, it sends this message to t
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "payment-failed",
       "payload": {
@@ -46,7 +46,7 @@ When Mostro cannot pay the buyer's Lightning invoice, it sends this message to t
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {

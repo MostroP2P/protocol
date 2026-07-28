@@ -6,7 +6,7 @@ If the order amount is `0` the buyer doesn't know the exact amount to create the
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-sell",
       "trade_index": 1,
@@ -29,7 +29,7 @@ In order to continue the buyer needs to send a lightning network invoice to Most
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -90,7 +90,7 @@ The buyer sends a Gift wrap Nostr event to Mostro with the lightning invoice, th
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -116,7 +116,7 @@ Mostro send a Gift wrap Nostr event to the buyer with a wrapped `order` in the r
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "waiting-seller-to-pay",
       "payload": null

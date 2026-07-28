@@ -6,7 +6,7 @@ A user can start a dispute in an order with status `active` or `fiat-sent` sendi
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "dispute",
       "payload": null
@@ -24,7 +24,7 @@ Mostro will send this message to the seller:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "dispute-initiated-by-you",
       "payload": {
@@ -42,7 +42,7 @@ And here is the message to the buyer:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "dispute-initiated-by-peer",
       "payload": {
@@ -88,7 +88,7 @@ Mostro admin will see the dispute and can take it using the dispute `Id` from `d
 [
   {
     "dispute": {
-      "version": 1,
+      "version": 2,
       "id": "<Dispute Id>",
       "action": "admin-take-dispute",
       "payload": null
@@ -104,7 +104,7 @@ Mostro will send a confirmation message to the admin with the order details:
 [
   {
     "dispute": {
-      "version": 1,
+      "version": 2,
       "id": "<Dispute Id>",
       "action": "admin-took-dispute",
       "payload": {
@@ -135,7 +135,7 @@ Then mostrod send messages to each trade participant, the buyer and seller for t
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-took-dispute",
       "payload": {

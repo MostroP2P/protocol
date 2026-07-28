@@ -6,7 +6,7 @@ After confirming the buyer sent the fiat money, the seller should send a message
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "request_id": "123456",
       "action": "release",
@@ -25,7 +25,7 @@ Here an example of the Mostro response to the seller:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "request_id": "123456",
       "action": "hold-invoice-payment-settled",
@@ -42,7 +42,7 @@ And a message to the buyer to let him know that the sats were released:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "released",
       "payload": null
@@ -62,7 +62,7 @@ Right after seller releases sats, Mostro will attempt to pay the buyer's Lightni
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "purchase-completed",
       "payload": null
@@ -112,7 +112,7 @@ If the order is a range order probably after release a child order would need to
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
       "action": "release",
       "payload": {
@@ -130,7 +130,7 @@ Mostro will send to the maker the newly child order created with the same `trade
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "4fd93fc9-e909-4fc9-acef-9976122b5dfa",
       "action": "new-order",
       "trade_index": <trade index>,

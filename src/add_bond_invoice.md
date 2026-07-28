@@ -16,7 +16,7 @@ Mostro sends a single `add-bond-invoice` message to the non-slashed counterparty
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-bond-invoice",
       "payload": {
@@ -64,7 +64,7 @@ The counterparty replies with a Gift wrap Nostr event whose rumor content carrie
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-bond-invoice",
       "payload": {
@@ -111,7 +111,7 @@ Sent by Mostro to the counterparty immediately after successfully receiving and 
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "bond-invoice-accepted",
       "payload": {
@@ -141,7 +141,7 @@ Sent by Mostro to the counterparty when the Lightning payment to their invoice h
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "bond-payout-completed",
       "payload": {

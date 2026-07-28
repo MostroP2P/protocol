@@ -10,7 +10,7 @@ When an admin takes a dispute, Mostro sends an `admin-took-dispute` message to e
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "admin-took-dispute",
       "payload": {

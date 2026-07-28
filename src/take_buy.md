@@ -6,7 +6,7 @@ To take an order the seller will send to Mostro a message with the following rum
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "take-buy",
       "trade_index": 1,
@@ -45,7 +45,7 @@ Mostro respond to the seller with a message with the following content:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "pay-invoice",
       "payload": {
@@ -108,7 +108,7 @@ And send a message to the buyer with the following content:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "waiting-seller-to-pay",
       "payload": null
@@ -126,7 +126,7 @@ After seller pays the hold invoice Mostro send a message to the seller with the 
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "waiting-buyer-invoice",
       "payload": null
@@ -141,7 +141,7 @@ Mostro sends a message to the buyer with the following content:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {
@@ -170,7 +170,7 @@ Buyer sends the LN invoice to Mostro.
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-invoice",
       "payload": {

@@ -6,7 +6,7 @@ When the seller is the maker and the order was taken by a buyer, Mostro will sen
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "pay-invoice",
       "payload": {
@@ -37,7 +37,7 @@ After the hold invoice is paid and the buyer already sent the invoice to receive
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "buyer-took-order",
       "payload": {
@@ -68,7 +68,7 @@ Mostro also send a message to the buyer, this way they can both write to each ot
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "hold-invoice-payment-accepted",
       "payload": {
@@ -100,7 +100,7 @@ Mostro send this message to the seller:
 ```json
 {
   "order": {
-    "version": 1,
+    "version": 2,
     "id": "<Order Id>",
     "action": "waiting-buyer-invoice",
     "payload": null
@@ -113,7 +113,7 @@ And this message to the buyer:
 ```json
 {
   "order": {
-    "version": 1,
+    "version": 2,
     "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
@@ -138,7 +138,7 @@ Now buyer sends the invoice to Mostro:
 ```json
 {
   "order": {
-    "version": 1,
+    "version": 2,
     "id": "<Order Id>",
     "action": "add-invoice",
     "payload": {
