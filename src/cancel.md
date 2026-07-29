@@ -17,7 +17,7 @@ A user can cancel an order created by himself and with status `pending` sending 
 ]
 ```
 
-## Mostro response
+## Mostro's response
 
 Mostro will send a message with action `cancel` confirming the order was canceled, here an example of decrypted content of the message:
 

@@ -22,7 +22,7 @@ If the order fiat amount is a range like `10-20` the buyer must indicate a fiat 
 
 ## Mostro response
 
-In order to continue the buyer needs to send a lightning network invoice to Mostro, in this case the amount of the order is `0`, so Mostro will need to calculate the amount of sats for this order, then Mostro will send back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the decrypted content of the message:
+In order to continue the buyer needs to send a lightning network invoice to Mostro, Mostro calculates the amount of sats from the fiat amount the buyer selected, then sends back a message asking for a LN invoice indicating the correct amount of sats that the invoice should have, here the decrypted content of the message:
 
 ```json
 [
@@ -89,7 +89,7 @@ Mostro updates the addressable event with `d` tag `<Order Id>` to change the sta
 
 ## Using a lightning address
 
-The buyer can use a [lightning address](https://github.com/andrerfneves/lightning-address) to receive funds and avoid to create and send lightning invoices on each trade, with a range order we set the fiat amount as the third element of the `payment_request` array, to acomplish this the buyer will send a message in a NIP-44 direct message (kind `14`) to Mostro with the following decrypted content:
+The buyer can use a [lightning address](https://github.com/andrerfneves/lightning-address) to receive funds and avoid creating and sending lightning invoices on each trade, with a range order we set the fiat amount as the third element of the `payment_request` array, to accomplish this the buyer will send a message in a NIP-44 direct message (kind `14`) to Mostro with the following decrypted content:
 
 ```json
 [

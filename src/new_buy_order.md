@@ -1,27 +1,31 @@
 # Creating a new buy order
 
-To create a new buy order the user should send a NIP-44 direct message (kind `14`) to Mostro with the following message:
+To create a new buy order the user should send a NIP-44 direct message (kind `14`) to Mostro with the following decrypted content:
 
 ```json
-{
-  "order": {
-    "version": 2,
-    "action": "new-order",
-    "trade_index": 1,
-    "payload": {
-      "order": {
-        "kind": "buy",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "fiat_amount": 100,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": 0
+[
+  {
+    "order": {
+      "version": 2,
+      "action": "new-order",
+      "trade_index": 1,
+      "payload": {
+        "order": {
+          "kind": "buy",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": 0
+        }
       }
     }
-  }
-}
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
+]
 ```
 
 The nostr event will look like this:

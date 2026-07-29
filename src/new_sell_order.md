@@ -1,29 +1,33 @@
 # Creating a new sell order
 
-To create a new sell order the user should send a NIP-44 direct message (kind `14`) to Mostro, the message should look like this:
+To create a new sell order the user should send a NIP-44 direct message (kind `14`) to Mostro, the decrypted content should look like this:
 
 ```json
-{
-  "order": {
-    "version": 2,
-    "action": "new-order",
-    "trade_index": 1,
-    "payload": {
-      "order": {
-        "kind": "sell",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "min_amount": null,
-        "max_amount": null,
-        "fiat_amount": 100,
-        "payment_method": "face to face,bank transfer,mobile",
-        "premium": 1,
-        "created_at": 0
+[
+  {
+    "order": {
+      "version": 2,
+      "action": "new-order",
+      "trade_index": 1,
+      "payload": {
+        "order": {
+          "kind": "sell",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "min_amount": null,
+          "max_amount": null,
+          "fiat_amount": 100,
+          "payment_method": "face to face,bank transfer,mobile",
+          "premium": 1,
+          "created_at": 0
+        }
       }
     }
-  }
-}
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
+]
 ```
 
 Let's explain some of the fields:
