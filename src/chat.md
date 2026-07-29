@@ -139,32 +139,43 @@ This single rule is what eliminates third-party flooding: the relay drops every 
 
 Clients MUST also bound the backlog: subscribe with `since` set to the last processed timestamp, persisted locally, together with a `limit`. An unbounded subscription re-downloads the entire stored history on every reconnection and every application start, which turns a one-off flood into permanent damage that survives reinstalling the application.
 
+**The persisted `since` cursor MUST NOT be advanced beyond the client's own clock.** A counterparty signs both events, so it can set both timestamps to the same far-future value and satisfy the relative check in step 13. If the client then stores that value as its cursor, its own subscription filters out every honest message that follows, and the conversation stays dead until that future date — a permanent denial of service from a single message, surviving restarts. Clamping the cursor to `min(accepted_timestamp, local_now)`, together with the absolute bound in step 3, closes this.
+
 ### Validation order
 
 Each incoming event MUST be validated cheapest-check-first, so that an abusive peer cannot force expensive work:
 
 1. **Author** is `pub(K_sign)` — otherwise discard.
-2. **Size** is within the client's limit (64 KiB is a reasonable default) — otherwise discard.
-3. **Outer event id** has not been seen before (bounded LRU) — otherwise discard.
-4. **Rate-limit budget** for this conversation is available — otherwise discard.
-5. **Outer signature** verifies.
-6. Only now, **NIP-44 decrypt** with `K_conv`.
-7. **Inner signature** verifies — this is the sender authentication and MUST NOT be skipped. Reading the inner `pubkey` field without verifying the signature accepts forged senders.
-8. **Inner pubkey** is the buyer's or the seller's trade key for this order — otherwise discard. No other signer is accepted, including a dispute solver.
-9. **Inner kind** is 1 — otherwise discard.
-10. **Inner event id** has not been seen before — otherwise discard.
-11. **Timestamps**: `|inner.created_at − outer.created_at|` is within tolerance (60 seconds is a reasonable default) — otherwise discard.
+2. **`p` tag**: exactly one, equal to `pub(K_conv)` — otherwise discard. See [below](#the-p-tag-is-part-of-the-contract).
+3. **Absolute timestamp bound**: `outer.created_at` is not further into the future than the client's tolerance for clock skew (60 seconds is a reasonable default), measured against the client's own clock — otherwise discard. Timestamps in the past are always acceptable, since offline catch-up is legitimate.
+4. **Size** is within the client's limit (64 KiB is a reasonable default) — otherwise discard.
+5. **Outer event id** has not been seen before (bounded LRU) — otherwise discard.
+6. **Rate-limit budget** for this conversation is available — otherwise discard.
+7. **Outer signature** verifies.
+8. Only now, **NIP-44 decrypt** with `K_conv`.
+9. **Inner signature** verifies — this is the sender authentication and MUST NOT be skipped. Reading the inner `pubkey` field without verifying the signature accepts forged senders.
+10. **Inner pubkey** is the buyer's or the seller's trade key for this order — otherwise discard. No other signer is accepted, including a dispute solver.
+11. **Inner kind** is 1 — otherwise discard.
+12. **Inner event id** has not been seen before, checked against **durable** state — otherwise discard.
+13. **Relative timestamp bound**: `|inner.created_at − outer.created_at|` is within the same tolerance — otherwise discard.
+
+Steps 1 through 6 are all reachable without any cryptographic work, and steps 2 and 3 in particular cost a tag comparison and an integer comparison.
+
+### The `p` tag is part of the contract
+
+Producers MUST emit exactly one `p` tag, set to `pub(K_conv)`, and MUST NOT allow application-supplied tags to add or override it. Recipients MUST reject anything else.
+
+This is not hygiene. A recipient filters by author, so a message carrying a wrong or missing `p` tag still reaches them and decrypts correctly — but a dispute solver locates the conversation by querying `#p = pub(K_conv)`. Without this rule a party could send messages that their counterparty sees normally yet are **invisible in the transcript the solver retrieves**, letting them shape the evidence after the fact.
 
 ### Replay protection
 
 Both parties hold `K_sign`, so either can re-publish a previously received inner event inside a fresh wrapper. The inner signature is genuine, so it verifies — a peer could reinject an old "I sent the fiat" message, or reshape the transcript a solver will read during a dispute.
 
-Steps 10 and 11 together close this completely:
+**Deduplication on the inner event id (step 12) is what rejects this**, in every case: the inner id is a hash over the sender's pubkey, content and `created_at`, so a re-wrapped message keeps the id it had the first time. The relative timestamp bound (step 13) is not the defence — a peer who re-wraps within the tolerance window would satisfy it. What that bound does is **limit how far back deduplication state has to reach**, by making a re-wrap detectable as stale once it falls outside the window.
 
-- Replaying the **inner** event inside a new wrapper fails the timestamp check, because the old inner `created_at` no longer matches the new outer one.
-- Replaying the **whole outer event** verbatim fails the event-id check, because the id is unchanged.
+Because of that, dedup state on the inner id MUST be **durable**, not a bounded in-memory cache: an entry evicted from an LRU makes the corresponding message replayable again. In practice this is free — clients already persist message history in order to advance the `since` cursor, so retaining each accepted inner event id alongside its message is one identifier per stored message. The bounded LRU in step 5 is a different thing: it applies to the *outer* id, is only a cheap pre-decryption filter against duplicate relay deliveries, and carries no security requirement.
 
-Both checks are therefore mandatory, not advisory.
+Retention MUST cover at least every timestamp the client will still accept, which follows from the `since` cursor: an event older than the cursor is not requested, and one newer is inside the retained range.
 
 ### Rate limiting
 
@@ -224,8 +235,12 @@ use sha2::Sha256;
 const CONV_INFO: &[u8] = b"mostro:chat:conv:v1";
 const SIGN_INFO: &[u8] = b"mostro:chat:sign:v1";
 
-/// Maximum accepted difference between the inner and outer `created_at`.
+/// Tolerance for clock skew, applied both between the inner and outer
+/// `created_at` and against the recipient's own clock.
 const MAX_CLOCK_SKEW_SECS: u64 = 60;
+
+/// Upper bound on the encrypted payload, enforced before decrypting.
+const MAX_CONTENT_BYTES: usize = 64 * 1024;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -252,7 +267,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Bob subscribes with `authors = [pub(K_sign)]` and validates what arrives.
     // Only the two trade keys of this order are accepted as inner signers.
     let allowed = [alice_trade.public_key(), bob_trade.public_key()];
-    let inner = mostro_unwrap(&bob_conv, &bob_sign.public_key(), &allowed, &outer)?;
+    let inner = mostro_unwrap(
+        &bob_conv,
+        &bob_sign.public_key(),
+        &allowed,
+        &outer,
+        Timestamp::now(),
+    )?;
     println!("Inner event: {inner:#?}");
     assert_eq!(inner.pubkey, alice_trade.public_key());
 
@@ -335,6 +356,14 @@ pub async fn mostro_wrap(
         nip44::Version::V2,
     )?;
 
+    // Exactly one `p` tag, ours. A caller-supplied one could hide the message
+    // from the `#p` query a dispute solver uses to rebuild the transcript.
+    if extra_tags
+        .iter()
+        .any(|t| t.kind() == TagKind::p())
+    {
+        return Err("extra_tags must not contain a p tag".into());
+    }
     let mut tags = vec![Tag::public_key(conv.public_key())];
     tags.extend(extra_tags);
 
@@ -348,20 +377,29 @@ pub async fn mostro_wrap(
 
 /// Validates an incoming outer event and returns the inner event.
 ///
-/// Every check here is mandatory; see "Client security requirements". Rate
-/// limiting and the event-id caches belong to the caller, which owns the
-/// per-conversation state.
+/// Every check here is mandatory; see "Client security requirements".
+///
+/// Two of the thirteen steps are the caller's, because they need state this
+/// function does not own: the **rate-limit budget** and the **event-id
+/// caches** (a bounded LRU on the outer id, and durable storage for the inner
+/// id). A caller that skips the durable inner-id check accepts replays.
+///
+/// The caller is also expected to have applied a byte limit when the raw event
+/// was read off the wire; the payload bound re-checked here only caps the
+/// decryption work.
 ///
 /// # Arguments
 /// - `conv`: `K_conv`, used to decrypt.
 /// - `sign_pubkey`: `pub(K_sign)` of this conversation.
 /// - `allowed_signers`: the buyer's and the seller's trade pubkeys.
 /// - `outer`: the received kind 14 event.
+/// - `now`: the recipient's current time, for the absolute timestamp bound.
 pub fn mostro_unwrap(
     conv: &Keys,
     sign_pubkey: &PublicKey,
     allowed_signers: &[PublicKey],
     outer: &Event,
+    now: Timestamp,
 ) -> Result<Event, Box<dyn std::error::Error>> {
     // A third party cannot produce a valid signature for this author, so this
     // check is what makes flooding impossible. Relays enforce it too, via the
@@ -372,6 +410,28 @@ pub fn mostro_unwrap(
     if outer.kind != Kind::PrivateDirectMessage {
         return Err("outer event is not kind 14".into());
     }
+
+    // Exactly one `p` tag, addressing this conversation. Anything else could be
+    // a message engineered to stay out of a dispute solver's `#p` query.
+    let mut p_tags = outer.tags.iter().filter(|t| t.kind() == TagKind::p());
+    match (p_tags.next().and_then(|t| t.content()), p_tags.next()) {
+        (Some(pk), None) if pk == conv.public_key().to_hex() => {}
+        _ => return Err("outer event must carry exactly one p tag for this conversation".into()),
+    }
+
+    // Absolute bound against our own clock. Without it a counterparty can date
+    // both events far in the future — they agree with each other, so the
+    // relative check below passes — and poison the `since` cursor, silencing
+    // the conversation until that date. The past is unbounded: catching up
+    // after being offline is legitimate.
+    if outer.created_at.as_secs() > now.as_secs().saturating_add(MAX_CLOCK_SKEW_SECS) {
+        return Err("outer event is dated too far in the future".into());
+    }
+
+    if outer.content.len() > MAX_CONTENT_BYTES {
+        return Err("encrypted payload exceeds the accepted size".into());
+    }
+
     outer.verify()?;
 
     let decrypted = nip44::decrypt(conv.secret_key(), &conv.public_key(), &outer.content)?;
@@ -387,11 +447,12 @@ pub fn mostro_unwrap(
         return Err("inner event is not kind 1".into());
     }
 
-    // Replay guard: a resent inner event keeps its original timestamp and no
-    // longer matches the wrapper it arrives in.
+    // Bounds how far back the caller's durable inner-id dedup has to reach: a
+    // re-wrap older than the tolerance is stale and rejected here, while one
+    // inside the window is caught by that dedup, never by this check.
     let skew = inner.created_at.as_secs().abs_diff(outer.created_at.as_secs());
     if skew > MAX_CLOCK_SKEW_SECS {
-        return Err("inner and outer timestamps disagree — possible replay".into());
+        return Err("inner and outer timestamps disagree — stale re-wrap".into());
     }
 
     Ok(inner)
