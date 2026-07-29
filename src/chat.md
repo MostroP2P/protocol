@@ -477,4 +477,6 @@ pub(K_sign), the author: 1dba04571059183f76b148119cfa6f8004dad30cb4e810180a6df17
 
 Both parties derive that pair from their own side of the ECDH, and these values are what the example above prints. NIP-44 v2 uses a random nonce, so ciphertexts are not reproducible: check the **derived pubkeys** against this vector first, then verify a round trip through `mostro_wrap` / `mostro_unwrap`.
 
-More details about this implementation can be found in this [repository](https://github.com/MostroP2P/mostro-chat).
+## Reference implementation
+
+[mostro-chat](https://github.com/MostroP2P/mostro-chat) is a terminal (TUI) chat client that implements this specification end to end and serves as the reference implementation: shared-key derivation with domain separation, the kind 14 outer / kind 1 inner event structure, NIP-44 self-encryption under `K_conv`, and the full validation order described in [Client security requirements](#client-security-requirements). Its code is kept up to date with this document — when in doubt about how the P2P chat should behave, consult that repository alongside the [test vector](#test-vector).
