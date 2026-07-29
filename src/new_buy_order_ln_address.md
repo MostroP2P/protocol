@@ -1,6 +1,6 @@
 # Creating a new order
 
-Creating buy order with a [lightning address](https://github.com/andrerfneves/lightning-address) would make the process way faster and easy going, to acomplish the buyer should send a Gift wrap Nostr event to Mostro with the following rumor's content:
+Creating buy order with a [lightning address](https://github.com/andrerfneves/lightning-address) would make the process way faster and easy going, to acomplish the buyer should send a NIP-44 direct message (kind `14`) to Mostro with the following decrypted content:
 
 ```json
 [
@@ -24,7 +24,8 @@ Creating buy order with a [lightning address](https://github.com/andrerfneves/li
       }
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
 ]
 ```
 
@@ -33,18 +34,21 @@ The nostr event will look like this:
 ```json
 {
   "id": "<Event id>",
-  "kind": 1059,
-  "pubkey": "<Buyer's ephemeral pubkey>",
-  "content": "<sealed-rumor-content>",
-  "tags": [["p", "Mostro's pubkey"]],
+  "kind": 14,
+  "pubkey": "<Buyer's trade pubkey>",
+  "content": "<NIP-44 ciphertext of the content array>",
+  "tags": [
+    ["p", "<Mostro's pubkey>"],
+    ["expiration", "<unix timestamp>"]
+  ],
   "created_at": 1234567890,
-  "sig": "<Signature of ephemeral pubkey>"
+  "sig": "<Buyer's trade key signature>"
 }
 ```
 
 ## Confirmation message
 
-Mostro will send back a nip59 event as a confirmation message to the user like the following:
+Mostro will send back a kind `14` event as a confirmation message to the user like the following:
 
 ```json
 [
@@ -71,6 +75,7 @@ Mostro will send back a nip59 event as a confirmation message to the user like t
       }
     }
   },
+  null,
   null
 ]
 ```

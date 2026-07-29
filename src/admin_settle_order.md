@@ -12,6 +12,7 @@ An admin can settle an order, most of the time this is done when admin is solvin
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -35,6 +36,7 @@ When solving a dispute, the admin can optionally slash one or both parties' bond
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -67,6 +69,7 @@ Mostro will send this message to the both parties buyer/seller and to the admin:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```

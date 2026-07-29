@@ -1,6 +1,6 @@
 # Seller pays hold invoice
 
-When the seller is the maker and the order was taken by a buyer, Mostro will send to the seller a message asking to pay the hold invoice, the rumor's content of the message will look like this:
+When the seller is the maker and the order was taken by a buyer, Mostro will send to the seller a message asking to pay the hold invoice, the decrypted content of the message will look like this:
 
 ```json
 [
@@ -27,11 +27,12 @@ When the seller is the maker and the order was taken by a buyer, Mostro will sen
       }
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  null,
+  null
 ]
 ```
 
-After the hold invoice is paid and the buyer already sent the invoice to receive the sats, Mostro will send a new message to seller with the following rumor's content:
+After the hold invoice is paid and the buyer already sent the invoice to receive the sats, Mostro will send a new message to seller with the following decrypted content:
 
 ```json
 [
@@ -58,7 +59,8 @@ After the hold invoice is paid and the buyer already sent the invoice to receive
       }
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  null,
+  null
 ]
 ```
 
@@ -89,6 +91,7 @@ Mostro also send a message to the buyer, this way they can both write to each ot
       }
     }
   },
+  null,
   null
 ]
 ```

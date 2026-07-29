@@ -1,6 +1,6 @@
 # User rating
 
-After a successful trade Mostro send a Gift wrap Nostr event to both parties to let them know they can rate each other, here an example how the message look like:
+After a successful trade Mostro send a NIP-44 direct message (kind `14`) to both parties to let them know they can rate each other, here an example how the message look like:
 
 ```json
 [
@@ -12,11 +12,12 @@ After a successful trade Mostro send a Gift wrap Nostr event to both parties to 
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
 
-After a Mostro client receive this message, the user can rate the other party, the rating is a number between 1 and 5, to rate the client must receive user's input and create a new Gift wrap Nostr event to send to Mostro with this content:
+After a Mostro client receive this message, the user can rate the other party, the rating is a number between 1 and 5, to rate the client must receive user's input and create a new NIP-44 direct message (kind `14`) to send to Mostro with this content:
 
 ```json
 [
@@ -30,6 +31,7 @@ After a Mostro client receive this message, the user can rate the other party, t
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -50,6 +52,7 @@ If Mostro received the correct message, it will send back a confirmation message
       }
     }
   },
+  null,
   null
 ]
 ```

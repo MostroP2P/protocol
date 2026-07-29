@@ -43,6 +43,7 @@ The message's content has the same shape as `pay-invoice`; only the action discr
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -121,6 +122,7 @@ The action and wire shape are identical to the taker case:
       }
     }
   },
+  null,
   null
 ]
 ```

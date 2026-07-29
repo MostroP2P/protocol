@@ -1,6 +1,6 @@
 # Taking a buy range order
 
-If the order fiat amount is a range like `10-20` the seller must indicate a fiat amount to take the order, seller will send a message in a Gift wrap Nostr event to Mostro with the following rumor's content:
+If the order fiat amount is a range like `10-20` the seller must indicate a fiat amount to take the order, seller will send a message in a NIP-44 direct message (kind `14`) to Mostro with the following decrypted content:
 
 ```json
 [
@@ -15,6 +15,7 @@ If the order fiat amount is a range like `10-20` the seller must indicate a fiat
       }
     }
   },
+  null,
   null
 ]
 ```

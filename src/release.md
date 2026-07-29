@@ -1,6 +1,6 @@
 # Release
 
-After confirming the buyer sent the fiat money, the seller should send a message to Mostro indicating that sats should be delivered to the buyer, the message inside rumor's content will look like this:
+After confirming the buyer sent the fiat money, the seller should send a message to Mostro indicating that sats should be delivered to the buyer, the message inside decrypted content will look like this:
 
 ```json
 [
@@ -13,6 +13,7 @@ After confirming the buyer sent the fiat money, the seller should send a message
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -32,6 +33,7 @@ Here an example of the Mostro response to the seller:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -48,6 +50,7 @@ And a message to the buyer to let him know that the sats were released:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -68,6 +71,7 @@ Right after seller releases sats, Mostro will attempt to pay the buyer's Lightni
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -120,6 +124,7 @@ If the order is a range order probably after release a child order would need to
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -153,6 +158,7 @@ Mostro will send to the maker the newly child order created with the same `trade
       }
     }
   },
+  null,
   null
 ]
 ```

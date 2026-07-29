@@ -34,6 +34,7 @@ The `bond-slashed` action is a notification Mostro sends to a bonded party when 
       }
     }
   },
+  null,
   null
 ]
 ```

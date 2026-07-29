@@ -1,6 +1,6 @@
 # Fiat sent
 
-After the buyer sends the fiat money to the seller, the buyer should send a message in a Gift wrap Nostr event to Mostro indicating that the fiat money was sent, message in the first element of the rumor's content would look like this:
+After the buyer sends the fiat money to the seller, the buyer should send a message in a NIP-44 direct message (kind `14`) to Mostro indicating that the fiat money was sent, message in the first element of the decrypted content would look like this:
 
 ```json
 {

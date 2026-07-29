@@ -39,6 +39,7 @@ The default remains `read-write` for backward compatibility.
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -56,6 +57,7 @@ The default remains `read-write` for backward compatibility.
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -73,6 +75,7 @@ Mostro sends this message to the admin:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```

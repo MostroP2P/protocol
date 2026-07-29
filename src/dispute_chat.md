@@ -20,6 +20,7 @@ When an admin takes a dispute, Mostro sends an `admin-took-dispute` message to e
       }
     }
   },
+  null,
   null
 ]
 ```

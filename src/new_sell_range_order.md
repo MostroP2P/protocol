@@ -1,6 +1,6 @@
 # Creating a new sell range order
 
-To create a new range order the user should send a Gift wrap Nostr event to Mostro with the following message:
+To create a new range order the user should send a NIP-44 direct message (kind `14`) to Mostro with the following message:
 
 ```json
 {
@@ -40,7 +40,7 @@ When a taker takes a slice of the range order, the bond obligation is reduced pr
 
 ## Confirmation message
 
-Mostro will send back a nip59 event as a confirmation message to the user like the following:
+Mostro will send back a kind `14` event as a confirmation message to the user like the following:
 
 ```json
 [
@@ -66,6 +66,7 @@ Mostro will send back a nip59 event as a confirmation message to the user like t
       }
     }
   },
+  null,
   null
 ]
 ```

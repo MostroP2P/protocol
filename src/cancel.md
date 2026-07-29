@@ -1,6 +1,6 @@
 # Cancel Order
 
-A user can cancel an order created by himself and with status `pending` sending action `cancel`, the rumor's content of the message will look like this:
+A user can cancel an order created by himself and with status `pending` sending action `cancel`, the decrypted content of the message will look like this:
 
 ```json
 [
@@ -12,13 +12,14 @@ A user can cancel an order created by himself and with status `pending` sending 
       "payload": null
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
 ]
 ```
 
 ## Mostro response
 
-Mostro will send a message with action `cancel` confirming the order was canceled, here an example of rumor's content of the message:
+Mostro will send a message with action `cancel` confirming the order was canceled, here an example of decrypted content of the message:
 
 ```json
 [
@@ -30,6 +31,7 @@ Mostro will send a message with action `cancel` confirming the order was cancele
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -103,6 +105,7 @@ A user can cancel an `active` order, but will need the counterparty to agree, le
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -119,6 +122,7 @@ Mostro will send this message to the seller:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -135,6 +139,7 @@ And this message to the buyer:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -151,6 +156,7 @@ The buyer can accept the cooperative cancellation sending this message:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -167,6 +173,7 @@ And Mostro will send this message to both parties:
       "payload": null
     }
   },
+  null,
   null
 ]
 ```

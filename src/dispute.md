@@ -12,7 +12,8 @@ A user can start a dispute in an order with status `active` or `fiat-sent` sendi
       "payload": null
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
 ]
 ```
 
@@ -32,6 +33,7 @@ Mostro will send this message to the seller:
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -50,6 +52,7 @@ And here is the message to the buyer:
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -94,6 +97,7 @@ Mostro admin will see the dispute and can take it using the dispute `Id` from `d
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -125,6 +129,7 @@ Mostro will send a confirmation message to the admin with the order details:
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -145,6 +150,7 @@ Then mostrod send messages to each trade participant, the buyer and seller for t
       }
     }
   },
+  null,
   null
 ]
 ```

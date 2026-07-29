@@ -1,6 +1,6 @@
 # Creating a new buy order
 
-To create a new buy order the user should send a Gift wrap Nostr event to Mostro with the following message:
+To create a new buy order the user should send a NIP-44 direct message (kind `14`) to Mostro with the following message:
 
 ```json
 {
@@ -29,12 +29,15 @@ The nostr event will look like this:
 ```json
 {
   "id": "<Event id>",
-  "kind": 1059,
-  "pubkey": "<Buyer's ephemeral pubkey>",
-  "content": "<sealed-rumor-content>",
-  "tags": [["p", "Mostro's pubkey"]],
+  "kind": 14,
+  "pubkey": "<Buyer's trade pubkey>",
+  "content": "<NIP-44 ciphertext of the content array>",
+  "tags": [
+    ["p", "<Mostro's pubkey>"],
+    ["expiration", "<unix timestamp>"]
+  ],
   "created_at": 1234567890,
-  "sig": "<Signature of ephemeral pubkey>"
+  "sig": "<Buyer's trade key signature>"
 }
 ```
 
@@ -50,7 +53,7 @@ If the maker never pays the bond invoice it expires and no order is created. See
 
 ## Confirmation message
 
-Mostro will send back a nip59 event as a confirmation message, the message in the rumor looks like the following:
+Mostro will send back a kind `14` event as a confirmation message, the decrypted content looks like the following:
 
 ```json
 [
@@ -77,6 +80,7 @@ Mostro will send back a nip59 event as a confirmation message, the message in th
       }
     }
   },
+  null,
   null
 ]
 ```

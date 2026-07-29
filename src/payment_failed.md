@@ -23,6 +23,7 @@ When Mostro cannot pay the buyer's Lightning invoice, it sends this message to t
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -58,6 +59,7 @@ When Mostro cannot pay the buyer's Lightning invoice, it sends this message to t
       }
     }
   },
+  null,
   null
 ]
 ```
