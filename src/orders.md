@@ -1,6 +1,6 @@
 # Request order details
 
-Clients can request detailed information for existing orders by sending a nip59 Gift wrap message with the action `orders`. This is useful for refreshing stale UI state or restoring a session from the mnemonic seed on a new device.
+Clients can request detailed information for existing orders by sending a NIP-44 direct message (kind `14`) with the action `orders`. This is useful for refreshing stale UI state or restoring a session from the mnemonic seed on a new device.
 
 ## Request message
 
@@ -10,7 +10,7 @@ The client sends a message where the payload object includes an `ids` array of o
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "request_id": 8721,
       "action": "orders",
       "payload":  {
@@ -21,6 +21,7 @@ The client sends a message where the payload object includes an `ids` array of o
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -38,7 +39,7 @@ Mostro replies with the same action and includes a structured payload describing
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "request_id": 8721,
       "action": "orders",
       "payload": {
@@ -79,6 +80,7 @@ Mostro replies with the same action and includes a structured payload describing
       }
     }
   },
+  null,
   null
 ]
 ```

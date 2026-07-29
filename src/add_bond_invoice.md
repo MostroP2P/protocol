@@ -16,7 +16,7 @@ Mostro sends a single `add-bond-invoice` message to the non-slashed counterparty
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-bond-invoice",
       "payload": {
@@ -35,6 +35,7 @@ Mostro sends a single `add-bond-invoice` message to the non-slashed counterparty
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -58,13 +59,13 @@ deadline = slashed_at + bond_payout_claim_window_days * 86_400
 
 ## Counterparty → Mostro (reply)
 
-The counterparty replies with a Gift wrap Nostr event whose rumor content carries the bolt11 inside the standard `payment_request` array. The invoice carries its own amount, so the array has two elements (per [Payment Request Array Structure](./overview.md#payment-request-array-structure)):
+The counterparty replies with a NIP-44 direct message (kind `14`) whose decrypted content carries the bolt11 inside the standard `payment_request` array. The invoice carries its own amount, so the array has two elements (per [Payment Request Array Structure](./overview.md#payment-request-array-structure)):
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "add-bond-invoice",
       "payload": {
@@ -75,7 +76,8 @@ The counterparty replies with a Gift wrap Nostr event whose rumor content carrie
       }
     }
   },
-  "<index N signature of the sha256 hash of the serialized first element of content>"
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
 ]
 ```
 
@@ -111,7 +113,7 @@ Sent by Mostro to the counterparty immediately after successfully receiving and 
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "bond-invoice-accepted",
       "payload": {
@@ -127,6 +129,7 @@ Sent by Mostro to the counterparty immediately after successfully receiving and 
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -141,7 +144,7 @@ Sent by Mostro to the counterparty when the Lightning payment to their invoice h
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "bond-payout-completed",
       "payload": {
@@ -157,6 +160,7 @@ Sent by Mostro to the counterparty when the Lightning payment to their invoice h
       }
     }
   },
+  null,
   null
 ]
 ```

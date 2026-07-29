@@ -1,27 +1,31 @@
 # Creating a new buy order
 
-To create a new buy order the user should send a Gift wrap Nostr event to Mostro with the following message:
+To create a new buy order the user should send a NIP-44 direct message (kind `14`) to Mostro with the following decrypted content:
 
 ```json
-{
-  "order": {
-    "version": 1,
-    "action": "new-order",
-    "trade_index": 1,
-    "payload": {
-      "order": {
-        "kind": "buy",
-        "status": "pending",
-        "amount": 0,
-        "fiat_code": "VES",
-        "fiat_amount": 100,
-        "payment_method": "face to face",
-        "premium": 1,
-        "created_at": 0
+[
+  {
+    "order": {
+      "version": 2,
+      "action": "new-order",
+      "trade_index": 1,
+      "payload": {
+        "order": {
+          "kind": "buy",
+          "status": "pending",
+          "amount": 0,
+          "fiat_code": "VES",
+          "fiat_amount": 100,
+          "payment_method": "face to face",
+          "premium": 1,
+          "created_at": 0
+        }
       }
     }
-  }
-}
+  },
+  "<index N signature of the sha256 hash of the serialized first element of content>",
+  ["<index 0 pubkey (identity key)>", "<index 0 identity proof signature>"]
+]
 ```
 
 The nostr event will look like this:
@@ -29,12 +33,15 @@ The nostr event will look like this:
 ```json
 {
   "id": "<Event id>",
-  "kind": 1059,
-  "pubkey": "<Buyer's ephemeral pubkey>",
-  "content": "<sealed-rumor-content>",
-  "tags": [["p", "Mostro's pubkey"]],
+  "kind": 14,
+  "pubkey": "<Buyer's trade pubkey>",
+  "content": "<NIP-44 ciphertext of the content array>",
+  "tags": [
+    ["p", "<Mostro's pubkey>"],
+    ["expiration", "<unix timestamp>"]
+  ],
   "created_at": 1234567890,
-  "sig": "<Signature of ephemeral pubkey>"
+  "sig": "<Buyer's trade key signature>"
 }
 ```
 
@@ -50,13 +57,13 @@ If the maker never pays the bond invoice it expires and no order is created. See
 
 ## Confirmation message
 
-Mostro will send back a nip59 event as a confirmation message, the message in the rumor looks like the following:
+Mostro will send back a kind `14` event as a confirmation message, the decrypted content looks like the following:
 
 ```json
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order id>",
       "action": "new-order",
       "payload": {
@@ -77,6 +84,7 @@ Mostro will send back a nip59 event as a confirmation message, the message in th
       }
     }
   },
+  null,
   null
 ]
 ```

@@ -4,17 +4,18 @@ To restore a session from the mnemonic seed on a new device (e.g., moving from m
 
 ## Request
 
-Client sends a Gift wrap Nostr event to Mostro with the following rumor's content:
+Client sends a NIP-44 direct message (kind `14`) to Mostro with the following decrypted content:
 
 ```json
 [
   {
     "restore": {
-      "version": 1,
+      "version": 2,
       "action": "restore-session",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
@@ -27,7 +28,7 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
 [
   {
     "restore": {
-      "version": 1,
+      "version": 2,
       "action": "restore-session",
       "payload": {
         "restore_data": {
@@ -61,6 +62,7 @@ Mostro will respond with a message containing all non-finalized orders (e.g., st
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -85,7 +87,7 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
 [
   {
     "restore": {
-      "version": 1,
+      "version": 2,
       "action": "restore-session",
       "payload": {
         "restore_data": {
@@ -102,6 +104,7 @@ When switching to desktop, after restoring the mnemonic, the client sends `resto
       }
     }
   },
+  null,
   null
 ]
 ```

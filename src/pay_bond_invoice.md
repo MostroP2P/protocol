@@ -22,7 +22,7 @@ The message's content has the same shape as `pay-invoice`; only the action discr
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "pay-bond-invoice",
       "payload": {
@@ -43,6 +43,7 @@ The message's content has the same shape as `pay-invoice`; only the action discr
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -100,7 +101,7 @@ The action and wire shape are identical to the taker case:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "id": "<Order Id>",
       "action": "pay-bond-invoice",
       "payload": {
@@ -121,6 +122,7 @@ The action and wire shape are identical to the taker case:
       }
     }
   },
+  null,
   null
 ]
 ```

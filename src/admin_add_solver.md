@@ -32,13 +32,14 @@ The default remains `read-write` for backward compatibility.
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "action": "admin-add-solver",
       "payload": {
         "text_message": "npub1qqq884wtp2jn96lqhqlnarl4kk3rmvrc9z2nmrvqujx3m4l2ea5qd5d0fq"
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -49,13 +50,14 @@ The default remains `read-write` for backward compatibility.
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "action": "admin-add-solver",
       "payload": {
         "text_message": "npub1qqq884wtp2jn96lqhqlnarl4kk3rmvrc9z2nmrvqujx3m4l2ea5qd5d0fq:read"
       }
     }
   },
+  null,
   null
 ]
 ```
@@ -68,11 +70,12 @@ Mostro sends this message to the admin:
 [
   {
     "order": {
-      "version": 1,
+      "version": 2,
       "action": "admin-add-solver",
       "payload": null
     }
   },
+  null,
   null
 ]
 ```
