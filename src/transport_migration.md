@@ -78,8 +78,8 @@ per instance — many run with `0` and require nothing.
   key the node does not currently associate with an active order or dispute.
   In practice that is the first event of a trade: creating an order, or taking
   one. It is never lower than `pow` and is typically higher, because that lane
-  is where spam concentrates. Once the node has matched a trade key to a live
-  order, its later messages are back to needing only `pow`.
+  is where spam concentrates. Once the node associates the trade key with an
+  active order or dispute, its later messages are back to needing only `pow`.
 
 Two consequences for a client:
 
@@ -92,8 +92,16 @@ Two consequences for a client:
    anything, so there is no `cant-do` message and no error of any kind — the
    event is simply dropped. A client that mines against `pow` when the node
    asked for `pow_first_contact` sees its order creation silently do nothing.
-   Read the info event before sending, and treat an absent `pow_first_contact`
-   tag (older daemons) as equal to `pow`.
+   Read the info event before sending.
+
+An **absent `pow_first_contact` tag means unknown, not zero and not `pow`.** Some
+protocol-v2 daemons enforce a configured first-contact difficulty but predate the
+tag, so assuming `pow` there is exactly the mistake that produces a silent drop.
+When the tag is missing and the node speaks v2, mine at least `pow` and, if a
+first contact goes unanswered, retry a freshly built event at a higher difficulty
+(doubling the bits up to a cap you choose) before concluding the node is
+unreachable — silence is the only feedback the gate gives. Nodes that publish the
+tag need none of this guesswork, which is the reason to prefer them.
 
 On v2 a node also drops a re-sent **identical** event id for a short window as
 replay defense, so a retry must be a freshly built event rather than a
