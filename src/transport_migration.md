@@ -56,10 +56,51 @@ their absence as v1.
 6. **On v2, add a NIP-40 `expiration` tag** to outgoing events. Mostro fills
    a default (the node's `dm_days`, 30 days) on its own messages when none
    is supplied.
+7. **Read the node's proof-of-work tags** and mine the outer event accordingly —
+   a new order or take is charged at the higher `pow_first_contact` rate. See
+   [Proof of work and the first-contact gate](#proof-of-work-and-the-first-contact-gate)
+   below.
 
 Full-privacy mode and reputation mode work the same way as in v1: omit the
 identity key (proof and trade signature both `null`) for full privacy, or
 include them to maintain reputation.
+
+## Proof of work and the first-contact gate
+
+Making the trade key the visible author is what lets a node filter before
+decrypting, and proof of work ([NIP-13](https://github.com/nostr-protocol/nips/blob/master/13.md))
+is how it charges for that first look. Both difficulties are published in the
+[instance-info event](./other_events.md#mostro-instance-status) and are chosen
+per instance — many run with `0` and require nothing.
+
+- **`pow`** — required of every event the client sends, on either transport.
+- **`pow_first_contact`** — required of an event whose visible sender is a trade
+  key the node does not currently associate with an active order or dispute.
+  In practice that is the first event of a trade: creating an order, or taking
+  one. It is never lower than `pow` and is typically higher, because that lane
+  is where spam concentrates. Once the node has matched a trade key to a live
+  order, its later messages are back to needing only `pow`.
+
+Two consequences for a client:
+
+1. **Mine on the outer event.** The difficulty is counted in leading zero bits
+   of the *event id* — the kind-`14` event's own id on v2, the gift wrap's id on
+   v1 — not of the inner message. Grind the `nonce` tag
+   (`["nonce", "<counter>", "<target bits>"]`) as NIP-13 describes; most Nostr
+   libraries expose this as a "pow" option on the event builder.
+2. **Under-powered events vanish.** The check happens before the node decrypts
+   anything, so there is no `cant-do` message and no error of any kind — the
+   event is simply dropped. A client that mines against `pow` when the node
+   asked for `pow_first_contact` sees its order creation silently do nothing.
+   Read the info event before sending, and treat an absent `pow_first_contact`
+   tag (older daemons) as equal to `pow`.
+
+On v2 a node also drops a re-sent **identical** event id for a short window as
+replay defense, so a retry must be a freshly built event rather than a
+rebroadcast of the same one. And independently of PoW, on both transports it
+discards messages whose inner `created_at` is older than a short freshness
+window (ten seconds in the current daemon) — so mine and publish promptly rather
+than preparing events far in advance.
 
 ## Release timeline
 
