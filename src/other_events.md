@@ -118,6 +118,10 @@ This event contains specific data about a Mostro instance. The instance is ident
         "0"
       ],
       [
+        "pow_first_contact",
+        "0"
+      ],
+      [
         "protocol_version",
         "1"
       ],
@@ -217,7 +221,8 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `fiat_currencies_accepted`: Fiat currencies accepted by the Mostro. If no currency is specified, all are accepted.
 - `max_orders_per_response`: Maximum complete orders data per response in orders action.
 - `fee`: The fee percentage charged by the instance. For example, "0.006" means a 0.6% fee.
-- `pow`: The Proof of Work required of incoming events.
+- `pow`: Proof of work ([NIP-13](https://github.com/nostr-protocol/nips/blob/master/13.md)) required of **every** event a client sends the instance, expressed as the number of leading zero bits the event id must have. Measured on the *outer* event (the gift wrap on protocol v1, the kind-`14` event on v2) and checked before anything else, so an under-powered event is discarded without any reply. `"0"` means no work is required. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
+- `pow_first_contact`: Proof of work required of a **first-contact** event — one whose visible sender is a trade key the instance does not currently associate with an active order or dispute, i.e. a new order or a take. Always at least `pow`, and typically higher: it is the anti-spam toll on the only lane an unknown sender can arrive through. Read this tag, not `pow`, before mining the first event of a trade. Daemons that predate the tag omit it; absence means the difficulty is *unknown*, not that it equals `pow`. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
 - `protocol_version`: The Mostro protocol (wire transport) this node speaks — `"1"` for NIP-59 gift wrap (kind `1059`, DEPRECATED) or `"2"` for NIP-44 direct messages (kind `14`). A node speaks exactly one; clients read this tag to pick the matching wire format. See the [client migration guide](./transport_migration.md).
 - `hold_invoice_expiration_window`: The maximum time, in seconds, for the hold invoice issued by Mostro to be paid by the seller.
 - `hold_invoice_cltv_delta`: The number of blocks in which the Mostro hold invoice will expire.
