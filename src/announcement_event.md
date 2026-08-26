@@ -40,7 +40,7 @@ so a correction is a republish under the same `d` rather than a second announcem
       ["z", "announcement"],
       ["y", "mostro", "[Publishing project name]"]
     ],
-    "content": "{\"v\":1,\"locales\":{\"en\":{\"title\":\"Mostro 2.1 is out\",\"body\":\"It fixes the invoice timeout.\"},\"es\":{\"title\":\"Mostro 2.1 ya está disponible\",\"body\":\"Corrige el timeout de la factura.\"}},\"url\":\"https://mostro.network/\"}",
+    "content": "{\"v\":1,\"severity\":\"info\",\"locales\":{\"en\":{\"title\":\"Mostro 2.1 is out\",\"body\":\"It fixes the invoice timeout.\"},\"es\":{\"title\":\"Mostro 2.1 ya está disponible\",\"body\":\"Corrige el timeout de la factura.\"}},\"url\":\"https://mostro.network/\"}",
     "sig": "<Publisher's signature>"
   }
 ]
@@ -75,6 +75,7 @@ showing the message to everyone is the wrong way to fail it.
 ```json
 {
   "v": 1,
+  "severity": "critical",
   "locales": {
     "en": { "title": "…", "body": "…" },
     "es": { "title": "…", "body": "…" }
@@ -86,6 +87,7 @@ showing the message to everyone is the wrong way to fail it.
 | Field | Required | Rule |
 |---|---|---|
 | `v` | yes | schema version, `1` today. A client MUST ignore an event whose `v` it does not know, rather than render it best-effort |
+| `severity` | yes | one of `info`, `warning`, `critical` — see below |
 | `locales` | yes | map of locale code → `{title, body}` |
 | `locales[x].title` | yes | ≤ 80 characters after trimming |
 | `locales[x].body` | yes | ≤ 500 characters after trimming |
@@ -107,10 +109,45 @@ links inside `body`; `url` is the only thing that is ever actionable. The publis
 trusted with authorship, not with rendering arbitrary content inside a Bitcoin exchange
 client.
 
+### Severity
+
+"2.1 is out, it has a nicer order book" and "2.0.3 fixes a bug that can leak your trade
+key — update now" are not the same message, and a client that renders them identically
+makes the second look like the first.
+
+| `severity` | For |
+|---|---|
+| `info` | releases, new features, events |
+| `warning` | outages, a relay being retired, anything with a deadline |
+| `critical` | a security issue the user must act on now |
+
+**A publisher declares a severity, never a colour, an icon or any other presentation
+value.** The mapping to a visual treatment belongs to the client: palettes differ between
+themes, contrast pairs are something a design system has checked and an arbitrary hex is
+not, and the publisher is trusted with authorship rather than with rendering — the same
+reason `title` and `body` are plain text. A client MUST NOT accept presentation
+instructions from this event, and SHOULD NOT rely on colour alone to convey the level.
+
+**A client that does not recognise a `severity` value MUST still render the announcement**,
+treating it as `warning`. This is the one field where the "unknown means ignore" rule of
+`v` does not apply: `v` and the locale set decide whether a message is intelligible, while
+severity only decides how it is presented, and dropping a security notice because a later
+revision of this document added a level is the worst outcome available. `warning` rather
+than `critical`, because a client cannot know which direction an unknown token sits in —
+and because "any unrecognised string renders as the loudest level" is an escalation path a
+careless or compromised publisher would use.
+
+Severity is a claim about urgency, and it decays with misuse: a `critical` spent on a
+release announcement teaches users that the level means nothing on the day it is true.
+This document cannot enforce that and does not try — it is a rule for whoever holds the
+key.
+
 ## What a reader owes
 
 The publisher's signature is the trust model, so a client MUST NOT relax any of this:
 
+0. **Never treat the event as presentation.** No markup in `title` / `body`, no colour or
+   layout taken from `content`, and `url` the only actionable element.
 1. **An allowlist of publisher keys, compiled into the client.** A list rather than a
    single key, so a successor can ship before it is needed, and not updatable over the
    wire — a remotely updatable allowlist is a channel for taking over the channel. The
