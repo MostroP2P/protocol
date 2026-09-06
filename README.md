@@ -36,3 +36,7 @@ Generates the static documentation site for production deployment.
 ```bash
 just build
 ```
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
