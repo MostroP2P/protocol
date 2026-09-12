@@ -1,0 +1,197 @@
+{
+  "version": 1,
+  "note": "Generated deterministically; every value is reproducible from the fixtures block.",
+  "curve": "secp256k1",
+  "tags": {
+    "challenge": "mostro/reputation/challenge/v1",
+    "token_id": "mostro/reputation/token/v1"
+  },
+  "tagged_hash": [
+    {
+      "tag": "mostro/reputation/challenge/v1",
+      "input": "",
+      "output": "ee81d9919f920195820f26e9bb4d885cf4cf1f81b55a589b8df8fe8add7ee790"
+    },
+    {
+      "tag": "mostro/reputation/challenge/v1",
+      "input": "00",
+      "output": "7c2d028606a6912f9a89ff3753f8d76252bebc45297e3ae57ce38137b4ca41c2"
+    },
+    {
+      "tag": "mostro/reputation/token/v1",
+      "input": "",
+      "output": "222632a20a442feacacec257eafc5fdd4333bf4ee5cea39645c059001ca87bb7"
+    }
+  ],
+  "encoding": {
+    "destination_identity_seckey": "00000000000000000000000000000000000000000000000000000000000000b0",
+    "destination_identity_xonly": "78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2",
+    "nonce": "a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "m_len": 70,
+    "token_id": "68d6322d10e4fbf3f362b416654c8623fc1bc9ef37d4e923b7ee4004ce1f955b",
+    "cell_id": "reviews:200+|rating:4.5+|age:24m+",
+    "point_compressed_example": "024e7403fcee10f849b635e334449a21e1b04b695db3e7e93651837631fd83c727"
+  },
+  "cell_key_derivation": {
+    "scheme": "HKDF-SHA256",
+    "salt_ascii": "mostro/reputation/keyset/v1",
+    "info": "epoch ‖ 0x00 ‖ cell_id ‖ counter",
+    "issuer_seckey": "0000000000000000000000000000000000000000000000000000000000000003",
+    "epoch": "2026",
+    "cases": [
+      {
+        "cell": "reviews:200+|rating:4.5+|age:24m+",
+        "counter": 0,
+        "x_cell": "7d3a941fd26dc5b8d626178e7baf4eca0e01ecdbab5da8d8cf070edfd4cdc2e8",
+        "p_cell": "024e7403fcee10f849b635e334449a21e1b04b695db3e7e93651837631fd83c727"
+      },
+      {
+        "cell": "reviews:50-200|rating:4.0-4.5|age:6m-24m",
+        "counter": 0,
+        "x_cell": "c8ba3f8d9e093cd9f36fb8d5745da3a423a61e81f4769e85243658cb5df15050",
+        "p_cell": "02d0874c428b0810d8a8b4be42c88e4ac37081a1f52ede9d2a182d68f74c98e7bf"
+      }
+    ]
+  },
+  "keyset": {
+    "kind": 38388,
+    "d": "reputation-keyset:2026",
+    "epoch": "2026",
+    "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+    "content": {
+      "cells": {
+        "reviews:200+|rating:4.5+|age:24m+": "024e7403fcee10f849b635e334449a21e1b04b695db3e7e93651837631fd83c727",
+        "reviews:50-200|rating:4.0-4.5|age:6m-24m": "02d0874c428b0810d8a8b4be42c88e4ac37081a1f52ede9d2a182d68f74c98e7bf"
+      },
+      "merges": {
+        "reviews:200+|rating:4.0-4.5|age:6m-24m": "reviews:50-200|rating:4.0-4.5|age:6m-24m"
+      }
+    }
+  },
+  "transcript": {
+    "x_cell": "7d3a941fd26dc5b8d626178e7baf4eca0e01ecdbab5da8d8cf070edfd4cdc2e8",
+    "p_cell": "024e7403fcee10f849b635e334449a21e1b04b695db3e7e93651837631fd83c727",
+    "k": [
+      "0000000000000000000000000000000000000000000000000000000000000011",
+      "0000000000000000000000000000000000000000000000000000000000000012"
+    ],
+    "r_prime": [
+      "03defdea4cdb677750a420fee807eacf21eb9898ae79b9768766e4faa04a2d4a34",
+      "025601570cb47f238d2b0286db4a990fa0f3ba28d1a319f5e7cf55c2a2444da7cc"
+    ],
+    "alpha": [
+      "0000000000000000000000000000000000000000000000000000000000000021",
+      "0000000000000000000000000000000000000000000000000000000000000031"
+    ],
+    "beta": [
+      "0000000000000000000000000000000000000000000000000000000000000022",
+      "0000000000000000000000000000000000000000000000000000000000000032"
+    ],
+    "r_blinded": [
+      "03c8aac7997194030a5db25e498f2292dbae02e47613424316133424b04db8c7a4",
+      "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0"
+    ],
+    "c_blinded": [
+      "9202edaf3e1358c174f8d240bf545b45ecc2a1c07e048b8f75d8c082267db7bc",
+      "8a341d86445060c8876c16a6e9e235f3a685131820bde4c26c9fd8ca149b516a"
+    ],
+    "clause": 1,
+    "s_blinded": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516703",
+    "s": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516734"
+  },
+  "valid_token": {
+    "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+    "epoch": "2026",
+    "cell": "reviews:200+|rating:4.5+|age:24m+",
+    "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+    "r_point": "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0",
+    "s": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516734"
+  },
+  "invalid_tokens": [
+    {
+      "name": "wrong_cell_key",
+      "reason": "invalid-reputation-token: signed for a different cell's key",
+      "token": {
+        "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+        "epoch": "2026",
+        "cell": "reviews:50-200|rating:4.0-4.5|age:6m-24m",
+        "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "r_point": "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0",
+        "s": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516734"
+      }
+    },
+    {
+      "name": "wrong_identity",
+      "reason": "reputation-identity-mismatch: `m` carries another identity",
+      "token": {
+        "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+        "epoch": "2026",
+        "cell": "reviews:200+|rating:4.5+|age:24m+",
+        "m": "72657076313a3775ab7089bc6af823aba2e1af70b236d251cadb0c86743287522a1b3b0dedeaa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "r_point": "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0",
+        "s": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516734"
+      }
+    },
+    {
+      "name": "expired_epoch",
+      "reason": "expired-reputation-keyset: epoch no longer accepted",
+      "token": {
+        "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+        "epoch": "2019",
+        "cell": "reviews:200+|rating:4.5+|age:24m+",
+        "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "r_point": "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0",
+        "s": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516734"
+      }
+    },
+    {
+      "name": "mauled_s",
+      "reason": "invalid-reputation-token: s altered",
+      "token": {
+        "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+        "epoch": "2026",
+        "cell": "reviews:200+|rating:4.5+|age:24m+",
+        "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "r_point": "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0",
+        "s": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516735"
+      }
+    },
+    {
+      "name": "mauled_r",
+      "reason": "invalid-reputation-token: R altered",
+      "token": {
+        "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+        "epoch": "2026",
+        "cell": "reviews:200+|rating:4.5+|age:24m+",
+        "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "r_point": "03c8aac7997194030a5db25e498f2292dbae02e47613424316133424b04db8c7a4",
+        "s": "89b6194d77ae5f905579767e11acff73dc8c72aec2bd2b8582e1f0572d516734"
+      }
+    },
+    {
+      "name": "zero_s",
+      "reason": "invalid-reputation-token: s = 0 must be rejected, never accepted",
+      "token": {
+        "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+        "epoch": "2026",
+        "cell": "reviews:200+|rating:4.5+|age:24m+",
+        "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "r_point": "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0",
+        "s": "0000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    {
+      "name": "s_overflow",
+      "reason": "invalid-reputation-token: s = n + s must be rejected, never reduced mod n",
+      "token": {
+        "issuer": "f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+        "epoch": "2026",
+        "cell": "reviews:200+|rating:4.5+|age:24m+",
+        "m": "72657076313a78a891aa2234a498896a193ed088a2b68fcae82788f506a0f3287432beb31db2a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+        "r_point": "02492787a0628d2874562487bdb7500c310bf4f6e0940c40ee2eeb54969f3509e0",
+        "s": "189b6194d77ae5f905579767e11acff72973b4f957205cbc142b44ee3fd87a875"
+      }
+    }
+  ]
+}
