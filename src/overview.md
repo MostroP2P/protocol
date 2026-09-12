@@ -10,7 +10,7 @@ Mostro uses [Addressable Events](https://github.com/nostr-protocol/nips/blob/mas
 | Ratings    | 38384 | User rating events |
 | Info       | 38385 | Mostro instance status and information |
 | Disputes   | 38386 | Dispute events |
-| Reputation keyset | 38387 | Public keys an issuer of portable reputation publishes per band |
+| Reputation keyset | 38388 | Public keys an issuer of portable reputation publishes per band |
 
 You can find more details about the order event [here](./order_event.md)
 
