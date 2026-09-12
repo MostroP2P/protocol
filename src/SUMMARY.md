@@ -37,5 +37,6 @@
 - [Last Trade Index](./last_trade_index.md)
 - [Actions](./actions.md)
   - [Message suggestions for actions](./message_suggestions_for_actions.md)
+- [Reputation bands](./reputation_bands.md)
 - [P2P Order event. NIP-69](./order_event.md)
 - [Other events published by Mostro](./other_events.md)
