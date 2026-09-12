@@ -40,7 +40,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
     ["premium", "1"],
     [
       "rating",
-      "{\"total_reviews\":1,\"total_rating\":3.0,\"last_rating\":3,\"max_rate\":5,\"min_rate\":1,\"days\":21}"
+      "{\"total_reviews\":1,\"total_rating\":3.0,\"last_rating\":3,\"max_rate\":5,\"min_rate\":1,\"since\":1700697600,\"days\":21}"
     ],
     ["source", "https://t.me/p2plightning/xxxxxxx"],
     ["network", "mainnet"],
@@ -71,7 +71,12 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
 - `pm` < Payment method >: The payment method used for the trade, if the order has multiple payment methods, they should be separated by a comma.
 - `premium` < Premium >: The percentage of the premium the maker is willing to pay.
 - `source` [Source]: The source of the order, it can be a URL that redirects to the order.
-- `rating` [Rating]: The rating of the maker, this document does not define how the rating is calculated, it's up to the platform to define it.
+- `rating` [Rating]: The rating of the maker, this document does not define how the rating is calculated, it's up to the platform to define it. The value is a JSON object; Mostro publishes:
+  - `total_reviews`: ratings the user has received.
+  - `total_rating`: the user's average rating.
+  - `since`: Unix timestamp of the user's first trade, **truncated to the start of its UTC day** (`created_at - created_at % 86400`). Clients compute the age at display time. Day precision is deliberate: the tag travels on every order of the same user, and a second-precision value would make their trade pubkeys trivially correlatable.
+  - `days`: **DEPRECATED** in favour of `since` — a day count computed at publish time is stale on any event that sits on relays. Published alongside `since` for one deprecation window, then removed in the minor release after the one that first publishes `since`. Clients MUST prefer `since` when present and MAY fall back to `days` while the window lasts.
+  - `last_rating`, `max_rate`, `min_rate`: optional detail of the rating history.
 - `network` < Network >: The network used for the trade, it can be `mainnet`, `testnet`, `signet`, etc.
 - `layer` < Layer >: The layer used for the trade, it can be `onchain`, `lightning`, `liquid`, etc.
 - `name` [Name]: The name of the maker.
