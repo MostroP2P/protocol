@@ -147,7 +147,7 @@ vectors = {
         ],
     },
     "keyset": {
-        "kind": 38387,
+        "kind": 38388,
         "d": f"reputation-keyset:{EPOCH}",
         "epoch": EPOCH,
         "issuer": xonly(issuer_pub).hex(),
