@@ -10,6 +10,7 @@ Mostro uses different event kinds for different types of data:
 | Ratings    | 38384 | `rating`           |
 | Info       | 38385 | `info`             |
 | Disputes   | 38386 | `dispute`          |
+| Reputation keyset | 38388 | `reputation-keyset` |
 
 This document focuses on the **Order** event (kind `38383`), which is used for the P2P order book.
 
