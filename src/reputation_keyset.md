@@ -8,7 +8,7 @@ states its band.
 
 ## The event
 
-Kind `38387`, an [addressable
+Kind `38388`, an [addressable
 event](https://github.com/nostr-protocol/nips/blob/master/01.md#kinds), signed
 with the issuer's own key:
 
@@ -20,7 +20,7 @@ with the issuer's own key:
     "id": "<Event id>",
     "pubkey": "<Issuer's pubkey>",
     "created_at": 1767225600,
-    "kind": 38387,
+    "kind": 38388,
     "tags": [
       ["d", "reputation-keyset:2026"],
       ["epoch", "2026"],
@@ -77,7 +77,7 @@ following hold. Otherwise a relay or a third party could substitute a
 1. The Nostr signature is valid.
 2. `pubkey` equals the issuer key the destination trusts — the same 32-byte
    x-only key that fills the `issuer` field of every token it signs.
-3. `kind` is `38387`.
+3. `kind` is `38388`.
 4. `d` is `reputation-keyset:<epoch>` and the `epoch` tag equals that
    `<epoch>`.
 5. `content` parses into `cells` and `merges`, every key of both is a valid
