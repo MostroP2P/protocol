@@ -7,8 +7,9 @@ means the same thing wherever it is redeemed. Operators choose whom to trust,
 not what a band means.
 
 This page defines only the grid. The event that publishes an issuer's keys is
-in [Reputation keyset event](./reputation_keyset.md); the messages that carry
-a band between instances are specified separately.
+in [Reputation keyset event](./reputation_keyset.md), and the messages that
+carry a band between instances are in
+[Reputation portability](./reputation_portability.md).
 
 ## Why bands and not numbers
 
