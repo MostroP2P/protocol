@@ -88,6 +88,14 @@ A client restoring onto an empty database can still rebuild the conversation, be
 
 With the pair it derives `K_conv` and `K_sign` exactly as in a live trade, subscribes to kind `14` events authored by `pub(K_sign)`, and decrypts the history the relays still hold. Without it the conversation is unreachable: the author to filter on cannot be computed, so there is nothing to ask the relays for.
 
+A restored subscription is a chat subscription like any other, and the [client security requirements](./chat.md#client-security-requirements) apply to it unchanged — every event goes through the same validation order before it is accepted. Restore is only the one case where there is no persisted `since` cursor yet, since the point is to pull the backlog the client no longer has:
+
+* The subscription MUST still carry a `limit`. Unbounded is what turns a flood into permanent damage.
+* The client persists the cursor from the accepted messages as it normally would, clamped to `min(accepted_timestamp, local_now)`. From the next reconnect on, the subscription is bounded by that cursor again.
+* Dedup state on the inner event id MUST be durable, as for a live conversation.
+
+Rebuilding is therefore a one-off larger read, not a licence to subscribe unbounded from then on.
+
 Mostro knows both trade pubkeys of every order it matched, so it returns the one the requesting client does not hold. It is `null` on an order nobody has taken — there is no counterparty yet, and no conversation to rebuild.
 
 How far back the history goes is a property of the relays, not of the protocol: whatever they have pruned is gone for both parties alike.
