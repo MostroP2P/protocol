@@ -48,6 +48,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
     ["name", "Nakamoto"],
     ["g", "<geohash>"],
     ["bond", "0"],
+    ["created_at", "1702548701"],
     ["expires_at", "1719391096"],
     ["expiration", "1719995896"],
     ["y", "lnp2pbot", "[Platform instance name]"],
@@ -77,6 +78,9 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
 - `name` [Name]: The name of the maker.
 - `g` [Geohash]: The geohash of the operation, it can be useful in a face to face trade.
 - `bond` [Bond]: The bond amount, the bond is a security deposit that both parties must pay.
+- `created_at` [Created At]: The unix timestamp when the order was created. Unlike the event's `created_at`, which changes on every update of this addressable event, it stays the same across updates, so clients can show the order's age and sort by it. Clients SHOULD fall back to the event's `created_at` when the tag is absent (nodes that predate it).
+
+  In Mostro this is when the daemon created the order, which is not always when it was first published: with an anti-abuse bond on the maker, the order exists before its first event goes out, once the bond locks. The remainder of a partially taken range order is a new order with its own `created_at`.
 - `expires_at` < Expires At\>: The expiration date of the event being published in `pending` status, after this time the event status SHOULD be changed to `expired`.
 - `expiration` < Expiration\>: The expiration date of the event, after this time the relay SHOULD delete it ([NIP-40](40.md)).
 - `y` < Platform >: Platform identifier tag values. For Mostro this is always `"mostro"` and MAY include a second value with the Mostro instance name from settings.
