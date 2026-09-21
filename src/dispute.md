@@ -2,21 +2,29 @@
 
 ## Dispute statuses
 
-A dispute has its own lifecycle, separate from the order's. Its current status travels in the `s` tag of the addressable dispute event (kind `38386`), and in the `status` field of the disputes returned by [restore-session](./restore_session.md).
+A dispute has its own lifecycle, separate from the order's. Its current status travels in the `s` tag of the addressable dispute event (kind `38386`), and in the `status` field of the disputes returned by [restore-session](./restore_session.md) — which only returns open ones.
 
 | Status | Meaning | Set when |
 |---|---|---|
 | `initiated` | Open, waiting for a solver. | Either party sends `dispute` (below). |
 | `in-progress` | A solver has taken it and is working on it. | A solver sends [`admin-take-dispute`](#taking-the-dispute). |
-| `settled` | Resolved in the **buyer's** favour: the seller's hold invoice was settled and the buyer is paid. | A solver sends [`admin-settle`](./admin_settle_order.md), **or** the seller sends [`release`](./release.md) while the dispute is open. |
-| `seller-refunded` | Resolved in the **seller's** favour: the hold invoice was canceled and the sats return to the seller. | A solver sends [`admin-cancel`](./admin_cancel_order.md), **or** both parties agree to a [cooperative cancel](./cancel.md) while the dispute is open. |
-| `released` | Reserved. | Never, today — see the note below. |
+| `settled` | A **solver** resolved it in the buyer's favour: the seller's hold invoice was settled and the buyer is paid. | A solver sends [`admin-settle`](./admin_settle_order.md). |
+| `seller-refunded` | A **solver** resolved it in the seller's favour: the hold invoice was canceled and the sats return to the seller. | A solver sends [`admin-cancel`](./admin_cancel_order.md). |
+| `released` | The **users** resolved it: the seller released the funds, and the buyer is paid. | The seller sends [`release`](./release.md) while the dispute is open. |
+| `cooperatively-canceled` | The **users** resolved it: both agreed to cancel, and the seller is refunded. | Both parties agree to a [cooperative cancel](./cancel.md) while the dispute is open. |
 
-`initiated` and `in-progress` are open; `settled` and `seller-refunded` are final.
+`initiated` and `in-progress` are open; the other four are final.
 
-Note that a dispute can close **without a solver**: if the users resolve the trade themselves — the seller releases, or both agree to cancel — Mostro closes the dispute with the status that matches the outcome (`settled` or `seller-refunded`). A client must therefore not read `settled` or `seller-refunded` as "a solver decided".
+The final statuses come in pairs with the same outcome, told apart by **who** resolved the dispute:
 
-`released` is defined in [mostro-core](https://github.com/MostroP2P/mostro-core) ("the seller released the funds before the dispute was resolved"), but the Mostro daemon does not emit it: a release during a dispute closes it as `settled`. Clients should still parse it, as a final status meaning the buyer was paid, so that a future daemon using it does not break them.
+| Outcome | Resolved by a solver | Resolved by the users |
+|---|---|---|
+| Buyer paid | `settled` | `released` |
+| Seller refunded | `seller-refunded` | `cooperatively-canceled` |
+
+So a client can read the outcome and the resolver straight from the status, without looking at the order.
+
+**Older daemons.** Before `released` and `cooperatively-canceled` were emitted, a release during a dispute closed it as `settled`, and a cooperative cancel as `seller-refunded` — so on those daemons `settled` and `seller-refunded` do not prove a solver decided. A client that must know who resolved a dispute should treat that pair as ambiguous when talking to a daemon that predates them, and must parse all four final statuses either way.
 
 ## Opening a dispute
 
