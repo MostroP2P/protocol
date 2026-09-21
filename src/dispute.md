@@ -1,5 +1,33 @@
 # Dispute
 
+## Dispute statuses
+
+A dispute has its own lifecycle, separate from the order's. Its current status travels in the `s` tag of the addressable dispute event (kind `38386`), and in the `status` field of the disputes returned by [restore-session](./restore_session.md) — which only returns open ones.
+
+| Status | Meaning | Set when |
+|---|---|---|
+| `initiated` | Open, waiting for a solver. | Either party sends `dispute` (below). |
+| `in-progress` | A solver has taken it and is working on it. | A solver sends [`admin-take-dispute`](#taking-the-dispute). |
+| `settled` | A **solver** resolved it in the buyer's favour: the seller's hold invoice was settled and the buyer is paid. | A solver sends [`admin-settle`](./admin_settle_order.md). |
+| `seller-refunded` | A **solver** resolved it in the seller's favour: the hold invoice was canceled and the sats return to the seller. | A solver sends [`admin-cancel`](./admin_cancel_order.md). |
+| `released` | The **users** resolved it: the seller released the funds, and the buyer is paid. | The seller sends [`release`](./release.md) while the dispute is open. |
+| `cooperatively-canceled` | The **users** resolved it: both agreed to cancel, and the seller is refunded. | Both parties agree to a [cooperative cancel](./cancel.md) while the dispute is open. |
+
+`initiated` and `in-progress` are open; the other four are final.
+
+The final statuses come in pairs with the same outcome, told apart by **who** resolved the dispute:
+
+| Outcome | Resolved by a solver | Resolved by the users |
+|---|---|---|
+| Buyer paid | `settled` | `released` |
+| Seller refunded | `seller-refunded` | `cooperatively-canceled` |
+
+So a client can read the outcome and the resolver straight from the status, without looking at the order.
+
+**Older daemons.** Before `released` and `cooperatively-canceled` were emitted, a release during a dispute closed it as `settled`, and a cooperative cancel as `seller-refunded` — so on those daemons `settled` and `seller-refunded` do not prove a solver decided. A client that must know who resolved a dispute should treat that pair as ambiguous when talking to a daemon that predates them, and must parse all four final statuses either way.
+
+## Opening a dispute
+
 A user can start a dispute in an order with status `active` or `fiat-sent` sending action `dispute`, here is an example where the seller initiates a dispute:
 
 ```json
@@ -84,6 +112,8 @@ Here is an example of the event sent by Mostro:
   }
 ]
 ```
+
+## Taking the dispute
 
 Mostro admin will see the dispute and can take it using the dispute `Id` from `d` tag, here how should look the message sent by the admin:
 
