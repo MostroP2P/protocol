@@ -1,5 +1,25 @@
 # Dispute
 
+## Dispute statuses
+
+A dispute has its own lifecycle, separate from the order's. Its current status travels in the `s` tag of the addressable dispute event (kind `38386`), and in the `status` field of the disputes returned by [restore-session](./restore_session.md).
+
+| Status | Meaning | Set when |
+|---|---|---|
+| `initiated` | Open, waiting for a solver. | Either party sends `dispute` (below). |
+| `in-progress` | A solver has taken it and is working on it. | A solver sends [`admin-take-dispute`](#taking-the-dispute). |
+| `settled` | Resolved in the **buyer's** favour: the seller's hold invoice was settled and the buyer is paid. | A solver sends [`admin-settle`](./admin_settle_order.md), **or** the seller sends [`release`](./release.md) while the dispute is open. |
+| `seller-refunded` | Resolved in the **seller's** favour: the hold invoice was canceled and the sats return to the seller. | A solver sends [`admin-cancel`](./admin_cancel_order.md), **or** both parties agree to a [cooperative cancel](./cancel.md) while the dispute is open. |
+| `released` | Reserved. | Never, today — see the note below. |
+
+`initiated` and `in-progress` are open; `settled` and `seller-refunded` are final.
+
+Note that a dispute can close **without a solver**: if the users resolve the trade themselves — the seller releases, or both agree to cancel — Mostro closes the dispute with the status that matches the outcome (`settled` or `seller-refunded`). A client must therefore not read `settled` or `seller-refunded` as "a solver decided".
+
+`released` is defined in [mostro-core](https://github.com/MostroP2P/mostro-core) ("the seller released the funds before the dispute was resolved"), but the Mostro daemon does not emit it: a release during a dispute closes it as `settled`. Clients should still parse it, as a final status meaning the buyer was paid, so that a future daemon using it does not break them.
+
+## Opening a dispute
+
 A user can start a dispute in an order with status `active` or `fiat-sent` sending action `dispute`, here is an example where the seller initiates a dispute:
 
 ```json
@@ -84,6 +104,8 @@ Here is an example of the event sent by Mostro:
   }
 ]
 ```
+
+## Taking the dispute
 
 Mostro admin will see the dispute and can take it using the dispute `Id` from `d` tag, here how should look the message sent by the admin:
 
