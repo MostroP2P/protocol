@@ -122,6 +122,10 @@ This event contains specific data about a Mostro instance. The instance is ident
         "0"
       ],
       [
+        "maintenance_mode",
+        "false"
+      ],
+      [
         "protocol_version",
         "1"
       ],
@@ -250,6 +254,14 @@ These tags advertise the node's anti-abuse-bond configuration so clients can sho
 - `bond_payout_claim_window_days`: number of days the winning counterparty has, from the slash moment, to submit a Lightning invoice for their share of a slashed bond. After this window the share is forfeited to the node. Clients use this together with the `slashed_at` field carried on `add-bond-invoice` messages (see [Bond payout invoice](./add_bond_invoice.md)) to render the forfeit deadline locally.
 
 **Disambiguation.** When `bond_enabled` is absent from the event, the daemon predates the bond feature; treat the node as not enforcing bonds. When `bond_enabled = "false"`, the daemon supports the feature but the operator has not enabled it on this instance. When `bond_enabled = "true"`, the remaining six bond tags are present and clients should expect bond messages on this node — [`pay-bond-invoice`](./pay_bond_invoice.md) for the bonded user and [`add-bond-invoice`](./add_bond_invoice.md) for the payout recipient on a slashed trade.
+
+### Maintenance mode tag
+
+- `maintenance_mode`: `"true"` while the operator has put the instance in maintenance mode, otherwise `"false"`. Always emitted on daemons that support the feature; daemons that predate it omit the tag, which clients should treat as `"false"`.
+
+While `maintenance_mode = "true"` the instance rejects [`new-order`](./new_sell_order.md), [`take-sell`](./take_sell.md) and [`take-buy`](./take_buy.md) with a `cant-do` whose reason is `maintenance_mode` (see [Cant Do Reasons](./message_suggestions_for_actions.md#cant-do-reasons)). Every action on an order that already exists — paying the hold invoice, `fiat-sent`, `release`, `cancel`, disputes, ratings, adding invoices — keeps working, so open trades can finish normally. The typical use is draining open escrow before the operator migrates the instance to a different Lightning node.
+
+Clients SHOULD read this tag and warn the user before they compose or take an order on an instance in maintenance mode, rather than letting the user mine proof of work for a request that will be rejected. The tag flips back to `"false"` when the operator re-opens the instance; the info event is republished immediately on each change and then at the usual interval.
 
 ## Information about the Relays Where Events Are Published
 
