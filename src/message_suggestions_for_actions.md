@@ -110,58 +110,58 @@ Below are suggestions for messages that clients can show to users when receiving
 
 ## Cant Do Reasons
 
-Mostro also handles messages with the `CantDo` action for various reasons. The details of the failure are included in the payload section of the event, providing a structured explanation of the issue. Below are suggested texts that clients can display to users based on the `CantDo` reason received:
+Mostro also handles messages with the `CantDo` action for various reasons. The details of the failure are included in the payload section of the event, providing a structured explanation of the issue. The reason travels as `snake_case`, e.g. `"payload": { "cant_do": "not_allowed_by_status" }`; match on that exact spelling. Below are suggested texts that clients can display to users based on the `CantDo` reason received:
 
-- **invalid-trade-index:**  
+- **invalid_trade_index:**  
   The provided trade index is invalid. Please ensure your client is synchronized and try again.
 
-- **invalid-amount:**  
+- **invalid_amount:**  
   The provided amount is invalid. Please verify it and try again.
 
-- **invalid-invoice:**  
+- **invalid_invoice:**  
   The provided Lightning invoice is invalid. Please check the invoice details and try again.
 
-- **invalid-peer:**  
+- **invalid_peer:**  
   You are not authorized to perform this action.
 
-- **invalid-order-status:**  
+- **invalid_order_status:**  
   The action cannot be completed due to the current order status. 
 
-- **invalid-parameters:**  
+- **invalid_parameters:**  
   The action cannot be completed due to invalid parameters. Please review the provided values and try again.
 
-- **invalid-pubkey:**  
+- **invalid_pubkey:**  
   The action cannot be completed because the public key is invalid.
 
-- **order-already-canceled:**  
+- **order_already_canceled:**  
   The action cannot be completed because the order has already been canceled.
 
-- **cant-create-user:**  
+- **cant_create_user:**  
   The action cannot be completed because the user could not be created.
 
-- **is-not-your-dispute:**  
+- **is_not_your_dispute:**  
   This dispute is not assigned to you.
 
-- **not-found:**  
+- **not_found:**  
   The requested dispute could not be found.
 
-- **invalid-signature:**  
+- **invalid_signature:**  
   The action cannot be completed because the signature is invalid.
 
-- **is-not-your-order:**  
+- **is_not_your_order:**  
   This order does not belong to you.
 
-- **not-allowed-by-status:**  
+- **not_allowed_by_status:**  
   The action cannot be completed because order Id `id` status is `order-status`.  
 
-- **out-of-range-fiat-amount:**  
+- **out_of_range_fiat_amount:**  
   The requested fiat amount is outside the acceptable range (`min_amount`–`max_amount`).
 
-- **out-of-range-sats-amount:**  
+- **out_of_range_sats_amount:**  
   The allowed Sats amount for this Mostro is between min `min_order_amount` and max `max_order_amount`. Please enter an amount within this range.
 
-- **too-many-requests:**
+- **too_many_requests:**
   User exceeds the allowed request rate.
 
-- **invalid-fiat-currency:**
+- **invalid_fiat_currency:**
   Prevents proceeding with unrecognized fiat currencies.

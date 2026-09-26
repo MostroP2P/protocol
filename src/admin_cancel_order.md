@@ -55,6 +55,12 @@ Whenever a side is slashed and the operator has configured `slash_node_share_pct
 
 Each slashed party is also sent a [`bond-slashed`](./bond_slashed.md) forfeiture notice for the slashed bond amount, in addition to the `admin-canceled` confirmation below.
 
+## Cancel an order waiting for its maker bond
+
+`admin-cancel` also accepts an order still waiting for its [maker bond](./pay_bond_invoice.md#maker-bond) (daemon-internal `waiting-maker-bond`), but only when the message is signed with the Mostro node's own key: this is how an operator clears unpublished orders, for example before a maintenance. A solver's `admin-cancel` on such an order receives `cant-do` with reason `not_authorized`.
+
+The order was never published, so Mostro closes it as `canceled-by-admin` in its database only, with no addressable event. It releases the maker bond, which cancels its hold invoice, and sends the maker `admin-canceled` (the message below). If the bond locked a moment earlier and the order is not published yet, the request receives `cant-do` with reason `not_allowed_by_status`; once the order is `pending`, `admin-cancel` cancels it as a published order. `bond_resolution` is ignored on this path: nothing is slashed.
+
 ## Mostro response
 
 Mostro will send this message to the both parties buyer/seller and to the admin:
