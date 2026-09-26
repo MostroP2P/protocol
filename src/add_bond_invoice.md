@@ -172,8 +172,8 @@ Both actions carry `Payload::Order` (the `SmallOrder` context) and are serde-add
 ## Failure modes
 
 - The counterparty never replies before the deadline → no Lightning payment arrives and the share is forfeited; the slashed funds remain with the node.
-- A reply arrives after the deadline, or from a sender other than the resolved recipient, or after another reply already won the race → Mostro responds with a `cant-do` action carrying reason `not-allowed-by-status`.
-- The bolt11 principal does not match the requested counterparty share, or the invoice is otherwise undecodable / expired → Mostro responds with `cant-do` reason `invalid-invoice`.
+- A reply arrives after the deadline, or from a sender other than the resolved recipient, or after another reply already won the race → Mostro responds with a `cant-do` action carrying reason `not_allowed_by_status`.
+- The bolt11 principal does not match the requested counterparty share, or the invoice is otherwise undecodable / expired → Mostro responds with `cant-do` reason `invalid_invoice`.
 - On a node where the operator retains 100% of slashed bonds, **no `add-bond-invoice` message is emitted at all**. Clients should not surface a phantom payout request.
 - If `send_payment` retries are exhausted (see `payout_max_retries` in the info event) the counterparty is re-prompted with a fresh `add-bond-invoice` request, provided the claim window has not yet elapsed. If the window has passed, the share is forfeited and no further messages are sent.
 

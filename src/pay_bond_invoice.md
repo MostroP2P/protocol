@@ -73,7 +73,7 @@ Internal transitions (not visible to clients):
 
 - From `pending` → `waiting-taker-bond`, after a successful `take-buy` / `take-sell` when bonds are enabled.
 - From `waiting-taker-bond` → `waiting-payment` (buy order taken) or → `waiting-buyer-invoice` (sell order taken), once the bond HTLC is `Accepted`.
-- From `waiting-taker-bond` → `pending`, if the bond bolt11 is never paid and expires (after `hold_invoice_expiration_window` seconds, see [Failure modes](#failure-modes)), or the taker cancels before locking. The published `s` tag was `pending` throughout — observers see only that the take attempt left no trace.
+- From `waiting-taker-bond` → `pending`, if the bond bolt11 is never paid and expires (after `hold_invoice_expiration_window` seconds, see [Failure modes](#failure-modes)), or the taker cancels before locking, **and no other taker's bond is still outstanding**. Otherwise the order stays in `waiting-taker-bond` while the remaining bonds race. The published `s` tag was `pending` throughout — observers see only that the take attempt left no trace.
 
 ### Failure modes
 
