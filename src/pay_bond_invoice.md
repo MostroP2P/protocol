@@ -73,11 +73,15 @@ Internal transitions (not visible to clients):
 
 - From `pending` → `waiting-taker-bond`, after a successful `take-buy` / `take-sell` when bonds are enabled.
 - From `waiting-taker-bond` → `waiting-payment` (buy order taken) or → `waiting-buyer-invoice` (sell order taken), once the bond HTLC is `Accepted`.
-- From `waiting-taker-bond` → `pending`, if the bond bolt11 is never paid and expires, or the taker cancels before locking. The published `s` tag was `pending` throughout — observers see only that the take attempt left no trace.
+- From `waiting-taker-bond` → `pending`, if the bond bolt11 is never paid and expires (after `hold_invoice_expiration_window` seconds, see [Failure modes](#failure-modes)), or the taker cancels before locking. The published `s` tag was `pending` throughout — observers see only that the take attempt left no trace.
 
 ### Failure modes
 
-- The user never pays the bond bolt11 → the invoice expires; the order's NIP-33 status was `pending` throughout, so the rollback only undoes the daemon-internal take state. The order remains takeable.
+- The user never pays the bond bolt11 → the invoice expires `hold_invoice_expiration_window` seconds after it was issued, the value the node advertises in its [info event](./other_events.md). From then on the Lightning node refuses any payment on it. Mostro releases the bond and, if no other taker's bond is still outstanding, returns the order to `pending` and republishes its event with the same tags (a range order keeps `amt` `"0"` and `fa` `[min, max]`). The order's NIP-33 status was `pending` throughout, so the rollback only undoes the daemon-internal take state, and the order remains takeable.
+
+  The taker receives **no message** when this happens. A client should treat the bolt11's expiry as the end of the take and let the user take the order again.
+
+  If the daemon misses the Lightning node's cancel (for example across a restart), a periodic check releases a bond left unpaid past `hold_invoice_expiration_window` within a few minutes. Nodes that predate the expiry issued taker bond invoices with the Lightning node's default expiry (24 hours on LND); on those, the invoice may stay payable long after the window.
 - The user pays the bond and then cancels before trade completion → the bond HTLC is cancelled and the funds return to the taker.
 - Slashing conditions (solver-directed dispute resolution, or timeout while in a waiting state) can settle the bond rather than release it. The solver directs slashing via the `bond_resolution` payload documented under [Admin Settle order](./admin_settle_order.md) and [Admin Cancel order](./admin_cancel_order.md), and the non-slashed counterparty is then asked for their share of the bond via [Bond payout invoice](./add_bond_invoice.md). When a timeout slash fires, the slashed party first receives a [`bond-slashed`](./bond_slashed.md) notification.
 
@@ -138,6 +142,29 @@ Once the maker's bond HTLC is `Accepted`:
 1. Mostro publishes the order to Nostr with status `pending` for the first time.
 2. Mostro sends the maker the `new-order` confirmation message (same as in the no-bond flow — see [Creating a new sell order](./new_sell_order.md) and [Creating a new buy order](./new_buy_order.md)).
 
+### Deadline to pay
+
+The maker bond hold invoice expires after the node's maker-bond payment timeout (operator setting `maker_bond_payment_timeout_seconds`, 900 seconds by default). The node does not advertise this timeout in its info event; a client reads it from the bolt11's expiry and can show the maker a countdown.
+
+When the deadline passes, the Lightning node refuses any payment on the invoice, and Mostro closes the order as `expired` (in its database only), releases the bond and sends the maker `canceled`:
+
+```json
+[
+  {
+    "order": {
+      "version": 2,
+      "id": "<Order Id>",
+      "action": "canceled",
+      "payload": null
+    }
+  },
+  null,
+  null
+]
+```
+
+The message answers no request of the maker's, so it carries no `request_id`. A client should end the bond-payment screen when it arrives, or at the bolt11's expiry if it never does. Nodes that predate the deadline issued maker bond invoices with the Lightning node's default expiry (24 hours on LND), kept the order until its `expires_at`, and sent the maker nothing.
+
 ### Daemon status `waiting-maker-bond` (internal only)
 
 Like `waiting-taker-bond`, this status lives **only in the daemon's database** — it is never published on a NIP-33 event (none exists yet) nor echoed in any DM payload (the `pay-bond-invoice` `SmallOrder` carries `pending`). It is documented here only to describe the daemon's lifecycle.
@@ -146,11 +173,16 @@ Internal transitions (not visible to clients):
 
 - On `new-order` receipt → `waiting-maker-bond`, before any NIP-33 event is emitted.
 - `waiting-maker-bond` → `pending` (and order published), once the bond HTLC is `Accepted`.
-- `waiting-maker-bond` discarded (no NIP-33 ever emitted), if the bond invoice expires without payment.
+- `waiting-maker-bond` → `expired`, if the maker does not pay before the [deadline](#deadline-to-pay), or the order reaches its `expires_at` first.
+- `waiting-maker-bond` → `canceled`, if the maker sends [`cancel`](./cancel.md#cancel-during-waiting-maker-bond) before paying.
+- `waiting-maker-bond` → `canceled-by-admin`, if the operator [cancels it](./admin_cancel_order.md#cancel-an-order-waiting-for-its-maker-bond).
+
+None of the last three emits a NIP-33 event: the order was never published, so there is nothing to replace. Each releases the bond, which cancels its hold invoice. A bond that already locked wins over all three: its order is published as `pending`, and the maker then handles it as a published order.
 
 ### Failure modes
 
-- Maker never pays → invoice expires, order discarded silently. No NIP-33 event was ever emitted so the order book is unaffected.
+- Maker never pays → at the [deadline](#deadline-to-pay) the invoice expires, the order closes as `expired` and the maker receives `canceled`. No NIP-33 event was ever emitted, so the order book is unaffected.
+- Maker changes their mind before paying → the maker sends [`cancel`](./cancel.md#cancel-during-waiting-maker-bond); the bond invoice is canceled and the order closes as `canceled`, again without any NIP-33 event.
 - Maker pays the bond, order publishes as `pending`, then maker cancels → bond HTLC released, funds return to maker.
 - A waiting-state timeout slash (when `slash_on_waiting_timeout = true`) settles the maker's bond HTLC instead of releasing it. The maker first receives a [`bond-slashed`](./bond_slashed.md) notification, then the order is canceled. The winning counterparty (the taker) then receives [`add-bond-invoice`](./add_bond_invoice.md) for their share.
 

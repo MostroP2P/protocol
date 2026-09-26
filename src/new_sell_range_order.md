@@ -28,6 +28,8 @@ To create a new range order the user should send a NIP-44 direct message (kind `
 
 Here we have two new fields, `min_amount` and `max_amount`, to define the range of the order. The `fiat_amount` field is set to 0 to indicate that the order is for a range of amounts.
 
+`min_amount` and `max_amount` go together: send both for a range order, or neither for a single-amount order. An order with only one of them is rejected with `cant-do` reason `invalid_amount`.
+
 When a taker takes the order, the amount will be set on the message.
 
 ## Optional: anti-abuse maker bond

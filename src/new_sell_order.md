@@ -62,7 +62,7 @@ Only after the maker pays the bond does Mostro:
 1. Publish the order to Nostr with status `pending`.
 2. Send the `new-order` confirmation (shown below).
 
-If the maker never pays the bond invoice it expires and no order is created. See [Pay bond invoice — Maker bond](./pay_bond_invoice.md#maker-bond) for details.
+If the maker never pays, the bond invoice expires at the node's deadline, no order is published and Mostro sends the maker `canceled`. Before paying, the maker can also [cancel](./cancel.md#cancel-during-waiting-maker-bond) the order. See [Pay bond invoice — Maker bond](./pay_bond_invoice.md#maker-bond) for details.
 
 ## Confirmation message
 

@@ -1,6 +1,6 @@
 # Cancel Order
 
-A user can cancel an order created by himself and with status `pending` sending action `cancel`, the decrypted content of the message will look like this:
+A user can cancel an order created by himself and with status `pending` (or, before paying a maker bond, one still waiting for it: see [Cancel during `waiting-maker-bond`](#cancel-during-waiting-maker-bond)) sending action `cancel`, the decrypted content of the message will look like this:
 
 ```json
 [
@@ -90,6 +90,16 @@ The maker is not notified; the NIP-33 order event stays `pending` throughout.
 ### Maker cancel
 
 The maker can cancel the order at any point before trade flow starts (i.e. while in `pending` or `waiting-taker-bond`). Sending `cancel` releases **all** concurrent taker bonds on the order, notifies each prospective taker with `canceled`, transitions the order to `canceled`, and publishes the updated NIP-33 event.
+
+## Cancel during `waiting-maker-bond`
+
+When the node requires a maker bond, a new order waits in the daemon-internal `waiting-maker-bond` state until the maker pays the [`pay-bond-invoice`](./pay_bond_invoice.md#maker-bond). The order has not been published yet. During that window the maker may send `cancel` for it, with the same message as above.
+
+- Mostro cancels the bond hold invoice, so it can no longer be paid, closes the order as `canceled` and replies `canceled` on the maker's `request_id`. **No addressable event is published or updated**: the order was never on Nostr.
+- If the bond locked a moment before the `cancel` arrived and the order is not published yet, Mostro replies `cant-do` with reason `not_allowed_by_status`: the payment wins. The client should wait for the `new-order` confirmation, then cancel it as a `pending` order (the event is updated to `canceled` and the bond released). Once the order is `pending`, a `cancel` takes that path directly.
+- Anyone other than the maker receives `cant-do` with reason `is_not_your_order`.
+
+Nodes that predate this reply `not_allowed_by_status` to any `cancel` on an order waiting for its maker bond. On those, the maker can only leave the bond invoice unpaid until it expires (see [Deadline to pay](./pay_bond_invoice.md#deadline-to-pay)).
 
 ## Cancel cooperatively
 
