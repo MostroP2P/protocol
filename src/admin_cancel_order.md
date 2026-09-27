@@ -124,6 +124,7 @@ The second event updates the addressable dispute event with status `seller-refun
     "tags": [
       ["d", "efc75871-2568-40b9-a6ee-c382d4d6de01"],
       ["s", "seller-refunded"],
+      ["published_at", "1703016565"],
       ["y", "mostro", "[Mostro instance name]"],
       ["z", "dispute"]
     ],
