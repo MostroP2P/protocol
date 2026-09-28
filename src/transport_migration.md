@@ -150,9 +150,9 @@ than preparing events far in advance.
   trace of v1: the gift-wrap path is gone, and a node configured with
   `transport = "gift-wrap"` does not start until the operator removes that
   line. Nodes keep publishing
-  `["protocol_version", "2"]`. A later breaking release of `mostro-core`
-  removes its gift-wrap code too; clients that still need to reach v1 nodes
-  should stay on an earlier `mostro-core` until those nodes upgrade.
+  `["protocol_version", "2"]`. It is built on `mostro-core` 0.16, which
+  removes gift wrap. A Rust client that bumps to 0.16 can no longer reach v1
+  nodes; one that still needs them stays on 0.15 until they upgrade.
 
 A node that upgrades from v1 to v0.19.0 keeps its open trades: orders and
 trade keys do not depend on the transport, so a client that follows the
