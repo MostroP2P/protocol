@@ -150,8 +150,9 @@ than preparing events far in advance.
   trace of v1: the gift-wrap path is gone, and a node configured with
   `transport = "gift-wrap"` does not start until the operator removes that
   line. Nodes keep publishing
-  `["protocol_version", "2"]`. `mostro-core` keeps its gift-wrap helpers for
-  the clients that still talk to older v1 nodes.
+  `["protocol_version", "2"]`. A later breaking release of `mostro-core`
+  removes its gift-wrap code too; clients that still need to reach v1 nodes
+  should stay on an earlier `mostro-core` until those nodes upgrade.
 
 A node that upgrades from v1 to v0.19.0 keeps its open trades: orders and
 trade keys do not depend on the transport, so a client that follows the
@@ -167,13 +168,13 @@ past that point.
 
 ## Future protocol versions
 
-v2 will not necessarily be the last protocol. If a v3 comes, it follows the
+No new protocol version is planned. If one ever comes, it will follow the
 same path as this migration: the node advertises it in `protocol_version`,
 nodes switch one at a time, and a client picks per node. What a client must
-do today so that a v3 does not break it:
+do today so that such a change does not break it:
 
 - **Treat an unknown `protocol_version` as unsupported.** If the node
-  advertises a value the client does not implement (`"3"`, say), the client
+  advertises a value the client does not implement, the client
   must not guess a transport. A guess fails silently: the node never
   answers a message in a format it does not speak. Tell the user that the
   node needs a newer client.
