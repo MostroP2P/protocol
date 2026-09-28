@@ -105,18 +105,10 @@ per instance — many run with `0` and require nothing.
 - **`pow`** — required of every event the client sends, on either transport.
 - **`pow_first_contact`** — required of an event whose visible sender is a trade
   key the node does not currently associate with an active order or dispute.
-  In practice that starts with the first event of a trade: creating an order,
-  or taking one. It is never lower than `pow` and is typically higher, because
-  that lane is where spam concentrates.
-
-A node does not recognize a trade key the moment it accepts that key's first
-event. mostrod rebuilds its set of active trade keys periodically, so a key
-keeps being charged at the first-contact rate for a while after its order was
-created or taken, and the client has no way to see when that stops. The rule
-is therefore: **mine `pow_first_contact` for every event sent from a trade
-key, not just for its first one.** On nodes where `pow_first_contact` equals
-`pow` this costs nothing; on nodes that set it higher, a follow-up mined at
-`pow` (the invoice right after a take, for example) is silently dropped.
+  In practice that is the first event of a trade: creating an order, or taking
+  one. It is never lower than `pow` and is typically higher, because that lane
+  is where spam concentrates. Once the node associates the trade key with an
+  active order or dispute, its later messages are back to needing only `pow`.
 
 Two consequences for a client:
 
