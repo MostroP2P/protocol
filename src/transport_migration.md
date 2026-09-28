@@ -147,9 +147,9 @@ than preparing events far in advance.
 - **v0.18.5** — the daemon default becomes v2. A node still speaks v1 only
   if its operator sets `transport = "gift-wrap"` explicitly.
 - **v0.19.0** — protocol v2 is the **only** protocol. mostrod removes every
-  trace of v1: the gift-wrap path and the `transport` setting are gone, and a
-  node configured with `transport = "gift-wrap"` does not start until the
-  operator removes that line. Nodes keep publishing
+  trace of v1: the gift-wrap path is gone, and a node configured with
+  `transport = "gift-wrap"` does not start until the operator removes that
+  line. Nodes keep publishing
   `["protocol_version", "2"]`. `mostro-core` keeps its gift-wrap helpers for
   the clients that still talk to older v1 nodes.
 
@@ -164,3 +164,21 @@ On v2, every message carries a NIP-40 `expiration` (the node's `dm_days`, 30
 days by default), and relays that honor it delete older messages. A client
 that rebuilds trades or disputes from relay history cannot recover messages
 past that point.
+
+## Future protocol versions
+
+v2 will not necessarily be the last protocol. If a v3 comes, it follows the
+same path as this migration: the node advertises it in `protocol_version`,
+nodes switch one at a time, and a client picks per node. What a client must
+do today so that a v3 does not break it:
+
+- **Treat an unknown `protocol_version` as unsupported.** If the node
+  advertises a value the client does not implement (`"3"`, say), the client
+  must not guess a transport. A guess fails silently: the node never
+  answers a message in a format it does not speak. Tell the user that the
+  node needs a newer client.
+- **A missing tag is not unknown.** It comes from a daemon older than
+  v0.18.0, which speaks v1.
+- **Read the tag every time you connect to a node, and follow changes.**
+  A node can move to a newer protocol with trades still open.
+
