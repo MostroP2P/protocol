@@ -7,7 +7,9 @@ detect which transport a node speaks, and how to support both during the
 transition.
 
 The logical messages, key derivation, indexing and rotation rules are
-unchanged — only the envelope differs. The two formats are documented
+unchanged — only the envelope differs. Even so, **v1 and v2 are
+incompatible**: a v1 node never reads a kind-`14` event, a v2 node never
+reads a gift wrap, and neither answers a message in the other format. The two formats are documented
 side by side in [Keys management](./key_management.md) (the v2 wire format
 is under *Protocol v2 — NIP-44 direct messages*) and the message tuples in
 [Overview](./overview.md#the-content-array-v1-vs-v2).
@@ -34,8 +36,35 @@ advertises which in its [instance-info event](./other_events.md#mostro-instance-
 - `["protocol_version", "2"]` → NIP-44 direct (kind `14`)
 
 A client should read this tag **before** sending anything and use the
-matching wire format. Old daemons that predate the tag emit nothing; treat
-their absence as v1.
+matching wire format. Old daemons that predate the tag (mostrod before
+v0.18.0) emit nothing; treat their absence as v1.
+
+## v1 and v2 are incompatible
+
+There is no negotiation, fallback or translation between the two
+protocols, neither in the daemon nor on the wire. A client that sends v2
+to a v1 node, or v1 to a v2 node, gets **no answer and no error**: the
+node subscribes to the other event kind and never sees the message. The
+`protocol_version` tag is therefore the only way to get it right, and a
+client must read it before it talks to a node.
+
+What the Mostro clients do with it:
+
+| Client | v1 node | v2 node |
+|--------|---------|---------|
+| Mostro Mobile (app v1) ≥ v1.3.0 | works — reads the tag and uses gift wrap | works — reads the tag and uses kind `14` |
+| Mostro app v2 | **not supported** — the app tells the user the node speaks a protocol it does not | works (kind `14` only) |
+| mostro-cli, mostrix | works | works |
+
+App v1 carries users across the transition: it keeps both wrap paths and
+follows whatever the node announces, so the same install keeps working
+when a node moves from v1 to v2. App v2 is v2-native and never implements
+v1; users who need a v1 node have to use app v1 until that node upgrades.
+
+A new client can make either choice. Supporting both is only worth it
+while v1 nodes are still around; a v2-only client must treat a missing or
+`"1"` tag as a node it cannot use and say so, rather than send messages
+that will never be answered.
 
 ## What a client must change
 
@@ -76,10 +105,18 @@ per instance — many run with `0` and require nothing.
 - **`pow`** — required of every event the client sends, on either transport.
 - **`pow_first_contact`** — required of an event whose visible sender is a trade
   key the node does not currently associate with an active order or dispute.
-  In practice that is the first event of a trade: creating an order, or taking
-  one. It is never lower than `pow` and is typically higher, because that lane
-  is where spam concentrates. Once the node associates the trade key with an
-  active order or dispute, its later messages are back to needing only `pow`.
+  In practice that starts with the first event of a trade: creating an order,
+  or taking one. It is never lower than `pow` and is typically higher, because
+  that lane is where spam concentrates.
+
+A node does not recognize a trade key the moment it accepts that key's first
+event. mostrod rebuilds its set of active trade keys periodically, so a key
+keeps being charged at the first-contact rate for a while after its order was
+created or taken, and the client has no way to see when that stops. The rule
+is therefore: **mine `pow_first_contact` for every event sent from a trade
+key, not just for its first one.** On nodes where `pow_first_contact` equals
+`pow` this costs nothing; on nodes that set it higher, a follow-up mined at
+`pow` (the invoice right after a take, for example) is silently dropped.
 
 Two consequences for a client:
 
@@ -115,12 +152,23 @@ than preparing events far in advance.
 - **v0.18.0** — protocol v2 ships. Default `transport = "gift-wrap"`, so
   nothing changes for existing clients. **Protocol v1 is DEPRECATED.**
   Client developers have the 0.18.x cycle to ship v2 support.
-- **v0.19.0** — protocol v2 becomes the **default and only** protocol.
-  mostrod removes the v1 path entirely. `mostro-core` keeps its gift-wrap
-  helpers so clients can still migrate at their own pace, but nodes will no
-  longer accept kind-`1059` traffic.
+- **v0.18.5** — the daemon default becomes v2. A node still speaks v1 only
+  if its operator sets `transport = "gift-wrap"` explicitly.
+- **v0.19.0** — protocol v2 is the **only** protocol. mostrod removes every
+  trace of v1: the gift-wrap path and the `transport` setting are gone, and a
+  node configured with `transport = "gift-wrap"` does not start until the
+  operator removes that line. Nodes keep publishing
+  `["protocol_version", "2"]`. `mostro-core` keeps its gift-wrap helpers for
+  the clients that still talk to older v1 nodes.
 
-The recommendation is therefore: **keep both wrap paths now** and select per
-node from `protocol_version`. A client that supports both will work against
-every node throughout the transition, and against v2-only nodes after the
-v0.19.0 cutover with no further change.
+A node that upgrades from v1 to v0.19.0 keeps its open trades: orders and
+trade keys do not depend on the transport, so a client that follows the
+`protocol_version` tag (app v1, mostro-cli, mostrix) continues the trade on
+kind `14`. Messages the node sent as gift wraps before the upgrade stay on
+the relays; a client that restores trades from relay history needs its v1
+reader for that part.
+
+On v2, every message carries a NIP-40 `expiration` (the node's `dm_days`, 30
+days by default), and relays that honor it delete older messages. A client
+that rebuilds trades or disputes from relay history cannot recover messages
+past that point.

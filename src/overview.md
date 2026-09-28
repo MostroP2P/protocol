@@ -17,21 +17,24 @@ You can find more details about the order event [here](./order_event.md)
 
 ### Transports
 
-Mostro messages travel over one of two interchangeable wire transports. A
-given node speaks **exactly one** of them — there is no dual mode — and
+Mostro messages travel over one of two wire transports. The two are
+**incompatible**: a v1 node never reads a v2 message and a v2 node never
+reads a v1 message, and a mismatch gets no reply at all. A given node
+speaks **exactly one** of them — there is no dual mode — and
 advertises which in its [instance-info event](./other_events.md#mostro-instance-status)
 (kind `38385`) through the `protocol_version` tag (`"1"` or `"2"`):
 
 | Protocol | Transport | Event kind | Status |
 |----------|-----------|------------|--------|
-| **v1** | [NIP-59 Gift Wrap](https://github.com/nostr-protocol/nips/blob/master/59.md) | `1059` | **DEPRECATED** (default through v0.18.x) |
-| **v2** | NIP-44 direct message | `14` | current (default from v0.19.0) |
+| **v1** | [NIP-59 Gift Wrap](https://github.com/nostr-protocol/nips/blob/master/59.md) | `1059` | **DEPRECATED**, default through v0.18.4, removed from mostrod in v0.19.0 |
+| **v2** | NIP-44 direct message | `14` | current, default from v0.18.5, the only protocol from v0.19.0 |
 
 Both transports carry the **same logical message** and, once unwrapped,
 yield the same structure to the daemon's handlers — only the envelope and
-how the identity key is proven differ. Client developers should support
-both during the transition and pick per node from the `protocol_version`
-tag; see the [client migration guide](./transport_migration.md).
+how the identity key is proven differ. A client must read the
+`protocol_version` tag before it sends anything to a node; see the
+[client migration guide](./transport_migration.md) for how each client
+handles v1 and v2 nodes.
 
 The logical message itself (the first tuple element described below) is
 identical across transports, except for the `version` field: `1` on the
