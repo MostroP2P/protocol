@@ -190,7 +190,9 @@ Then mostrod send messages to each trade participant, the buyer and seller for t
 
 A dispute can change solver while it is `in-progress`: a `read-write` solver can take over a dispute held by a `read` solver, for example a human solver taking a case from [Serbero](./other_events.md#serbero-tag). The new solver sends `admin-take-dispute` as above, and both parties receive another `admin-took-dispute` with the new solver's pubkey. No other solver can take over a dispute held by a `read-write` solver; the node's own key can take any `initiated` or `in-progress` dispute.
 
-A client that receives a newer `admin-took-dispute` for the same order must switch the dispute chat to the new pubkey: derive the [dispute chat](./dispute_chat.md) keys again, and stop listening to the previous solver. Offline catch-up can replay every assignment, usually newest first, so a client orders them by the event's `created_at` and ignores one that is not newer than the solver it already has.
+A client that receives a newer `admin-took-dispute` for the same order must switch the dispute chat to the new pubkey: derive the [dispute chat](./dispute_chat.md) keys again, and stop listening to the previous solver. Offline catch-up can replay every assignment, usually newest first, so a client orders them by the event's `created_at` and ignores one older than the solver it already has.
+
+`created_at` has one-second resolution, and the protocol carries no other sequence for assignments, so two assignments in the same second cannot be ordered from the events. A client keeps the solver it already has in that case. A takeover normally comes long after the first assignment, because the new solver acts on a dispute that is already `in-progress`, so a tie is not expected in practice.
 
 Also Mostro will broadcast a new addressable dispute event to update the dispute `status` to `in-progress`:
 

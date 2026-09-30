@@ -263,7 +263,7 @@ These tags advertise the node's anti-abuse-bond configuration so clients can sho
 
 The node registers that key as a `read` solver (see [Add solver](./admin_add_solver.md)), and refuses to start if the key is a `read-write` solver, a user that is not a solver, or its own key. The tag therefore also tells clients that this solver cannot settle or cancel.
 
-Clients compare the tag with the solver pubkey in [`admin-took-dispute`](./dispute.md#taking-the-dispute) to tell the assistant from a human solver, for example to label the dispute chat "Serbero" instead of "Solver". When the tag is absent, the node runs no Serbero (or predates the tag), and every solver is a person.
+Clients compare the tag with the solver pubkey in [`admin-took-dispute`](./dispute.md#taking-the-dispute) to tell the assistant from a human solver, for example to label the dispute chat "Serbero" instead of "Solver". When the tag is absent, clients cannot identify a Serbero from this event. It does not mean every solver is a person: a node that predates the tag may still run one, registered through `admin-add-solver`.
 
 ## Information about the Relays Where Events Are Published
 
