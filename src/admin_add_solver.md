@@ -26,6 +26,8 @@ Permission meanings:
 
 The default remains `read-write` for backward compatibility.
 
+A node that runs [Serbero](https://github.com/MostroP2P/serbero), the dispute assistant, does not need this message for it: the operator configures its key, the node registers it as a `read` solver at startup, and announces it in the [`serbero` tag](./other_events.md#serbero-tag) of the info event.
+
 ## Example: default read-write solver
 
 ```json
