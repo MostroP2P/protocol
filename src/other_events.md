@@ -194,6 +194,10 @@ This event contains specific data about a Mostro instance. The instance is ident
         "15"
       ],
       [
+        "serbero",
+        "<Serbero's pubkey>"
+      ],
+      [
         "y",
         "mostro",
         "[Mostro instance name]"
@@ -250,6 +254,16 @@ These tags advertise the node's anti-abuse-bond configuration so clients can sho
 - `bond_payout_claim_window_days`: number of days the winning counterparty has, from the slash moment, to submit a Lightning invoice for their share of a slashed bond. After this window the share is forfeited to the node. Clients use this together with the `slashed_at` field carried on `add-bond-invoice` messages (see [Bond payout invoice](./add_bond_invoice.md)) to render the forfeit deadline locally.
 
 **Disambiguation.** When `bond_enabled` is absent from the event, the daemon predates the bond feature; treat the node as not enforcing bonds. When `bond_enabled = "false"`, the daemon supports the feature but the operator has not enabled it on this instance. When `bond_enabled = "true"`, the remaining six bond tags are present and clients should expect bond messages on this node — [`pay-bond-invoice`](./pay_bond_invoice.md) for the bonded user and [`add-bond-invoice`](./add_bond_invoice.md) for the payout recipient on a slashed trade.
+
+### Serbero tag
+
+[Serbero](https://github.com/MostroP2P/serbero) is a dispute assistant a node operator can run: it takes a dispute first, helps the parties establish the payment facts, and hands the case to a human solver when needed.
+
+- `serbero`: the hex public key of the node's Serbero. Present only when the operator configured one.
+
+The node registers that key as a `read` solver (see [Add solver](./admin_add_solver.md)), and refuses to start if the key is a `read-write` solver, a user that is not a solver, or its own key. The tag therefore also tells clients that this solver cannot settle or cancel.
+
+Clients compare the tag with the solver pubkey in [`admin-took-dispute`](./dispute.md#taking-the-dispute) to tell the assistant from a human solver, for example to label the dispute chat "Serbero" instead of "Solver". When the tag is absent, clients cannot identify a Serbero from this event. It does not mean every solver is a person: a node that predates the tag may still run one, registered through `admin-add-solver`.
 
 ## Information about the Relays Where Events Are Published
 
