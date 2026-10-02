@@ -25,7 +25,7 @@ Reputation is quantised into a cell of a three-dimensional grid.
 | Dimension (cell-id key) | Bands | Cell-id labels | Floor |
 |---|---|---|---|
 | Ratings received (`reviews`) | `[1,10)`, `[10,50)`, `[50,200)`, `[200,∞)` | `1-10`, `10-50`, `50-200`, `200+` | 1 / 10 / 50 / 200 |
-| Average rating (`rating`) | `[0,4.0)`, `[4.0,4.5)`, `[4.5,5.0]` | `0-4.0`, `4.0-4.5`, `4.5+` | 0.0 / 4.0 / 4.5 |
+| Average rating (`rating`) | `[1.0,4.0)`, `[4.0,4.5)`, `[4.5,5.0]` | `1.0-4.0`, `4.0-4.5`, `4.5+` | 1.0 / 4.0 / 4.5 |
 | Account age (`age`) | `[0,6m)`, `[6m,24m)`, `[24m,∞)` | `0-6m`, `6m-24m`, `24m+` | 0d / 180d / 720d |
 
 The grid therefore has 4 × 3 × 3 = **36 raw cells**.
@@ -33,14 +33,20 @@ The grid therefore has 4 × 3 × 3 = **36 raw cells**.
 All intervals are **half-open**, `[low, high)`, so every value falls in exactly
 one band and two implementations cannot disagree on a boundary. The top rating
 band is closed at `5.0` because that is the maximum a rating can take; every
-other band is half-open.
+other band is half-open. The rating dimension starts at `1.0` rather than `0`
+because every rating is a number from 1 to 5 (see [User rating](./user_rating.md))
+and eligibility requires at least one, so an eligible user's average is never
+below 1; a floor of `0.0` would seed an average no set of valid reviews can
+produce.
 
 A **month** is exactly 30 days of 86400 seconds, so `6m` is 180 days and `24m`
-is 720 days. Ages are computed from the **day-truncated** creation date
-(`created_at - created_at % 86400`, the same `since` value published in the
-[rating tag](./order_event.md)), so a band cannot flip in the middle of a day.
-On a Mostro issuer that date is the account's own creation date and never a
-date moved back by a previous import.
+is 720 days. Ages are computed from the user's **`since`**, the day-truncated
+date of their first trade published in the [rating tag](./order_event.md) and
+the [rating event](./user_rating.md), so a band cannot flip in the middle of a
+day and an issuer cannot place a user in a different age band from the one
+their public rating implies. On a Mostro issuer that date is the user's own,
+never a date moved back by a previous import: age is computed from native
+history only.
 
 ### The first dimension counts ratings received, not completed trades
 
@@ -70,7 +76,7 @@ band's low bound and, except for the open-ended top band, its high bound.
 
 ```text
 reviews:200+|rating:4.5+|age:24m+
-reviews:10-50|rating:0-4.0|age:0-6m
+reviews:10-50|rating:1.0-4.0|age:0-6m
 ```
 
 This string is the key of the `cells` map in the keyset event and the value of
@@ -122,20 +128,23 @@ MUST therefore merge any cell holding fewer than **K = 50** users into a lower
 cell before publishing its keyset, and MUST publish the resulting map so a
 client can reproduce the decision instead of trusting it.
 
-The merge is deterministic. Given the raw population of every cell:
+The population of a cell counts only users who meet the
+[eligibility](#eligibility) rules. They are the only ones who can ever hold a
+token, so they are the crowd a token hides in: a raw cell with 50 accounts of
+which one is eligible would otherwise hand that one user a band nobody else
+can show.
+
+The merge is deterministic. Given the population of every cell:
 
 ```text
 effective[c] = c            for every one of the 36 cells
-population[c] = raw count of users whose raw cell is c
+population[c] = number of eligible users whose raw cell is c
 
 loop:
-    sparse = { c : effective[c] == c and population[c] < K }
+    sparse = { c : effective[c] == c and c != lowest and population[c] < K }
     if sparse is empty: stop
     c = the smallest member of sparse in cell order
-    t = step_down(c)
-    if t is none:
-        t = nearest_lower(c)
-        if t is none: stop
+    t = effective[step_down(c)]
     population[t] += population[c]
     population[c] = 0
     for every raw cell r with effective[r] == c: effective[r] = t
@@ -146,24 +155,33 @@ with:
 - **cell order** — the total order on cells given by the tuple of band indices
   `(reviews, age, rating)`, each counted from 0 at the lowest band, compared
   lexicographically. It exists only to make the loop deterministic.
+- **`lowest`** — the cell that is the lowest band in all three dimensions,
+  `reviews:1-10|rating:1.0-4.0|age:0-6m`.
 - **`step_down(c)`** — lower `c` by one band in the first dimension that has a
   lower band, trying the dimensions in the fixed order `reviews`, `age`,
-  `rating`. None when `c` is already the lowest cell in all three.
-- **`nearest_lower(c)`** — among the cells that are lower than or equal to `c`
-  in every dimension, strictly lower in at least one, and hold at least one
-  user, the one minimising the sum of band-index distances to `c`; ties broken
-  by cell order. None when no such cell exists.
+  `rating`. It is defined for every cell except `lowest`, which never enters
+  `sparse`.
 
-Cells left holding 0 users at the end have no key and appear in neither map.
-Every one of the 36 raw cells appears either as a key of `cells` or as a key of
-`merges`, so a client always finds its own cell. A cell that ends up holding
-fewer than `K` users only because nothing lower exists keeps its key: otherwise
-nobody could ever migrate from a young issuer.
+Two properties follow and make the result easy to check. `effective[r]` is
+always a cell that has not been folded, so the target `t` is resolved in one
+lookup and population is never added to a cell that no longer has a key. And
+because the loop always takes the smallest sparse cell, every cell below `c`
+in cell order that has not been folded already holds at least `K` users or is
+`lowest`, so `t` never
+needs to fold again on `c`'s account.
 
-A client folds its own raw cell through the published `merges` map
-**transitively** — the map may point at a cell that was itself folded later —
-and a conforming implementation MUST terminate rather than loop if an issuer
-publishes a cyclic map.
+`lowest` keeps its key whatever it ends up holding, even fewer than `K` users
+or none: it has nowhere lower to go, and otherwise nobody could ever migrate
+from a young issuer. Every other cell either holds at least `K` users at the
+end or has been folded. The cells left with a key are the keys of `cells`, the
+folded ones are the keys of `merges` with `effective[r]` as their value, and
+every one of the 36 raw cells is a key of exactly one of the two maps, so a
+client always finds its own cell.
+
+The map an issuer computes this way is already flat: every value of `merges`
+is a key of `cells`. A client SHOULD still fold its own raw cell through
+`merges` **transitively**, and a conforming implementation MUST terminate
+rather than loop if an issuer publishes a cyclic map.
 
 ## Eligibility
 
