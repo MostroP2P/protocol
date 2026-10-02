@@ -31,11 +31,11 @@ so a correction is a republish under the same `d` rather than a second announcem
   {
     "id": "<Event id>",
     "pubkey": "<Publisher's pubkey>",
-    "created_at": 1756200000,
+    "created_at": 1787736000,
     "kind": 38387,
     "tags": [
       ["d", "2026-08-release-2-1"],
-      ["expiration", "1758792000"],
+      ["expiration", "1790328000"],
       ["max_version", "2.1"],
       ["z", "announcement"],
       ["y", "mostro", "[Publishing project name]"]
