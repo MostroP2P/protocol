@@ -79,7 +79,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
   - `total_reviews`: ratings the user has received.
   - `total_rating`: the user's average rating.
   - `since`: Unix timestamp of the user's first trade, **truncated to the start of its UTC day** (`created_at - created_at % 86400`). Clients compute the age at display time. Day precision is deliberate: the tag travels on every order of the same user, and a second-precision value would make their trade pubkeys trivially correlatable.
-  - `days`: **DEPRECATED** in favour of `since` — a day count computed at publish time is stale on any event that sits on relays. Published alongside `since` for one deprecation window, then removed in the minor release after the one that first publishes `since`. Clients MUST prefer `since` when present and MAY fall back to `days` while the window lasts.
+  - `days`: **DEPRECATED** in favour of `since` — a day count computed at publish time is stale on any event that sits on relays. Published alongside `since`, with no removal release fixed: Mostro drops it only as the last step of the reputation portability rollout, because clients update at their users' pace and one that predates `since` would lose the age. Clients MUST prefer `since` when present and MAY fall back to `days` while it is published.
 - `network` < Network >: The network used for the trade, it can be `mainnet`, `testnet`, `signet`, etc.
 - `layer` < Layer >: The layer used for the trade, it can be `onchain`, `lightning`, `liquid`, etc.
 - `name` [Name]: The name of the maker.
