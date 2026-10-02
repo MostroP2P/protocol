@@ -10,8 +10,11 @@ Mostro uses different event kinds for different types of data:
 | Ratings    | 38384 | `rating`           |
 | Info       | 38385 | `info`             |
 | Disputes   | 38386 | `dispute`          |
+| Announcements | 38387 | `announcement`  |
 
 This document focuses on the **Order** event (kind `38383`), which is used for the P2P order book.
+
+Every kind above is published by a Mostro daemon except **Announcements** (kind `38387`), which is published by the keys of the project that ships a client and is described in [Announcement events](./announcement_event.md).
 
 ## Abstract
 
