@@ -165,3 +165,11 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 
 - **invalid_fiat_currency:**
   Prevents proceeding with unrecognized fiat currencies.
+
+- **maintenance_mode:**
+  Mostro is in maintenance mode and is not accepting new orders or takes right now. Your existing orders are not affected and can still be completed or canceled. Please try again later.
+
+- **unknown:**
+  Mostro rejected the action for a reason this client does not recognize yet. Please update your client.
+
+> **Forward compatibility.** A daemon never sends `unknown`; it is the value a client falls back to for a reason it does not know. Since `mostro-core` 0.14.6 `CantDoReason` carries a `#[serde(other)] Unknown` catch-all, so a client that deserializes with it reads an unrecognized reason as `unknown` instead of failing to parse the whole `cant_do` payload. Clients built against an older `mostro-core` fail to parse the payload and may drop the message without showing anything; clients with their own parser should map an unrecognized reason to `unknown` the same way. A daemon operator should therefore only enable features that emit new reasons (such as maintenance mode) once the clients it serves have caught up.

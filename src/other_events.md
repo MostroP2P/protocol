@@ -122,6 +122,10 @@ This event contains specific data about a Mostro instance. The instance is ident
         "0"
       ],
       [
+        "maintenance_mode",
+        "false"
+      ],
+      [
         "protocol_version",
         "1"
       ],
@@ -264,6 +268,14 @@ These tags advertise the node's anti-abuse-bond configuration so clients can sho
 The node registers that key as a `read` solver (see [Add solver](./admin_add_solver.md)), and refuses to start if the key is a `read-write` solver, a user that is not a solver, or its own key. The tag therefore also tells clients that this solver cannot settle or cancel.
 
 Clients compare the tag with the solver pubkey in [`admin-took-dispute`](./dispute.md#taking-the-dispute) to tell the assistant from a human solver, for example to label the dispute chat "Serbero" instead of "Solver". When the tag is absent, clients cannot identify a Serbero from this event. It does not mean every solver is a person: a node that predates the tag may still run one, registered through `admin-add-solver`.
+
+### Maintenance mode tag
+
+- `maintenance_mode`: `"true"` while the operator has put the instance in maintenance mode, otherwise `"false"`. Always emitted on daemons that support the feature; daemons that predate it omit the tag, which clients should treat as `"false"`.
+
+While `maintenance_mode = "true"` the instance rejects [`new-order`](./new_sell_order.md), [`take-sell`](./take_sell.md) and [`take-buy`](./take_buy.md) with a `cant-do` whose reason is `maintenance_mode` (see [Cant Do Reasons](./message_suggestions_for_actions.md#cant-do-reasons)). Every other action keeps working under the same rules as always: what an existing order's current status allows — paying the hold invoice, `fiat-sent`, `release`, `cancel`, disputes, ratings, adding invoices — is still accepted, so open trades can finish normally. Maintenance mode only removes the actions that open new escrow; it does not make a completed or canceled order accept anything new. The typical use is draining open escrow before the operator migrates the instance to a different Lightning node.
+
+Clients SHOULD read this tag and warn the user before they compose or take an order on an instance in maintenance mode, rather than letting the user mine proof of work for a request that will be rejected. The tag flips back to `"false"` when the operator re-opens the instance; the info event is republished immediately on each change and then at the usual interval.
 
 ## Information about the Relays Where Events Are Published
 
