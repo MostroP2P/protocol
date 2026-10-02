@@ -75,6 +75,7 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
       ["last_rating", "1"],
       ["max_rate", "5"],
       ["min_rate", "1"],
+      ["since", "1700784000"],
       ["days", "21"],
       ["y", "mostro", "[Mostro instance name]"],
       ["z", "rating"]
@@ -93,6 +94,7 @@ Mostro updates the addressable rating event, in this event the `d` tag will be t
 - `last_rating` < Last rating >: The rating received in the most recent review.
 - `max_rate` < Max rate >: The highest rating the user has received.
 - `min_rate` < Min rate >: The lowest rating the user has received.
-- `days` < Days >: The number of days since the user's first trade.
+- `since` < Since >: Unix timestamp of the user's first trade, **truncated to the start of its UTC day** (`created_at - created_at % 86400`). Clients compute the age at display time (`now - since`). Day precision carries exactly the information `days` carried, without turning the tag into a per-user fingerprint: second precision, published on every event of the same user, would make their trade pubkeys trivially correlatable.
+- `days` [Days]: **DEPRECATED.** The number of days since the user's first trade, computed at publish time — so it is stale on any event that lives on relays for a while. Superseded by `since`. Mostro publishes both for one deprecation window and then drops `days`; it will be removed in the minor release after the one that first publishes `since`. Clients MUST read `since` when present and MAY fall back to `days` while the window lasts.
 - `y` < Platform >: Platform identifier tag values. Mostro publishes `"mostro"` and MAY include a second value with the Mostro instance name from settings.
 - `z` < Document >: `rating`.
