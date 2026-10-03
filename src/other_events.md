@@ -202,6 +202,15 @@ This event contains specific data about a Mostro instance. The instance is ident
         "<Serbero's pubkey>"
       ],
       [
+        "reputation_import_issuers",
+        "<Trusted issuer key>",
+        "<Another trusted issuer key>"
+      ],
+      [
+        "reputation_issuer",
+        "<This instance's issuer key>"
+      ],
+      [
         "y",
         "mostro",
         "[Mostro instance name]"
@@ -268,6 +277,15 @@ These tags advertise the node's anti-abuse-bond configuration so clients can sho
 The node registers that key as a `read` solver (see [Add solver](./admin_add_solver.md)), and refuses to start if the key is a `read-write` solver, a user that is not a solver, or its own key. The tag therefore also tells clients that this solver cannot settle or cancel.
 
 Clients compare the tag with the solver pubkey in [`admin-took-dispute`](./dispute.md#taking-the-dispute) to tell the assistant from a human solver, for example to label the dispute chat "Serbero" instead of "Solver". When the tag is absent, clients cannot identify a Serbero from this event. It does not mean every solver is a person: a node that predates the tag may still run one, registered through `admin-add-solver`.
+
+### Reputation tags
+
+These tags say whether the node takes part in [reputation export and import](./reputation_transfer.md). Clients read them before offering either, and never send `export-reputation` or `import-reputation` to a node that does not advertise it.
+
+- `reputation_import_issuers`: the hex keys of every issuer whose [attestations](./reputation_attestation.md) the node imports, one value per key, across all the entries of its trust list. Present only when import is enabled; an enabled node with an empty trust list publishes the tag with no values.
+- `reputation_issuer`: the hex key the node signs attestations with. Present only when export is enabled. It is a key dedicated to issuance, never the node's own key, and an operator who trusts this node adds it to their trust list. When the node rotates it, the tag names the new key.
+
+A key in `reputation_import_issuers` is never the node's own `reputation_issuer`: a node does not import its own attestations.
 
 ### Maintenance mode tag
 
