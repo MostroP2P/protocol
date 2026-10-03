@@ -264,7 +264,7 @@ The seller can ask for the history again with `payment-history` and a `null` pay
 
 Mostro answers with the same `payment-history` message as the push, with the `request_id` echoed (`4412` here). The query takes no parameter beyond the order id: Mostro resolves the buyer and the hash from the order itself.
 
-The query is accepted in `fiat-sent`, `dispute` and `settled-hold-invoice`. Each reply is a live snapshot, not a value frozen at `fiat-sent`: while the order stays queryable, another order of the same buyer from the same account may reach `success`, and a node restart with new experience thresholds re-evaluates `experienced_counterparties`, so a repeated query can return different numbers. Once the order reaches `success` the declaration has been consumed and the query answers `not_found`: the seller already received the push at `fiat-sent` time, and a post-success value would include the trade just completed.
+The query is accepted in `fiat-sent`, `dispute` and `settled-hold-invoice`. Every reply carries the snapshot Mostro took when it built the `fiat-sent` push, so it always matches the push and a repeated query returns the same numbers. A live aggregate would change whenever the buyer finished another trade with the same account while this order waits, letting a polling seller watch that activity; the snapshot also stays put across a restart that changes the experience thresholds. Once the order reaches `success` the declaration has been consumed and the query answers `not_found`: the seller already received the push at `fiat-sent` time, and a post-success value would include the trade just completed.
 
 ## Status windows
 
@@ -621,7 +621,7 @@ Payer details, hashes and history are never published on Nostr. The four info-ev
 ### Why there is no oracle
 
 - The only query, `payment-history`, takes no parameter beyond the order id. The buyer and the hash are resolved by Mostro from the order. A seller cannot ask about a hash the buyer did not commit to this order, nor about a user who is not its counterparty in this order.
-- Repeating the query only returns a fresher snapshot of the same buyer and hash; it leaks nothing about anyone else.
+- Repeating the query returns the same snapshot, taken at `fiat-sent`; it reveals nothing about the buyer's later trades, nor about anyone else.
 - The seller already has the plaintext, because the buyer sent it. Learning its hash is not new information.
 - The seller cannot tell "this buyer used account X before" from "somebody used account X before" across users: the counters are for the buyer it is trading with now, keyed by that buyer's identity, so a victim's own history on the same account is never attributed to an attacker.
 - There is no "are these two keys the same user?" primitive.
