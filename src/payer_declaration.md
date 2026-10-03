@@ -389,9 +389,10 @@ The canonical string is
 
 Each field is normalised as follows:
 
-1. Apply Unicode normalisation form NFKC.
-2. Convert to uppercase with the Unicode default, locale-independent case mapping.
-3. Then, by field kind:
+1. Check the input: every code point MUST be in the repertoire below, in the whitespace set below, or a combining diacritical mark (U+0300–U+036F, which lets a decomposed `E` + U+0301 still reach `É`). A field with any other code point has no canonical form. This check comes first because NFKC maps some characters into the repertoire only in newer Unicode versions (U+A7F1, unassigned in Unicode 16, becomes `S` under Unicode 17), and clients on different versions must agree on whether a field is accepted.
+2. Apply Unicode normalisation form NFKC.
+3. Convert to uppercase with the Unicode default, locale-independent case mapping.
+4. Then, by field kind:
    - **Identifier** fields (IBAN, CBU/CVU, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
    - **Name** fields: replace every run of whitespace with a single space (U+0020) and trim leading and trailing whitespace.
 
@@ -445,6 +446,7 @@ Normalisation:
 | `EU`, `SEPA`, `ES91 2100 0418 4502 0005 1332`, `José  García` | `EU\|SEPA\|ES9121000418450200051332\|JOSÉ GARCÍA` |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+0085 U+00A0 `Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+FEFF `Smith` | none: U+FEFF is outside the repertoire |
+| `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+A7F1`mith` | none: refused before NFKC, whatever the runtime's Unicode version |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Groß  Łukasz` | `EU\|SEPA\|DE89370400440532013000\|GROSS ŁUKASZ` |
 | `EU`, `SEPA`, `RO49 AAAA 1B31 0075 9384 0000`, `Ștefan Țepeș` | `EU\|SEPA\|RO49AAAA1B31007593840000\|ȘTEFAN ȚEPEȘ` |
 
@@ -490,6 +492,8 @@ WS = "[\t\n\v\f\r \x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]"
 
 
 def _base(value: str) -> str:
+    if not _accepted_input(value):
+        raise ValueError("this payer has no canonical form")
     return unicodedata.normalize("NFKC", value).upper()
 
 
@@ -499,6 +503,12 @@ def identifier(value: str) -> str:
 
 def name(value: str) -> str:
     return re.sub(WS + "+", " ", _base(value)).strip(" ")
+
+
+def _accepted_input(field: str) -> bool:
+    return all(
+        _in_repertoire(c) or re.fullmatch(WS, c) or 0x300 <= ord(c) <= 0x36F for c in field
+    )
 
 
 def _in_repertoire(field: str) -> bool:
@@ -528,11 +538,13 @@ assert canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Groß
 assert payment_hash(
     canonical("EU", "SEPA", identifier("RO49 AAAA 1B31 0075 9384 0000"), name("Ștefan Țepeș"))
 ) == "2b6b4ce972a97c5c0519b5a06325c34a6f10595ccff4ca94df556ef5445ababf"
-try:
-    canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Alice\ufeffSmith"))
-    raise AssertionError("U+FEFF is outside the repertoire")
-except ValueError:
-    pass
+for refused in ["Alice\ufeffSmith", "Alice\ua7f1mith"]:
+    try:
+        canonical("EU", "SEPA", identifier("DE89370400440532013000"), name(refused))
+        raise AssertionError(f"{refused!r} must have no canonical form")
+    except ValueError:
+        pass
+assert name("Jose\u0301 García") == "JOSÉ GARCÍA"
 ```
 
 ### Full-privacy buyers
