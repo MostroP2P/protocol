@@ -175,7 +175,7 @@ The seller receives every re-declaration. Forwards carry no sequence number and 
 
 The buyer sends the payer details themselves to the seller over the [peer-to-peer chat](./chat.md), never to Mostro. Mostro cannot leak, log or be compelled to hand over what it never receives.
 
-The seller's client needs the details in a form it can canonicalise exactly as the buyer's client did, so the buyer's client SHOULD include the canonical string (for example `EU|SEPA|DE89370400440532013000|ALICE SMITH`) alongside any human-readable rendering. The seller's client hashes the canonical string and compares the result with the `payment_hash` echoed by `payment-history`. A mismatch against that hash means the buyer committed to one account and disclosed another; treat it like a sender mismatch. A mismatch against a `payer-declared` forward alone is not conclusive (a later re-declaration may be in flight): wait for the `payment-history` push, or send the query once fiat is reported sent, and compare again before warning.
+The seller's client needs the details in a form it can canonicalise exactly as the buyer's client did, so the buyer's client SHOULD send the canonical string (for example `EU|SEPA|DE89370400440532013000|ALICE SMITH`). What the seller checks against the bank transfer and what is hashed MUST be the same account: the seller's client MUST show the payer fields it derives from the string it hashes (split by the registry's field order), or canonicalise the fields it shows and check that they give exactly that string. It MUST NOT present a separate free-text rendering from the buyer as the account to compare, since a buyer could pair an established account's canonical string with someone else's details. The seller's client hashes the canonical string and compares the result with the `payment_hash` echoed by `payment-history`. A mismatch against that hash means the buyer committed to one account and disclosed another; treat it like a sender mismatch. A mismatch against a `payer-declared` forward alone is not conclusive (a later re-declaration may be in flight): wait for the `payment-history` push, or send the query once fiat is reported sent, and compare again before warning.
 
 ## Reporting fiat sent
 
@@ -511,7 +511,7 @@ Normative for clients that support the feature, which they detect through the in
 
 **Seller side**
 
-1. On `payer-declared`, store the hash for the order as provisional. When the plaintext arrives from the buyer, recompute the hash and, once fiat is reported sent, compare it with the hash `payment-history` echoes (query it if the push has not arrived); if it differs, show a hard warning.
+1. On `payer-declared`, store the hash for the order as provisional. When the plaintext arrives from the buyer, show the seller the payer fields of the string it hashes (never a separate rendering), recompute the hash and, once fiat is reported sent, compare it with the hash `payment-history` echoes (query it if the push has not arrived); if it differs, show a hard warning.
 2. On `payment-history` (push or reply), show two independent blocks: *Sender match* (a manual confirmation by the seller) and *Payment-account history*.
 3. In the history block, show `experienced_counterparties` next to the raw counters, for example *"`N` of the buyer's past counterparties were already experienced on this node when they traded with them"*, with the thresholds read from the info-event tags.
 4. Never auto-release and never auto-refuse. The release screen shows both blocks above the release and dispute buttons.
