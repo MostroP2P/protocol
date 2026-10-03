@@ -278,6 +278,9 @@ The query is accepted in `fiat-sent`, `dispute` and `settled-hold-invoice`. Each
 | `payment-history` (query) | seller trade key | any other status | `cant-do not_allowed_by_status` |
 | success | Mostro | `settled-hold-invoice` → `success` | history updated, declaration consumed |
 | cleanup | Mostro | any other terminal status | declaration deleted |
+| new buyer | Mostro | a take rolls back to `pending` and another buyer takes the order | the previous buyer's declaration is void: it never satisfies the new buyer's `fiat-sent` and never becomes their history |
+
+A declaration belongs to the buyer trade key that made it. When a take times out and the order returns to `pending` (see [Other events](./other_events.md)), the next buyer starts with no declaration and declares its own; Mostro ignores, and discards at success, any declaration left by an earlier buyer.
 
 ## Refusal reasons
 
