@@ -284,7 +284,7 @@ These tags advertise the node's [payer declaration and payment-account history](
 - `payer_history_experienced_min_trades`: decimal string. How many earlier successful, undisputed trades with *other* buyers a seller needs to count as an experienced counterparty.
 - `payer_history_experienced_min_days`: decimal string. How many days must have passed since that seller's first such trade.
 
-The two threshold tags are node policy, not protocol constants. Clients read them to explain the `experienced_counterparties` counter (see [Experienced counterparty](./payer_declaration.md#experienced-counterparty)) instead of hard-coding them. When an operator changes them, the node re-evaluates its stored history under the new values at the next restart, so the tags and the counters always describe the same policy.
+The two threshold tags are node policy, not protocol constants. Clients read them to explain the `experienced_counterparties` counter (see [Experienced counterparty](./payer_declaration.md#experienced-counterparty)) instead of hard-coding them. When an operator changes them, the node re-evaluates its stored per-counterparty flags under the new values at the next restart and discards the frozen `payment-history` replies of open orders, which the next query re-takes, so the tags and the counters always describe the same policy.
 
 ### Serbero tag
 

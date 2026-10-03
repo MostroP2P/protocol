@@ -370,7 +370,7 @@ A distinct seller counts as *experienced* for a buyer's history when, at the mom
 
 Trades with the same buyer never count, so a seller key that only ever trades with one buyer cannot make that buyer look established. A full-privacy seller never qualifies.
 
-The thresholds are node policy, not protocol constants: read them from the info-event tags and do not hard-code them. When an operator changes them, the node re-evaluates every stored snapshot under the new thresholds at its next restart, so the advertised tags and the stored counters always describe the same policy. Within one policy the flag never flips back. It is a flat, one-hop signal: a seller's own history counters play no part in its qualification.
+The thresholds are node policy, not protocol constants: read them from the info-event tags and do not hard-code them. When an operator changes them, the node re-evaluates every stored per-counterparty `experienced` flag under the new thresholds at its next restart, and discards the frozen `payment-history` replies of open orders, which the next query re-takes (see [Querying the history](#querying-the-history)); so the advertised tags and the counters always describe the same policy. Within one policy the flag never flips back. It is a flat, one-hop signal: a seller's own history counters play no part in its qualification.
 
 ## Canonicalisation and hash
 
