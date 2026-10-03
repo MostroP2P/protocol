@@ -237,7 +237,7 @@ Right after `fiat-sent-ok`, Mostro pushes the history to the seller's trade key.
 ]
 ```
 
-The push is sent only when the buyer declared a payer. When there is no declaration, nothing is pushed; the seller's client treats "no `payment-history` by the time fiat is reported sent" as its own warning (see [Client contract](#client-contract)).
+The push is sent only when the buyer declared a payer. When there is no declaration, nothing is pushed. A missing push is not yet a warning, though: relays can delay it and Mostro can fail to build it. The seller's client shows the history as pending, sends the `payment-history` query, and shows "Buyer did not declare a payment sender" only when that query answers `not_found` (see [Client contract](#client-contract)).
 
 The push is queued only after the `fiat-sent` transition is stored. If Mostro cannot build the history at that point, it logs the failure and still completes `fiat-sent`; the seller can pull the history with a query.
 
@@ -621,7 +621,7 @@ Payer details, hashes and history are never published on Nostr. The four info-ev
 ### Why there is no oracle
 
 - The only query, `payment-history`, takes no parameter beyond the order id. The buyer and the hash are resolved by Mostro from the order. A seller cannot ask about a hash the buyer did not commit to this order, nor about a user who is not its counterparty in this order.
-- Repeating the query returns the same snapshot, taken at `fiat-sent`; it reveals nothing about the buyer's later trades, nor about anyone else.
+- Repeating the query returns the same snapshot; it reveals nothing about anyone else. The snapshot is taken at `fiat-sent`, so it shows none of the buyer's later trades, with two exceptions described [above](#querying-the-history): if the push could not be built, the first query takes it as of that query, and a threshold change re-takes it at the next query. Either can count trades the buyer completed after this order's `fiat-sent`.
 - The seller already has the plaintext, because the buyer sent it. Learning its hash is not new information.
 - The seller cannot tell "this buyer used account X before" from "somebody used account X before" across users: the counters are for the buyer it is trading with now, keyed by that buyer's identity, so a victim's own history on the same account is never attributed to an attacker.
 - There is no "are these two keys the same user?" primitive.
