@@ -6,7 +6,8 @@ instance that will import it. The issuer is a Mostro instance or lnp2pBot; the
 instance that imports it is the *destination*.
 
 An attestation is **never published to relays**. It travels inside the
-`reputation-exported` reply and the `import-reputation` request, both encrypted direct
+[`reputation-exported`](./reputation_transfer.md#export) reply and the
+[`import-reputation`](./reputation_transfer.md#import) request, both encrypted direct
 messages, or through the Telegram hand-off described below. Only the issuer, the user
 and the destinations the user chooses ever see it. The number sits in the addressable
 range only to keep the Mostro kinds together; since nothing publishes it, it carries no
@@ -104,7 +105,9 @@ history only. Completed trades decide eligibility and are not carried.
 The issuer signs with a key **dedicated** to issuance: lnp2pBot's
 `REPUTATION_ISSUER_SK`, kept apart from its `NOSTR_SK`, and on a Mostro a separate key,
 never the daemon key. Either can then be rotated without touching the other, and the
-daemon key never signs an attestation next to its public events.
+daemon key never signs an attestation next to its public events. A Mostro that issues
+attestations names its current issuer key in its
+[info event](./other_events.md#reputation-tags).
 
 ## Issuance
 
@@ -197,7 +200,8 @@ and the figures.
 
 ## Redemption
 
-A destination that receives an attestation in an `import-reputation` request runs these
+A destination that receives an attestation in an
+[`import-reputation`](./reputation_transfer.md#import) request runs these
 checks in order, and refuses the import at the first one that fails:
 
 1. The event parses, its `id` is the hash of its canonical serialisation and its
