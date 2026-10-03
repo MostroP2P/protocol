@@ -21,6 +21,7 @@
 - [Bond payout invoice](./add_bond_invoice.md)
 - [Bond slashed notification](./bond_slashed.md)
 - [Seller pays hold invoice](./seller_pay_hold_invoice.md)
+- [Payer declaration and payment history](./payer_declaration.md)
 - [Fiat sent](./fiatsent.md)
 - [Release](./release.md)
 - [Payment Failed](./payment_failed.md)
