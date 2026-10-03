@@ -392,6 +392,8 @@ Each field is normalised as follows:
    - **Identifier** fields (IBAN, CBU/CVU, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
    - **Name** fields: replace every run of whitespace with a single space (U+0020) and trim leading and trailing whitespace.
 
+*Whitespace* means exactly the code points with the Unicode `White_Space` property: U+0009–U+000D, U+0020, U+0085, U+00A0, U+1680, U+2000–U+200A, U+2028, U+2029, U+202F, U+205F and U+3000. The set is this list, not a runtime's notion of whitespace: Python's `\s` also matches U+001C–U+001F, and ECMAScript's `\s` and `trim()` also match U+FEFF, and neither is whitespace here. Every other code point, including U+FEFF, U+200B and U+180E, is kept as it is. (Rust's `char::is_whitespace` matches this set exactly.)
+
 Diacritics are kept: NFKC does not remove them, so `José` becomes `JOSÉ`, not `JOSE`. A field that is empty after normalisation, or that contains `|`, has no canonical form; the client MUST NOT declare it.
 
 The canonical string MUST NOT include the order id, a trade key, a timestamp, a salt or anything else specific to one trade: that would make the hash unique per trade and defeat the history.
@@ -434,8 +436,10 @@ Normalisation:
 | `AR`, `CVU`, `0000003100012345678901`, `27-12345678-9` | `AR\|CVU\|0000003100012345678901\|27123456789` |
 | `EU`, `SEPA`, `de89 3704 0044 0532 0130 00`, `"  Alice   Smith "` (quotes added to show the spaces) | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
 | `EU`, `SEPA`, `ES91 2100 0418 4502 0005 1332`, `José  García` | `EU\|SEPA\|ES9121000418450200051332\|JOSÉ GARCÍA` |
+| `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+0085 U+00A0 `Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
+| `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+FEFF `Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE` U+FEFF `SMITH` |
 
-`DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string.
+`DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string. The last two rows check the whitespace set: U+0085 and U+00A0 are whitespace, so that name canonicalises like `Alice Smith` and gives the same hash (`ee06af92…9903`); U+FEFF is not, so it is kept and gives a different hash (below).
 
 Hashes, `sha256("mostro-payer-v1|" + canonical)` as lowercase hex:
 
@@ -448,9 +452,12 @@ ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226161f0de9903
 
 EU|SEPA|ES9121000418450200051332|JOSÉ GARCÍA
 91863709cf207cf042cece0cc4673241e4e0f321a39a327c16f05a9d0d231ebd
+
+EU|SEPA|DE89370400440532013000|ALICE<U+FEFF>SMITH
+2cf0d5fe987398b392ba514b7f2bfedbf1a71f8cef6047386c84da12a9949a88
 ```
 
-The last vector checks the UTF-8 and NFKC handling: `É` is the single code point U+00C9 (bytes `c3 89`). A name typed in decomposed form (`E` followed by U+0301) has different bytes, so hashing it without normalisation would give a different hash. NFKC maps both forms to U+00C9, which is why it comes first: a conforming client gets the same canonical string, and the same hash, from either form.
+`<U+FEFF>` stands for that single code point (bytes `ef bb bf`). The `JOSÉ GARCÍA` vector checks the UTF-8 and NFKC handling: `É` is the single code point U+00C9 (bytes `c3 89`). A name typed in decomposed form (`E` followed by U+0301) has different bytes, so hashing it without normalisation would give a different hash. NFKC maps both forms to U+00C9, which is why it comes first: a conforming client gets the same canonical string, and the same hash, from either form.
 
 A client that forgets the prefix gets `7838e67266dea11dbca22c155c52ceb344f36658a7c7206f45af189c4ea2a99a` for the SEPA string instead of `ee06af92…9903`, and builds a history nobody else can match.
 
@@ -466,16 +473,20 @@ import unicodedata
 DOMAIN = "mostro-payer-v1|"
 
 
+# The Unicode White_Space set, spelled out: Python's own \s differs.
+WS = "[\t\n\v\f\r \x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]"
+
+
 def _base(value: str) -> str:
     return unicodedata.normalize("NFKC", value).upper()
 
 
 def identifier(value: str) -> str:
-    return re.sub(r"[\s\-./]", "", _base(value))
+    return re.sub(WS + "|[-./]", "", _base(value))
 
 
 def name(value: str) -> str:
-    return re.sub(r"\s+", " ", _base(value)).strip()
+    return re.sub(WS + "+", " ", _base(value)).strip(" ")
 
 
 def canonical(country: str, method: str, *fields: str) -> str:
@@ -491,6 +502,10 @@ def payment_hash(canonical_string: str) -> str:
 
 c = canonical("EU", "SEPA", identifier("de89 3704 0044 0532 0130 00"), name("  Alice   Smith "))
 assert payment_hash(c) == "ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226161f0de9903"
+assert canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Alice\x85\xa0Smith")) == c
+assert payment_hash(
+    canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Alice\ufeffSmith"))
+) == "2cf0d5fe987398b392ba514b7f2bfedbf1a71f8cef6047386c84da12a9949a88"
 ```
 
 ### The hash is not a secret
