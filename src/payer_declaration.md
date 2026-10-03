@@ -167,7 +167,7 @@ And forwards the same hash to the seller's trade key. The forward is unsolicited
 ]
 ```
 
-The seller receives every re-declaration and keeps the last one. If the order has no seller yet when the buyer declares, only the ack is sent; the seller then learns the hash from the `payment-history` push at `fiat-sent` time, which echoes it.
+The seller receives every re-declaration. Forwards carry no sequence number and relays can deliver them out of order, so the last one received is only provisional; the authoritative hash is the one `payment-history` echoes, because the declaration is frozen once fiat is reported sent. If the order has no seller yet when the buyer declares, only the ack is sent; the seller then learns the hash from the `payment-history` push at `fiat-sent` time.
 
 `payer-declared` is a Mostro → user action. Mostro ignores it when a client sends it.
 
@@ -175,7 +175,7 @@ The seller receives every re-declaration and keeps the last one. If the order ha
 
 The buyer sends the payer details themselves to the seller over the [peer-to-peer chat](./chat.md), never to Mostro. Mostro cannot leak, log or be compelled to hand over what it never receives.
 
-The seller's client needs the details in a form it can canonicalise exactly as the buyer's client did, so the buyer's client SHOULD include the canonical string (for example `EU|SEPA|DE89370400440532013000|ALICE SMITH`) alongside any human-readable rendering. The seller's client hashes the canonical string and compares the result with the `payment_hash` it received in `payer-declared` or `payment-history`. A mismatch means the buyer committed to one account and disclosed another; treat it like a sender mismatch.
+The seller's client needs the details in a form it can canonicalise exactly as the buyer's client did, so the buyer's client SHOULD include the canonical string (for example `EU|SEPA|DE89370400440532013000|ALICE SMITH`) alongside any human-readable rendering. The seller's client hashes the canonical string and compares the result with the `payment_hash` echoed by `payment-history`. A mismatch against that hash means the buyer committed to one account and disclosed another; treat it like a sender mismatch. A mismatch against a `payer-declared` forward alone is not conclusive (a later re-declaration may be in flight): wait for the `payment-history` push, or send the query once fiat is reported sent, and compare again before warning.
 
 ## Reporting fiat sent
 
@@ -389,9 +389,8 @@ Each field is normalised as follows:
 1. Apply Unicode normalisation form NFKC.
 2. Convert to uppercase with the Unicode default, locale-independent case mapping.
 3. Then, by field kind:
-   - **Identifier** fields (IBAN, CBU/CVU, PIX key, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
+   - **Identifier** fields (IBAN, CBU/CVU, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
    - **Name** fields: replace every run of whitespace with a single space (U+0020) and trim leading and trailing whitespace.
-   - **E-mail** fields: remove every whitespace character only. Dots, hyphens and other punctuation are part of an e-mail address, so `A.B@EXAMPLE.COM` and `AB@EXAMPLE.COM` stay two different accounts.
 
 Diacritics are kept: NFKC does not remove them, so `José` becomes `JOSÉ`, not `JOSE`. A field that is empty after normalisation, or that contains `|`, has no canonical form; the client MUST NOT declare it.
 
@@ -417,9 +416,10 @@ printf '%s' 'mostro-payer-v1|EU|SEPA|DE89370400440532013000|ALICE SMITH' | sha25
 |---|---|---|---|
 | `AR\|CVU` | CBU or CVU number; holder's CUIT/CUIL | identifier; identifier | The 22-digit account number, never an alias. The tax id is the 11-digit CUIT/CUIL. |
 | `EU\|SEPA` | IBAN; account holder name | identifier; name | Covers SEPA credit transfers in any SEPA country. |
-| `BR\|PIX` | PIX key | identifier, or e-mail when the key contains `@` | Any key type (CPF, CNPJ, phone, e-mail, random key) as registered. Phone keys keep the leading `+` and the country code. An e-mail key keeps its dots and hyphens (e-mail rule); every other key type follows the identifier rule. |
 
 New methods are added to this table by a pull request to this book. An entry fixes the prefix, the fields, their order and their kind; once published, an entry never changes, because changing it would split every history built under it.
+
+PIX is not listed. A PIX key identifies the account that receives a transfer, so the buyer's own key is not sender data and the seller cannot check it against the payment; the payer details a PIX receipt shows (name, institution, a partly masked CPF/CNPJ) are not enough to recompute a canonical string either. A PIX entry needs payer fields the seller can read in full from the payment.
 
 Methods that cannot show the seller who sent the money (cash, gift cards, vouchers) have no canonical form. Clients MUST NOT declare a payer for them and SHOULD tell the seller that sender verification is unavailable for the method.
 
@@ -433,8 +433,6 @@ Normalisation:
 |---|---|
 | `AR`, `CVU`, `0000003100012345678901`, `27-12345678-9` | `AR\|CVU\|0000003100012345678901\|27123456789` |
 | `EU`, `SEPA`, `de89 3704 0044 0532 0130 00`, `"  Alice   Smith "` (quotes added to show the spaces) | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
-| `BR`, `PIX`, `+55 11 99999-8888` | `BR\|PIX\|+5511999998888` |
-| `BR`, `PIX`, `Alice.Smith@Example.com ` | `BR\|PIX\|ALICE.SMITH@EXAMPLE.COM` |
 | `EU`, `SEPA`, `ES91 2100 0418 4502 0005 1332`, `José  García` | `EU\|SEPA\|ES9121000418450200051332\|JOSÉ GARCÍA` |
 
 `DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string.
@@ -447,12 +445,6 @@ df82c620ee9df8f7ad068e3bd771a707d9c0dfcfdef2c34a3fb8e6cdda3c9a2f
 
 EU|SEPA|DE89370400440532013000|ALICE SMITH
 ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226161f0de9903
-
-BR|PIX|+5511999998888
-77801d9713f5a93e133c8b507429b69ce89ae392e5c37c4777730e2153f08b78
-
-BR|PIX|ALICE.SMITH@EXAMPLE.COM
-bc10fa5b6d8914c550e3db8e5b3e461720646992e046d2fa5af097e769c323a2
 
 EU|SEPA|ES9121000418450200051332|JOSÉ GARCÍA
 91863709cf207cf042cece0cc4673241e4e0f321a39a327c16f05a9d0d231ebd
@@ -484,10 +476,6 @@ def identifier(value: str) -> str:
 
 def name(value: str) -> str:
     return re.sub(r"\s+", " ", _base(value)).strip()
-
-
-def email(value: str) -> str:
-    return re.sub(r"\s", "", _base(value))
 
 
 def canonical(country: str, method: str, *fields: str) -> str:
@@ -523,7 +511,7 @@ Normative for clients that support the feature, which they detect through the in
 
 **Seller side**
 
-1. On `payer-declared`, store the hash for the order. When the plaintext arrives from the buyer, recompute the hash; if it differs, show a hard warning.
+1. On `payer-declared`, store the hash for the order as provisional. When the plaintext arrives from the buyer, recompute the hash and, once fiat is reported sent, compare it with the hash `payment-history` echoes (query it if the push has not arrived); if it differs, show a hard warning.
 2. On `payment-history` (push or reply), show two independent blocks: *Sender match* (a manual confirmation by the seller) and *Payment-account history*.
 3. In the history block, show `experienced_counterparties` next to the raw counters, for example *"`N` of the buyer's past counterparties were already experienced on this node when they traded with them"*, with the thresholds read from the info-event tags.
 4. Never auto-release and never auto-refuse. The release screen shows both blocks above the release and dispute buttons.
