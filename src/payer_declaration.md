@@ -393,7 +393,7 @@ Each field is normalised as follows:
 2. Apply Unicode normalisation form NFKC.
 3. Convert to uppercase with the Unicode default, locale-independent case mapping.
 4. Then, by field kind:
-   - Every field: remove every U+00AD SOFT HYPHEN. It is invisible, so two strings that look identical to the seller would otherwise hash differently.
+   - Every field: remove every U+00AD SOFT HYPHEN. It is invisible, so two strings that look identical to the seller would otherwise hash differently. (It lies in U+00A0–U+017F, so the input check of step 1 lets it through to be removed here.)
    - **Identifier** fields (IBAN, CBU/CVU, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
    - **Name** fields: replace every run of whitespace with a single space (U+0020) and trim leading and trailing whitespace.
 
