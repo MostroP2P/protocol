@@ -175,7 +175,7 @@ The seller receives every re-declaration. Forwards carry no sequence number and 
 
 The buyer sends the payer details themselves to the seller over the [peer-to-peer chat](./chat.md), never to Mostro. Mostro cannot leak, log or be compelled to hand over what it never receives. A solver does read them if the trade goes to dispute and a party discloses the conversation key, as with everything else in the chat.
 
-The seller's client needs the details in a form it can canonicalise exactly as the buyer's client did, so the buyer's client SHOULD send the canonical string (for example `EU|SEPA|DE89370400440532013000|ALICE SMITH`). What the seller checks against the bank transfer and what is hashed MUST be the same account: the seller's client MUST show the payer fields it derives from the string it hashes (split by the registry's field order), or canonicalise the fields it shows and check that they give exactly that string. It MUST NOT present a separate free-text rendering from the buyer as the account to compare, since a buyer could pair an established account's canonical string with someone else's details. The seller's client hashes the canonical string and compares the result with the `payment_hash` echoed by `payment-history`. A mismatch against that hash means the buyer committed to one account and disclosed another; treat it like a sender mismatch. A mismatch against a `payer-declared` forward alone is not conclusive (a later re-declaration may be in flight): wait for the `payment-history` push, or send the query once fiat is reported sent, and compare again before warning.
+The seller's client needs the details in a form it can canonicalise exactly as the buyer's client did, so the buyer's client SHOULD send the canonical string (for example `EU|SEPA|DE89370400440532013000|ALICE SMITH`). What the seller checks against the bank transfer and what is hashed MUST be the same account: the seller's client MUST show the payer fields it derives from the string it hashes (split by the registry's field order), or canonicalise the fields it shows and check that they give exactly that string. It MUST NOT present a separate free-text rendering from the buyer as the account to compare, since a buyer could pair an established account's canonical string with someone else's details. The seller's client hashes the canonical string, with the order-bound construction when `payment-history` reports `buyer_mode = "full_privacy"`, and compares the result with the `payment_hash` echoed by `payment-history`. A mismatch against that hash means the buyer committed to one account and disclosed another; treat it like a sender mismatch. A mismatch against a `payer-declared` forward alone is not conclusive (a later re-declaration may be in flight): wait for the `payment-history` push, or send the query once fiat is reported sent, and compare again before warning.
 
 ## Reporting fiat sent
 
@@ -320,7 +320,7 @@ Carried by `declare-payer` (buyer → Mostro) and `payer-declared` (Mostro → b
 
 | Field | Type | Meaning |
 |---|---|---|
-| `payment_hash` | string | `sha256("mostro-payer-v1\|" + canonical)` as 64 lowercase hex characters. See [Canonicalisation and hash](#canonicalisation-and-hash). |
+| `payment_hash` | string | 64 lowercase hex characters: `sha256("mostro-payer-v1\|" + canonical)` for a reputation-mode buyer, or the order-bound `sha256("mostro-payer-order-v1\|" + order_id + "\|" + canonical)` for a full-privacy buyer. See [Canonicalisation and hash](#canonicalisation-and-hash) and [Full-privacy buyers](#full-privacy-buyers). |
 
 ### `payment_history`
 
@@ -338,12 +338,12 @@ Carried by `payment-history` from Mostro to the seller. Counters only ever inclu
 
 The counters satisfy `experienced_counterparties ≤ distinct_counterparties ≤ successful_trades`.
 
-A full-privacy buyer always gets this shape:
+A full-privacy buyer always gets this shape. Its hash is the order-bound one (here the [test vector](#full-privacy-buyers) for order `ede61c96-4c13-4519-bf3a-dcf7f1e9d842`), never the reusable one:
 
 ```json
 {
   "payment_history": {
-    "payment_hash": "ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226161f0de9903",
+    "payment_hash": "1f0616c3f355282b7fb73b54f172be84d023f1f63a8a7d7822c4d51f83528628",
     "buyer_mode": "full_privacy",
     "successful_trades": 0,
     "distinct_counterparties": 0,
@@ -392,7 +392,9 @@ Each field is normalised as follows:
    - **Identifier** fields (IBAN, CBU/CVU, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
    - **Name** fields: replace every run of whitespace with a single space (U+0020) and trim leading and trailing whitespace.
 
-*Whitespace* means exactly the code points with the Unicode `White_Space` property: U+0009–U+000D, U+0020, U+0085, U+00A0, U+1680, U+2000–U+200A, U+2028, U+2029, U+202F, U+205F and U+3000. The set is this list, not a runtime's notion of whitespace: Python's `\s` also matches U+001C–U+001F, and ECMAScript's `\s` and `trim()` also match U+FEFF, and neither is whitespace here. Every other code point, including U+FEFF, U+200B and U+180E, is kept as it is. (Rust's `char::is_whitespace` matches this set exactly.)
+*Whitespace* means exactly the code points with the Unicode `White_Space` property: U+0009–U+000D, U+0020, U+0085, U+00A0, U+1680, U+2000–U+200A, U+2028, U+2029, U+202F, U+205F and U+3000. The set is this list, not a runtime's notion of whitespace: Python's `\s` also matches U+001C–U+001F, and ECMAScript's `\s` and `trim()` also match U+FEFF, and neither is whitespace here. Every other code point is not whitespace; U+FEFF, U+200B and U+180E, for example, are left to the repertoire check below, which refuses them. (Rust's `char::is_whitespace` matches this set exactly.)
+
+After these steps every code point of the field MUST lie in U+0020–U+007E or U+00A0–U+017F (Basic Latin, Latin-1 Supplement and Latin Extended-A); a field with any other code point has no canonical form. This keeps the canonical string identical across Unicode versions: NFKC never changes for an assigned code point, and every letter in this range already had both cases in the earliest Unicode data, so no runtime's default uppercase mapping can differ on it (a newer Unicode adding an uppercase for a letter outside it, as Unicode 16 did for U+0264, cannot split a history). The range also covers the Latin character set SEPA uses for holder names.
 
 Diacritics are kept: NFKC does not remove them, so `José` becomes `JOSÉ`, not `JOSE`. A field that is empty after normalisation, or that contains `|`, has no canonical form; the client MUST NOT declare it.
 
@@ -437,9 +439,10 @@ Normalisation:
 | `EU`, `SEPA`, `de89 3704 0044 0532 0130 00`, `"  Alice   Smith "` (quotes added to show the spaces) | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
 | `EU`, `SEPA`, `ES91 2100 0418 4502 0005 1332`, `José  García` | `EU\|SEPA\|ES9121000418450200051332\|JOSÉ GARCÍA` |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+0085 U+00A0 `Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
-| `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+FEFF `Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE` U+FEFF `SMITH` |
+| `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+FEFF `Smith` | none: U+FEFF is outside the repertoire |
+| `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Groß  Łukasz` | `EU\|SEPA\|DE89370400440532013000\|GROSS ŁUKASZ` |
 
-`DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string. The last two rows check the whitespace set: U+0085 and U+00A0 are whitespace, so that name canonicalises like `Alice Smith` and gives the same hash (`ee06af92…9903`); U+FEFF is not, so it is kept and gives a different hash (below).
+`DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string. The `Alice` U+0085 U+00A0 `Smith` row checks the whitespace set: both are whitespace, so that name canonicalises like `Alice Smith` and gives the same hash (`ee06af92…9903`). U+FEFF is not whitespace and is outside the repertoire, so a name containing it cannot be declared. The last row checks the case mapping: `ß` uppercases to `SS` under the default full mapping.
 
 Hashes, `sha256("mostro-payer-v1|" + canonical)` as lowercase hex:
 
@@ -453,11 +456,11 @@ ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226161f0de9903
 EU|SEPA|ES9121000418450200051332|JOSÉ GARCÍA
 91863709cf207cf042cece0cc4673241e4e0f321a39a327c16f05a9d0d231ebd
 
-EU|SEPA|DE89370400440532013000|ALICE<U+FEFF>SMITH
-2cf0d5fe987398b392ba514b7f2bfedbf1a71f8cef6047386c84da12a9949a88
+EU|SEPA|DE89370400440532013000|GROSS ŁUKASZ
+4d5352f5235572ba4ddb61eefb1d294acde0424737d65721638da0d3b63676b6
 ```
 
-`<U+FEFF>` stands for that single code point (bytes `ef bb bf`). The `JOSÉ GARCÍA` vector checks the UTF-8 and NFKC handling: `É` is the single code point U+00C9 (bytes `c3 89`). A name typed in decomposed form (`E` followed by U+0301) has different bytes, so hashing it without normalisation would give a different hash. NFKC maps both forms to U+00C9, which is why it comes first: a conforming client gets the same canonical string, and the same hash, from either form.
+The `JOSÉ GARCÍA` vector checks the UTF-8 and NFKC handling: `É` is the single code point U+00C9 (bytes `c3 89`). A name typed in decomposed form (`E` followed by U+0301) has different bytes, so hashing it without normalisation would give a different hash. NFKC maps both forms to U+00C9, which is why it comes first: a conforming client gets the same canonical string, and the same hash, from either form.
 
 A client that forgets the prefix gets `7838e67266dea11dbca22c155c52ceb344f36658a7c7206f45af189c4ea2a99a` for the SEPA string instead of `ee06af92…9903`, and builds a history nobody else can match.
 
@@ -489,9 +492,13 @@ def name(value: str) -> str:
     return re.sub(WS + "+", " ", _base(value)).strip(" ")
 
 
+def _in_repertoire(field: str) -> bool:
+    return all(0x20 <= ord(c) <= 0x7E or 0xA0 <= ord(c) <= 0x17F for c in field)
+
+
 def canonical(country: str, method: str, *fields: str) -> str:
     parts = [country, method, *fields]
-    if any(p == "" or "|" in p for p in parts):
+    if any(p == "" or "|" in p or not _in_repertoire(p) for p in parts):
         raise ValueError("this payer has no canonical form")
     return "|".join(parts)
 
@@ -503,9 +510,14 @@ def payment_hash(canonical_string: str) -> str:
 c = canonical("EU", "SEPA", identifier("de89 3704 0044 0532 0130 00"), name("  Alice   Smith "))
 assert payment_hash(c) == "ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226161f0de9903"
 assert canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Alice\x85\xa0Smith")) == c
-assert payment_hash(
+assert canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Groß  Łukasz")) == (
+    "EU|SEPA|DE89370400440532013000|GROSS ŁUKASZ"
+)
+try:
     canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Alice\ufeffSmith"))
-) == "2cf0d5fe987398b392ba514b7f2bfedbf1a71f8cef6047386c84da12a9949a88"
+    raise AssertionError("U+FEFF is outside the repertoire")
+except ValueError:
+    pass
 ```
 
 ### Full-privacy buyers
