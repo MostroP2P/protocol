@@ -423,6 +423,8 @@ printf '%s' 'mostro-payer-v1|EU|SEPA|DE89370400440532013000|ALICE SMITH' | sha25
 
 New methods are added to this table by a pull request to this book. An entry fixes the prefix, the fields, their order and their kind; once published, an entry never changes, because changing it would split every history built under it.
 
+**Partial sender visibility.** A registry entry fixes what is hashed, not what every bank shows the payee. Some banks show the payee of a SEPA transfer only the payer's name, without the IBAN. The seller's client MUST let the seller confirm each field separately against what the bank shows, and when a field cannot be seen (for SEPA, typically the IBAN) it MUST present the sender match as partial ("name matches, IBAN not shown by your bank") rather than as a full match. A partial match still limits the attack: to borrow an established account's history, the payment must come from an account with the same holder name. Clients SHOULD give a partial match less weight than a full one.
+
 PIX is not listed. A PIX key identifies the account that receives a transfer, so the buyer's own key is not sender data and the seller cannot check it against the payment; the payer details a PIX receipt shows (name, institution, a partly masked CPF/CNPJ) are not enough to recompute a canonical string either. A PIX entry needs payer fields the seller can read in full from the payment.
 
 Methods that cannot show the seller who sent the money (cash, gift cards, vouchers) have no canonical form. Clients MUST NOT declare a payer for them and SHOULD tell the seller that sender verification is unavailable for the method.
@@ -554,7 +556,7 @@ Normative for clients that support the feature, which they detect through the in
 **Seller side**
 
 1. On `payer-declared`, store the hash for the order as provisional. When the plaintext arrives from the buyer, show the seller the payer fields of the string it hashes (never a separate rendering), recompute the hash (with the order-bound construction when `payment-history` reports `buyer_mode = "full_privacy"`) and, once fiat is reported sent, compare it with the hash `payment-history` echoes (query it if the push has not arrived); if it differs, show a hard warning.
-2. On `payment-history` (push or reply), show two independent blocks: *Sender match* (a manual confirmation by the seller) and *Payment-account history*.
+2. On `payment-history` (push or reply), show two independent blocks: *Sender match* (a manual confirmation by the seller, field by field, shown as partial when the bank does not display a field; see [Partial sender visibility](#method-registry)) and *Payment-account history*.
 3. In the history block, show `experienced_counterparties` next to the raw counters, for example *"`N` of the buyer's past counterparties were already experienced on this node when they traded with them"*, with the thresholds read from the info-event tags.
 4. Never auto-release and never auto-refuse. The release screen shows both blocks above the release and dispute buttons.
 5. The `payment-history` push is a separate message and may arrive late, or not at all (a relay can drop it, and Mostro skips it if it cannot build the history). If it has not arrived once fiat is reported sent, send the `payment-history` query. Show *"Buyer did not declare a payment sender"* as its own warning only when that query answers `not_found` while the order is still `fiat-sent`. Until then, show the history as pending.
