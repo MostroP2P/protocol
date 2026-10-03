@@ -173,7 +173,7 @@ The seller receives every re-declaration. Forwards carry no sequence number and 
 
 ## Sending the plaintext to the seller
 
-The buyer sends the payer details themselves to the seller over the [peer-to-peer chat](./chat.md), never to Mostro. Mostro cannot leak, log or be compelled to hand over what it never receives.
+The buyer sends the payer details themselves to the seller over the [peer-to-peer chat](./chat.md), never to Mostro. Mostro cannot leak, log or be compelled to hand over what it never receives. A solver does read them if the trade goes to dispute and a party discloses the conversation key, as with everything else in the chat.
 
 The seller's client needs the details in a form it can canonicalise exactly as the buyer's client did, so the buyer's client SHOULD send the canonical string (for example `EU|SEPA|DE89370400440532013000|ALICE SMITH`). What the seller checks against the bank transfer and what is hashed MUST be the same account: the seller's client MUST show the payer fields it derives from the string it hashes (split by the registry's field order), or canonicalise the fields it shows and check that they give exactly that string. It MUST NOT present a separate free-text rendering from the buyer as the account to compare, since a buyer could pair an established account's canonical string with someone else's details. The seller's client hashes the canonical string and compares the result with the `payment_hash` echoed by `payment-history`. A mismatch against that hash means the buyer committed to one account and disclosed another; treat it like a sender mismatch. A mismatch against a `payer-declared` forward alone is not conclusive (a later re-declaration may be in flight): wait for the `payment-history` push, or send the query once fiat is reported sent, and compare again before warning.
 
@@ -396,7 +396,7 @@ Each field is normalised as follows:
 
 Diacritics are kept: NFKC does not remove them, so `José` becomes `JOSÉ`, not `JOSE`. A field that is empty after normalisation, or that contains `|`, has no canonical form; the client MUST NOT declare it.
 
-The canonical string MUST NOT include the order id, a trade key, a timestamp, a salt or anything else specific to one trade: that would make the hash unique per trade and defeat the history.
+The canonical string MUST NOT include the order id, a trade key, a timestamp, a salt or anything else specific to one trade: that would make the hash unique per trade and defeat the history. The one exception is a full-privacy buyer, whose declaration is bound to the order on purpose (see [Full-privacy buyers](#full-privacy-buyers)).
 
 ### Hash
 
@@ -508,6 +508,21 @@ assert payment_hash(
 ) == "2cf0d5fe987398b392ba514b7f2bfedbf1a71f8cef6047386c84da12a9949a88"
 ```
 
+### Full-privacy buyers
+
+A buyer in full-privacy mode has no history to build, and the same `payment_hash` on every order would let Mostro link trade keys the mode exists to keep apart. Its client MUST bind the declaration to the order instead:
+
+```text
+payment_hash = lowercase_hex( sha256( UTF-8("mostro-payer-order-v1|" + order_id + "|" + canonical) ) )
+```
+
+`order_id` is the order's UUID in its lowercase hyphenated form, as it appears in the message. The result is still 64 lowercase hexadecimal characters, so Mostro handles it like any other declaration; it never learns which construction was used, and it stores nothing for a full-privacy buyer anyway. The hash still works as a commitment: the seller's client sees `buyer_mode = "full_privacy"` in `payment-history`, hashes the plaintext with this construction and the order id, and compares. `mostro-core` exposes it as `order_bound_payment_hash()` and the prefix as `PAYMENT_HASH_ORDER_DOMAIN`.
+
+```text
+order ede61c96-4c13-4519-bf3a-dcf7f1e9d842, EU|SEPA|DE89370400440532013000|ALICE SMITH
+1f0616c3f355282b7fb73b54f172be84d023f1f63a8a7d7822c4d51f83528628
+```
+
 ### The hash is not a secret
 
 An account number plus a name is guessable by anyone who already knows the account, so the hash is brute-forceable from a candidate list. It is an identifier that must never be published, not a secret. That is why it only ever travels inside encrypted messages between the parties and Mostro. The node database is its only server-side copy. The two clients of the trade keep it as well, the buyer's for the declaration and the seller's to compare with the plaintext; they SHOULD keep it only as long as they keep the order, and never send it anywhere else.
@@ -519,14 +534,14 @@ Normative for clients that support the feature, which they detect through the in
 **Buyer side**
 
 1. When the order is taken and the node advertises `payer_history_enabled = "true"`, show a "payment sender" form for the payment method in use, and explain why it is asked for.
-2. Canonicalise and hash the details, and send `declare-payer`. Keep the plaintext locally.
-3. Send the plaintext to the seller over the peer chat.
-4. Before sending `fiat-sent`, ask the user to confirm: *"Did you send the payment from the account declared for this trade?"*
+2. Canonicalise and hash the details (bound to the order in full-privacy mode, see [Full-privacy buyers](#full-privacy-buyers)), and send `declare-payer`. Keep the plaintext locally. Wait for the `payer-declared` acknowledgement carrying the request's `request_id`, and re-send the declaration if it does not arrive: on a node that does not require declarations, a `fiat-sent` that overtakes the declaration closes the window, the late declaration is refused, and the seller gets no history even though the buyer declared.
+3. Send the plaintext to the seller over the peer chat. Tell the buyer that a solver can read it if the trade goes to dispute.
+4. Send `fiat-sent` only after the acknowledgement of step 2. Before sending it, ask the user to confirm: *"Did you send the payment from the account declared for this trade?"*
 5. If `fiat-sent` answers `payer_not_declared`, go back to step 1.
 
 **Seller side**
 
-1. On `payer-declared`, store the hash for the order as provisional. When the plaintext arrives from the buyer, show the seller the payer fields of the string it hashes (never a separate rendering), recompute the hash and, once fiat is reported sent, compare it with the hash `payment-history` echoes (query it if the push has not arrived); if it differs, show a hard warning.
+1. On `payer-declared`, store the hash for the order as provisional. When the plaintext arrives from the buyer, show the seller the payer fields of the string it hashes (never a separate rendering), recompute the hash (with the order-bound construction when `payment-history` reports `buyer_mode = "full_privacy"`) and, once fiat is reported sent, compare it with the hash `payment-history` echoes (query it if the push has not arrived); if it differs, show a hard warning.
 2. On `payment-history` (push or reply), show two independent blocks: *Sender match* (a manual confirmation by the seller) and *Payment-account history*.
 3. In the history block, show `experienced_counterparties` next to the raw counters, for example *"`N` of the buyer's past counterparties were already experienced on this node when they traded with them"*, with the thresholds read from the info-event tags.
 4. Never auto-release and never auto-refuse. The release screen shows both blocks above the release and dispute buttons.
@@ -555,6 +570,7 @@ Requiring at least one experienced counterparty keeps a fresh cluster of colludi
 |---|---|---|
 | Seller (through Mostro) | the hash the buyer committed to **this order**; the aggregate counters for **this** buyer and hash, including how many past counterparties met the node's experience policy, as a bare count; whether the buyer trades in full-privacy mode (already visible today through `Peer.reputation == null`) | the buyer's identity key, other trade keys, other order ids, which sellers were the counterparties, any single counterparty's qualification, any hash other than the one the buyer chose to commit to this order |
 | Buyer | nothing new about the seller | |
+| Solver, in a dispute | the plaintext payer details, when a party discloses the conversation key: the details travel over the peer chat, which is part of the dispute transcript (see [Chat](./chat.md)) | the hash's history, unless it is also shown the `payment-history` message |
 | Mostro node | the association between the buyer's identity key and the hash, with the counters; keyed hashes of the counterparties; per-counterparty qualification snapshots derived from orders the node already holds | the plaintext payer details |
 | Public relays | nothing | everything in this feature |
 
@@ -575,4 +591,5 @@ Payer details, hashes and history are never published on Nostr. The four info-ev
 - History is per node. It does not travel between Mostro instances.
 - A buyer in full-privacy mode never builds history. This is deliberate: storing rows that can never be matched again would only link a hash to a trade key.
 - A trade that went through a dispute never counts, whatever the outcome.
+- The payer details are sent over the peer chat, so a solver who receives a party's conversation key during a dispute reads them along with the rest of the conversation. That is the purpose of the dispute transcript; clients SHOULD tell the buyer before they send the details.
 - A compromised node database reveals which identity keys used which hashes, and the hashes can be brute-forced by anyone who already knows a candidate account. This is the same trust boundary as the rest of the data a node holds about its trades.
