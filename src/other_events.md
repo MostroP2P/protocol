@@ -198,6 +198,22 @@ This event contains specific data about a Mostro instance. The instance is ident
         "15"
       ],
       [
+        "payer_history_enabled",
+        "true"
+      ],
+      [
+        "payer_declaration_required",
+        "false"
+      ],
+      [
+        "payer_history_experienced_min_trades",
+        "5"
+      ],
+      [
+        "payer_history_experienced_min_days",
+        "30"
+      ],
+      [
         "serbero",
         "<Serbero's pubkey>"
       ],
@@ -258,6 +274,17 @@ These tags advertise the node's anti-abuse-bond configuration so clients can sho
 - `bond_payout_claim_window_days`: number of days the winning counterparty has, from the slash moment, to submit a Lightning invoice for their share of a slashed bond. After this window the share is forfeited to the node. Clients use this together with the `slashed_at` field carried on `add-bond-invoice` messages (see [Bond payout invoice](./add_bond_invoice.md)) to render the forfeit deadline locally.
 
 **Disambiguation.** When `bond_enabled` is absent from the event, the daemon predates the bond feature; treat the node as not enforcing bonds. When `bond_enabled = "false"`, the daemon supports the feature but the operator has not enabled it on this instance. When `bond_enabled = "true"`, the remaining six bond tags are present and clients should expect bond messages on this node — [`pay-bond-invoice`](./pay_bond_invoice.md) for the bonded user and [`add-bond-invoice`](./add_bond_invoice.md) for the payout recipient on a slashed trade.
+
+### Payer history policy tags
+
+These tags advertise the node's [payer declaration and payment-account history](./payer_declaration.md) policy. All four are emitted **only when the operator has enabled the feature**; a node with the feature disabled, or a daemon that predates it, emits none of them, so clients treat missing tags as "feature disabled".
+
+- `payer_history_enabled`: always `"true"` when present. The node accepts [`declare-payer`](./payer_declaration.md#declaring-the-payer), pushes `payment-history` to the seller after `fiat-sent-ok`, and answers the seller's `payment-history` query.
+- `payer_declaration_required`: `"true"` if the node rejects `fiat-sent` with the `cant-do` reason `payer_not_declared` until the buyer has declared a payer for the order, otherwise `"false"`. The node never blocks a trade on the history itself.
+- `payer_history_experienced_min_trades`: decimal string. How many earlier successful, undisputed trades with *other* buyers a seller needs to count as an experienced counterparty.
+- `payer_history_experienced_min_days`: decimal string. How many days must have passed since that seller's first such trade.
+
+The two threshold tags are node policy, not protocol constants. Clients read them to explain the `experienced_counterparties` counter (see [Experienced counterparty](./payer_declaration.md#experienced-counterparty)) instead of hard-coding them. When an operator changes them, the node re-evaluates its stored history under the new values at the next restart, so the tags and the counters always describe the same policy.
 
 ### Serbero tag
 

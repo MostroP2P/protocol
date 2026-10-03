@@ -30,6 +30,10 @@ In most of the cases after complete a range order, a child order needs to be cre
 }
 ```
 
+## Payer declaration
+
+On a node that advertises `payer_history_enabled = "true"`, the buyer may declare, before `fiat-sent`, the account it pays from, and Mostro pushes a `payment-history` message to the seller right after `fiat-sent-ok`. When the node also advertises `payer_declaration_required = "true"`, `fiat-sent` without a prior declaration is refused with the `cant-do` reason `payer_not_declared`. See [Payer declaration and payment history](./payer_declaration.md).
+
 ## Mostro response
 
 Mostro send messages to both parties confirming `fiat-sent` action and sending again the counterpart pubkey, here an example of the message to the buyer:
