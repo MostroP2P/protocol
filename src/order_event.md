@@ -11,10 +11,11 @@ Mostro uses different event kinds for different types of data:
 | Info       | 38385 | `info`             |
 | Disputes   | 38386 | `dispute`          |
 | Announcements | 38387 | `announcement`  |
+| Reputation attestations | 38388 | `reputation-attestation` |
 
 This document focuses on the **Order** event (kind `38383`), which is used for the P2P order book.
 
-Every kind above is published by a Mostro daemon except **Announcements** (kind `38387`), which is published by the keys of the project that ships a client and is described in [Announcement events](./announcement_event.md).
+Every kind above is published by a Mostro daemon except **Announcements** (kind `38387`), which is published by the keys of the project that ships a client and is described in [Announcement events](./announcement_event.md), and **Reputation attestations** (kind `38388`), which are signed by a reputation issuer and never published at all: they travel inside encrypted messages, as described in [Reputation attestation](./reputation_attestation.md).
 
 ## Abstract
 
