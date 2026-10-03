@@ -264,7 +264,7 @@ The seller can ask for the history again with `payment-history` and a `null` pay
 
 Mostro answers with the same `payment-history` message as the push, with the `request_id` echoed (`4412` here). The query takes no parameter beyond the order id: Mostro resolves the buyer and the hash from the order itself.
 
-The query is accepted in `fiat-sent`, `dispute` and `settled-hold-invoice`. Repeating it returns the same numbers. Once the order reaches `success` the declaration has been consumed and the query answers `not_found`: the seller already received the push at `fiat-sent` time, and a post-success value would include the trade just completed.
+The query is accepted in `fiat-sent`, `dispute` and `settled-hold-invoice`. Each reply is a live snapshot, not a value frozen at `fiat-sent`: while the order stays queryable, another order of the same buyer from the same account may reach `success`, and a node restart with new experience thresholds re-evaluates `experienced_counterparties`, so a repeated query can return different numbers. Once the order reaches `success` the declaration has been consumed and the query answers `not_found`: the seller already received the push at `fiat-sent` time, and a post-success value would include the trade just completed.
 
 ## Status windows
 
@@ -391,6 +391,7 @@ Each field is normalised as follows:
 3. Then, by field kind:
    - **Identifier** fields (IBAN, CBU/CVU, PIX key, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
    - **Name** fields: replace every run of whitespace with a single space (U+0020) and trim leading and trailing whitespace.
+   - **E-mail** fields: remove every whitespace character only. Dots, hyphens and other punctuation are part of an e-mail address, so `A.B@EXAMPLE.COM` and `AB@EXAMPLE.COM` stay two different accounts.
 
 Diacritics are kept: NFKC does not remove them, so `José` becomes `JOSÉ`, not `JOSE`. A field that is empty after normalisation, or that contains `|`, has no canonical form; the client MUST NOT declare it.
 
@@ -416,11 +417,13 @@ printf '%s' 'mostro-payer-v1|EU|SEPA|DE89370400440532013000|ALICE SMITH' | sha25
 |---|---|---|---|
 | `AR\|CVU` | CBU or CVU number; holder's CUIT/CUIL | identifier; identifier | The 22-digit account number, never an alias. The tax id is the 11-digit CUIT/CUIL. |
 | `EU\|SEPA` | IBAN; account holder name | identifier; name | Covers SEPA credit transfers in any SEPA country. |
-| `BR\|PIX` | PIX key | identifier | Any key type (CPF, CNPJ, phone, e-mail, random key) as registered. Phone keys keep the leading `+` and the country code. |
+| `BR\|PIX` | PIX key | identifier, or e-mail when the key contains `@` | Any key type (CPF, CNPJ, phone, e-mail, random key) as registered. Phone keys keep the leading `+` and the country code. An e-mail key keeps its dots and hyphens (e-mail rule); every other key type follows the identifier rule. |
 
 New methods are added to this table by a pull request to this book. An entry fixes the prefix, the fields, their order and their kind; once published, an entry never changes, because changing it would split every history built under it.
 
 Methods that cannot show the seller who sent the money (cash, gift cards, vouchers) have no canonical form. Clients MUST NOT declare a payer for them and SHOULD tell the seller that sender verification is unavailable for the method.
+
+A node that advertises `payer_declaration_required = "true"` refuses `fiat-sent` without a declaration, so a buyer paying with a method that has no canonical form could never report fiat as sent. Operators MUST NOT require declarations while accepting such methods; the setting is meant for markets that trade only over sender-verifiable rails listed in this registry. Clients SHOULD warn a buyer before taking such an order on a node that requires declarations.
 
 ### Test vectors
 
@@ -431,6 +434,7 @@ Normalisation:
 | `AR`, `CVU`, `0000003100012345678901`, `27-12345678-9` | `AR\|CVU\|0000003100012345678901\|27123456789` |
 | `EU`, `SEPA`, `de89 3704 0044 0532 0130 00`, `"  Alice   Smith "` (quotes added to show the spaces) | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
 | `BR`, `PIX`, `+55 11 99999-8888` | `BR\|PIX\|+5511999998888` |
+| `BR`, `PIX`, `Alice.Smith@Example.com ` | `BR\|PIX\|ALICE.SMITH@EXAMPLE.COM` |
 | `EU`, `SEPA`, `ES91 2100 0418 4502 0005 1332`, `José  García` | `EU\|SEPA\|ES9121000418450200051332\|JOSÉ GARCÍA` |
 
 `DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string.
@@ -447,11 +451,14 @@ ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226161f0de9903
 BR|PIX|+5511999998888
 77801d9713f5a93e133c8b507429b69ce89ae392e5c37c4777730e2153f08b78
 
+BR|PIX|ALICE.SMITH@EXAMPLE.COM
+bc10fa5b6d8914c550e3db8e5b3e461720646992e046d2fa5af097e769c323a2
+
 EU|SEPA|ES9121000418450200051332|JOSÉ GARCÍA
 91863709cf207cf042cece0cc4673241e4e0f321a39a327c16f05a9d0d231ebd
 ```
 
-The last vector checks the UTF-8 and NFKC handling: `É` is the single code point U+00C9 (bytes `c3 89`). The decomposed form (`E` followed by U+0301) hashes differently, which is why NFKC comes first.
+The last vector checks the UTF-8 and NFKC handling: `É` is the single code point U+00C9 (bytes `c3 89`). A name typed in decomposed form (`E` followed by U+0301) has different bytes, so hashing it without normalisation would give a different hash. NFKC maps both forms to U+00C9, which is why it comes first: a conforming client gets the same canonical string, and the same hash, from either form.
 
 A client that forgets the prefix gets `7838e67266dea11dbca22c155c52ceb344f36658a7c7206f45af189c4ea2a99a` for the SEPA string instead of `ee06af92…9903`, and builds a history nobody else can match.
 
@@ -479,6 +486,10 @@ def name(value: str) -> str:
     return re.sub(r"\s+", " ", _base(value)).strip()
 
 
+def email(value: str) -> str:
+    return re.sub(r"\s", "", _base(value))
+
+
 def canonical(country: str, method: str, *fields: str) -> str:
     parts = [country, method, *fields]
     if any(p == "" or "|" in p for p in parts):
@@ -496,7 +507,7 @@ assert payment_hash(c) == "ee06af92c95429e7cb0cf8428636199a71a01e32bab7a8526d226
 
 ### The hash is not a secret
 
-An account number plus a name is guessable by anyone who already knows the account, so the hash is brute-forceable from a candidate list. It is an identifier that must never be published, not a secret. That is why it only ever travels inside encrypted messages between the parties and Mostro, and why the node database is the only place it is stored.
+An account number plus a name is guessable by anyone who already knows the account, so the hash is brute-forceable from a candidate list. It is an identifier that must never be published, not a secret. That is why it only ever travels inside encrypted messages between the parties and Mostro. The node database is its only server-side copy. The two clients of the trade keep it as well, the buyer's for the declaration and the seller's to compare with the plaintext; they SHOULD keep it only as long as they keep the order, and never send it anywhere else.
 
 ## Client contract
 
@@ -516,7 +527,7 @@ Normative for clients that support the feature, which they detect through the in
 2. On `payment-history` (push or reply), show two independent blocks: *Sender match* (a manual confirmation by the seller) and *Payment-account history*.
 3. In the history block, show `experienced_counterparties` next to the raw counters, for example *"`N` of the buyer's past counterparties were already experienced on this node when they traded with them"*, with the thresholds read from the info-event tags.
 4. Never auto-release and never auto-refuse. The release screen shows both blocks above the release and dispute buttons.
-5. If no `payment-history` has arrived once fiat is reported sent on a node with the feature enabled, show *"Buyer did not declare a payment sender"* as its own warning.
+5. The `payment-history` push is a separate message and may arrive late, or not at all (a relay can drop it, and Mostro skips it if it cannot build the history). If it has not arrived once fiat is reported sent, send the `payment-history` query. Show *"Buyer did not declare a payment sender"* as its own warning only when that query answers `not_found` while the order is still `fiat-sent`. Until then, show the history as pending.
 
 ### Suggested tiers
 
@@ -549,7 +560,7 @@ Payer details, hashes and history are never published on Nostr. The four info-ev
 ### Why there is no oracle
 
 - The only query, `payment-history`, takes no parameter beyond the order id. The buyer and the hash are resolved by Mostro from the order. A seller cannot ask about a hash the buyer did not commit to this order, nor about a user who is not its counterparty in this order.
-- Repeating the query returns the same numbers and leaks nothing further.
+- Repeating the query only returns a fresher snapshot of the same buyer and hash; it leaks nothing about anyone else.
 - The seller already has the plaintext, because the buyer sent it. Learning its hash is not new information.
 - The seller cannot tell "this buyer used account X before" from "somebody used account X before" across users: the counters are for the buyer it is trading with now, keyed by that buyer's identity, so a victim's own history on the same account is never attributed to an attacker.
 - There is no "are these two keys the same user?" primitive.
