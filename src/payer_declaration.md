@@ -394,7 +394,7 @@ Each field is normalised as follows:
 
 *Whitespace* means exactly the code points with the Unicode `White_Space` property: U+0009–U+000D, U+0020, U+0085, U+00A0, U+1680, U+2000–U+200A, U+2028, U+2029, U+202F, U+205F and U+3000. The set is this list, not a runtime's notion of whitespace: Python's `\s` also matches U+001C–U+001F, and ECMAScript's `\s` and `trim()` also match U+FEFF, and neither is whitespace here. Every other code point is not whitespace; U+FEFF, U+200B and U+180E, for example, are left to the repertoire check below, which refuses them. (Rust's `char::is_whitespace` matches this set exactly.)
 
-After these steps every code point of the field MUST lie in U+0020–U+007E or U+00A0–U+017F (Basic Latin, Latin-1 Supplement and Latin Extended-A); a field with any other code point has no canonical form. This keeps the canonical string identical across Unicode versions: NFKC never changes for an assigned code point, and every letter in this range already had both cases in the earliest Unicode data, so no runtime's default uppercase mapping can differ on it (a newer Unicode adding an uppercase for a letter outside it, as Unicode 16 did for U+0264, cannot split a history). The range also covers the Latin character set SEPA uses for holder names.
+After these steps every code point of the field MUST lie in U+0020–U+007E, U+00A0–U+017F or U+0218–U+021B (Basic Latin, Latin-1 Supplement, Latin Extended-A, and the Romanian `Ș ș Ț ț`); a field with any other code point has no canonical form. This keeps the canonical string identical across Unicode versions: NFKC never changes for an assigned code point, and every letter in these ranges has had both cases since Unicode 3.0, so no runtime's default uppercase mapping can differ on it (a newer Unicode adding an uppercase for a letter outside it, as Unicode 16 did for U+0264, cannot split a history). The ranges cover the Latin character set SEPA uses for holder names, plus the Romanian letters its extended sets commonly carry. A holder name a bank records in another script (Greek, Cyrillic) has no canonical form; see the preflight rule below.
 
 Diacritics are kept: NFKC does not remove them, so `José` becomes `JOSÉ`, not `JOSE`. A field that is empty after normalisation, or that contains `|`, has no canonical form; the client MUST NOT declare it.
 
@@ -429,7 +429,7 @@ PIX is not listed. A PIX key identifies the account that receives a transfer, so
 
 Methods that cannot show the seller who sent the money (cash, gift cards, vouchers) have no canonical form. Clients MUST NOT declare a payer for them and SHOULD tell the seller that sender verification is unavailable for the method.
 
-A node that advertises `payer_declaration_required = "true"` refuses `fiat-sent` without a declaration, so a buyer paying with a method that has no canonical form could never report fiat as sent. Operators MUST NOT require declarations while accepting such methods; the setting is meant for markets that trade only over sender-verifiable rails listed in this registry. Clients SHOULD warn a buyer before taking such an order on a node that requires declarations.
+A node that advertises `payer_declaration_required = "true"` refuses `fiat-sent` without a declaration, so a buyer paying with a method that has no canonical form could never report fiat as sent. Operators MUST NOT require declarations while accepting such methods; the setting is meant for markets that trade only over sender-verifiable rails listed in this registry. Clients SHOULD warn a buyer before taking such an order on a node that requires declarations. The same holds for payer details outside the repertoire: on such a node, the buyer's client MUST canonicalise the details it will declare **before** taking the order (or creating a buy order), and refuse to proceed when they have no canonical form, since the buyer could never satisfy the `fiat-sent` gate.
 
 ### Test vectors
 
@@ -443,8 +443,9 @@ Normalisation:
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+0085 U+00A0 `Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+FEFF `Smith` | none: U+FEFF is outside the repertoire |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Groß  Łukasz` | `EU\|SEPA\|DE89370400440532013000\|GROSS ŁUKASZ` |
+| `EU`, `SEPA`, `RO49 AAAA 1B31 0075 9384 0000`, `Ștefan Țepeș` | `EU\|SEPA\|RO49AAAA1B31007593840000\|ȘTEFAN ȚEPEȘ` |
 
-`DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string. The `Alice` U+0085 U+00A0 `Smith` row checks the whitespace set: both are whitespace, so that name canonicalises like `Alice Smith` and gives the same hash (`ee06af92…9903`). U+FEFF is not whitespace and is outside the repertoire, so a name containing it cannot be declared. The last row checks the case mapping: `ß` uppercases to `SS` under the default full mapping.
+`DE89 3704 0044 0532 0130 00` and `DE89370400440532013000` canonicalise to the same string. The `Alice` U+0085 U+00A0 `Smith` row checks the whitespace set: both are whitespace, so that name canonicalises like `Alice Smith` and gives the same hash (`ee06af92…9903`). U+FEFF is not whitespace and is outside the repertoire, so a name containing it cannot be declared. The `Groß  Łukasz` row checks the case mapping: `ß` uppercases to `SS` under the default full mapping. The Romanian row checks the U+0218–U+021B range.
 
 Hashes, `sha256("mostro-payer-v1|" + canonical)` as lowercase hex:
 
@@ -460,6 +461,9 @@ EU|SEPA|ES9121000418450200051332|JOSÉ GARCÍA
 
 EU|SEPA|DE89370400440532013000|GROSS ŁUKASZ
 4d5352f5235572ba4ddb61eefb1d294acde0424737d65721638da0d3b63676b6
+
+EU|SEPA|RO49AAAA1B31007593840000|ȘTEFAN ȚEPEȘ
+2b6b4ce972a97c5c0519b5a06325c34a6f10595ccff4ca94df556ef5445ababf
 ```
 
 The `JOSÉ GARCÍA` vector checks the UTF-8 and NFKC handling: `É` is the single code point U+00C9 (bytes `c3 89`). A name typed in decomposed form (`E` followed by U+0301) has different bytes, so hashing it without normalisation would give a different hash. NFKC maps both forms to U+00C9, which is why it comes first: a conforming client gets the same canonical string, and the same hash, from either form.
@@ -495,7 +499,10 @@ def name(value: str) -> str:
 
 
 def _in_repertoire(field: str) -> bool:
-    return all(0x20 <= ord(c) <= 0x7E or 0xA0 <= ord(c) <= 0x17F for c in field)
+    return all(
+        0x20 <= ord(c) <= 0x7E or 0xA0 <= ord(c) <= 0x17F or 0x218 <= ord(c) <= 0x21B
+        for c in field
+    )
 
 
 def canonical(country: str, method: str, *fields: str) -> str:
@@ -515,6 +522,9 @@ assert canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Alice
 assert canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Groß  Łukasz")) == (
     "EU|SEPA|DE89370400440532013000|GROSS ŁUKASZ"
 )
+assert payment_hash(
+    canonical("EU", "SEPA", identifier("RO49 AAAA 1B31 0075 9384 0000"), name("Ștefan Țepeș"))
+) == "2b6b4ce972a97c5c0519b5a06325c34a6f10595ccff4ca94df556ef5445ababf"
 try:
     canonical("EU", "SEPA", identifier("DE89370400440532013000"), name("Alice\ufeffSmith"))
     raise AssertionError("U+FEFF is outside the repertoire")
@@ -547,7 +557,7 @@ Normative for clients that support the feature, which they detect through the in
 
 **Buyer side**
 
-1. When the order is taken and the node advertises `payer_history_enabled = "true"`, show a "payment sender" form for the payment method in use, and explain why it is asked for.
+1. When the order is taken and the node advertises `payer_history_enabled = "true"`, show a "payment sender" form for the payment method in use, and explain why it is asked for. On a node that also advertises `payer_declaration_required = "true"`, collect and canonicalise the details before taking the order instead, and do not take it if they have no canonical form.
 2. Canonicalise and hash the details (bound to the order in full-privacy mode, see [Full-privacy buyers](#full-privacy-buyers)), and send `declare-payer`. Keep the plaintext locally. Wait for the `payer-declared` acknowledgement carrying the request's `request_id`, and re-send the declaration if it does not arrive: on a node that does not require declarations, a `fiat-sent` that overtakes the declaration closes the window, the late declaration is refused, and the seller gets no history even though the buyer declared.
 3. Send the plaintext to the seller over the peer chat. Tell the buyer that a solver can read it if the trade goes to dispute.
 4. Send `fiat-sent` only after the acknowledgement of step 2. Before sending it, ask the user to confirm: *"Did you send the payment from the account declared for this trade?"*
