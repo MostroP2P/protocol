@@ -278,9 +278,9 @@ The query is accepted in `fiat-sent`, `dispute` and `settled-hold-invoice`. Each
 | `payment-history` (query) | seller trade key | any other status | `cant-do not_allowed_by_status` |
 | success | Mostro | `settled-hold-invoice` → `success` | history updated, declaration consumed |
 | cleanup | Mostro | any other terminal status | declaration deleted |
-| new buyer | Mostro | a take rolls back to `pending` and another buyer takes the order | the previous buyer's declaration is void: it never satisfies the new buyer's `fiat-sent` and never becomes their history |
+| rollback | Mostro | a take rolls back to `pending` (timeout or cancel) | declaration deleted: the next take, by any buyer, starts with none |
 
-A declaration belongs to the buyer trade key that made it. When a take times out and the order returns to `pending` (see [Other events](./other_events.md)), the next buyer starts with no declaration and declares its own; Mostro ignores, and discards at success, any declaration left by an earlier buyer.
+A declaration belongs to one take. When a take times out or is canceled and the order returns to `pending` (see [Other events](./other_events.md)), Mostro deletes the declaration, so the next take starts with none and the buyer declares again, even if the same trade key takes the order. As a second guard, Mostro ignores, and discards at success, a declaration made by a buyer other than the order's current one.
 
 ## Refusal reasons
 
@@ -393,6 +393,7 @@ Each field is normalised as follows:
 2. Apply Unicode normalisation form NFKC.
 3. Convert to uppercase with the Unicode default, locale-independent case mapping.
 4. Then, by field kind:
+   - Every field: remove every U+00AD SOFT HYPHEN. It is invisible, so two strings that look identical to the seller would otherwise hash differently.
    - **Identifier** fields (IBAN, CBU/CVU, account number, tax id): remove every whitespace character, hyphen (`-`), dot (`.`) and slash (`/`).
    - **Name** fields: replace every run of whitespace with a single space (U+0020) and trim leading and trailing whitespace.
 
@@ -447,6 +448,7 @@ Normalisation:
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+0085 U+00A0 `Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+FEFF `Smith` | none: U+FEFF is outside the repertoire |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Alice` U+A7F1`mith` | none: refused before NFKC, whatever the runtime's Unicode version |
+| `EU`, `SEPA`, `DE89` U+00AD `3704 0044 0532 0130 00`, `Ali` U+00AD `ce Smith` | `EU\|SEPA\|DE89370400440532013000\|ALICE SMITH` |
 | `EU`, `SEPA`, `DE89 3704 0044 0532 0130 00`, `Groß  Łukasz` | `EU\|SEPA\|DE89370400440532013000\|GROSS ŁUKASZ` |
 | `EU`, `SEPA`, `RO49 AAAA 1B31 0075 9384 0000`, `Ștefan Țepeș` | `EU\|SEPA\|RO49AAAA1B31007593840000\|ȘTEFAN ȚEPEȘ` |
 
@@ -498,11 +500,11 @@ def _base(value: str) -> str:
 
 
 def identifier(value: str) -> str:
-    return re.sub(WS + "|[-./]", "", _base(value))
+    return re.sub(WS + "|[-./\xad]", "", _base(value))
 
 
 def name(value: str) -> str:
-    return re.sub(WS + "+", " ", _base(value)).strip(" ")
+    return re.sub(WS + "+", " ", _base(value).replace("\xad", "")).strip(" ")
 
 
 def _accepted_input(field: str) -> bool:
@@ -545,6 +547,7 @@ for refused in ["Alice\ufeffSmith", "Alice\ua7f1mith"]:
     except ValueError:
         pass
 assert name("Jose\u0301 García") == "JOSÉ GARCÍA"
+assert canonical("EU", "SEPA", identifier("DE89\xad370400440532013000"), name("Ali\xadce Smith")) == c
 ```
 
 ### Full-privacy buyers
