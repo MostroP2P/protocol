@@ -100,7 +100,7 @@ A party reacts to the other party's message with an inner **kind 7** event, as i
 ```
 
 - **`e` tag**: exactly one, holding the **inner** event id of a kind 1 message of this conversation. That is the id both parties and a solver see after decryption, never an outer id. Other tags are ignored.
-- **`content`**: the reaction, at most 32 bytes of UTF-8. It SHOULD be a single emoji, and clients render it as plain text. NIP-25's `+`, `-` and `:shortcode:` forms carry no special meaning here. An **empty** `content` withdraws the sender's reaction to that message.
+- **`content`**: the reaction, at most 64 bytes of UTF-8 (the longest emoji sequences, such as a couple with two skin tones, take 35). It SHOULD be a single emoji, and clients render it as plain text. NIP-25's `+`, `-` and `:shortcode:` forms carry no special meaning here. An **empty** `content` withdraws the sender's reaction to that message.
 - **One reaction per sender and message.** Of a sender's reactions to one message, the one with the greatest inner `created_at` holds, ties broken by the lowest inner id. A newer reaction replaces an older one, and a newer empty one removes it.
 - **Only on the other party's messages.** A client MUST NOT show a reaction on a message its own sender wrote. A kind 7 event is never itself a target.
 - **The target may arrive later.** Offline catch-up does not guarantee order, so a client SHOULD keep a reaction whose target it does not hold yet and show it once the target arrives.
@@ -180,7 +180,7 @@ Each incoming event MUST be validated cheapest-check-first, so that an abusive p
 8. Only now, **NIP-44 decrypt** with `K_conv`.
 9. **Inner signature** verifies — this is the sender authentication and MUST NOT be skipped. Reading the inner `pubkey` field without verifying the signature accepts forged senders.
 10. **Inner pubkey** is the buyer's or the seller's trade key for this order — otherwise discard. No other signer is accepted, including a dispute solver.
-11. **Inner kind** is 1, or 7 with exactly one `e` tag and a `content` of at most 32 bytes (see [Reactions](#reactions)) — otherwise discard.
+11. **Inner kind** is 1, or 7 with exactly one `e` tag and a `content` of at most 64 bytes (see [Reactions](#reactions)) — otherwise discard.
 12. **Inner event id** has not been seen before, checked against **durable** state — otherwise discard. For a reaction, the newest reaction kept per sender and message meets this: a re-wrapped reaction is never newer than the one already kept, so it changes nothing.
 13. **Relative timestamp bound**: `|inner.created_at − outer.created_at|` is within the same tolerance — otherwise discard.
 
@@ -272,7 +272,7 @@ const MAX_CLOCK_SKEW_SECS: u64 = 60;
 const MAX_CONTENT_BYTES: usize = 64 * 1024;
 
 /// Upper bound on a reaction's `content`: one emoji, or empty to withdraw it.
-const MAX_REACTION_BYTES: usize = 32;
+const MAX_REACTION_BYTES: usize = 64;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
