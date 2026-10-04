@@ -99,7 +99,7 @@ A party reacts to the other party's message with an inner **kind 7** event, as i
 }
 ```
 
-- **`e` tag**: exactly one, holding the **inner** event id of a kind 1 message of this conversation. That is the id both parties and a solver see after decryption, never an outer id. Other tags are ignored.
+- **`e` tag**: exactly one, whose value is a valid event id (32 bytes in hex): the **inner** event id of a kind 1 message of this conversation. That is the id both parties and a solver see after decryption, never an outer id. Other tags are ignored.
 - **`content`**: the reaction, at most 64 bytes of UTF-8 (the longest emoji sequences, such as a couple with two skin tones, take 35). It SHOULD be a single emoji, and clients render it as plain text. NIP-25's `+`, `-` and `:shortcode:` forms carry no special meaning here. An **empty** `content` withdraws the sender's reaction to that message.
 - **One reaction per sender and message.** Of a sender's reactions to one message, the one with the greatest inner `created_at` holds, ties broken by the lowest inner id. A newer reaction replaces an older one, and a newer empty one removes it.
 - **Only on the other party's messages.** A client MUST NOT show a reaction on a message its own sender wrote. A kind 7 event is never itself a target.
@@ -180,7 +180,7 @@ Each incoming event MUST be validated cheapest-check-first, so that an abusive p
 8. Only now, **NIP-44 decrypt** with `K_conv`.
 9. **Inner signature** verifies — this is the sender authentication and MUST NOT be skipped. Reading the inner `pubkey` field without verifying the signature accepts forged senders.
 10. **Inner pubkey** is the buyer's or the seller's trade key for this order — otherwise discard. No other signer is accepted, including a dispute solver.
-11. **Inner kind** is 1, or 7 with exactly one `e` tag and a `content` of at most 64 bytes (see [Reactions](#reactions)) — otherwise discard.
+11. **Inner kind** is 1, or 7 with exactly one `e` tag holding a valid event id and a `content` of at most 64 bytes (see [Reactions](#reactions)) — otherwise discard.
 12. **Inner event id** has not been seen before, checked against **durable** state — otherwise discard. For a reaction, the newest reaction kept per sender and message meets this: a re-wrapped reaction is never newer than the one already kept, so it changes nothing.
 13. **Relative timestamp bound**: `|inner.created_at − outer.created_at|` is within the same tolerance — otherwise discard.
 
@@ -477,11 +477,16 @@ pub fn mostro_unwrap(
     }
     match inner.kind {
         Kind::TextNote => {}
-        // A reaction names exactly one target, by its inner id.
+        // A reaction names exactly one target, by its inner id. A tag with no
+        // value, or one that is not an id, names nothing.
         Kind::Reaction => {
-            let targets = inner.tags.iter().filter(|t| t.kind() == TagKind::e()).count();
-            if targets != 1 || inner.content.len() > MAX_REACTION_BYTES {
-                return Err("malformed reaction".into());
+            let mut targets = inner.tags.iter().filter(|t| t.kind() == TagKind::e());
+            let target = targets.next().and_then(|t| t.content()).map(EventId::from_hex);
+            if !matches!(target, Some(Ok(_))) || targets.next().is_some() {
+                return Err("a reaction must name exactly one valid target".into());
+            }
+            if inner.content.len() > MAX_REACTION_BYTES {
+                return Err("reaction content exceeds the accepted size".into());
             }
         }
         _ => return Err("inner event is neither kind 1 nor kind 7".into()),
