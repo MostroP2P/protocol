@@ -83,6 +83,31 @@ A kind 1 event with the message, signed by the sender's **trade key**, timestamp
 
 The inner signature is the **only** authentication of the sender. Both parties hold `K_sign`, so the outer signature proves the event came from the conversation but not which side wrote it.
 
+#### Reactions
+
+A party reacts to the other party's message with an inner **kind 7** event, as in [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md). It is signed by the sender's trade key and carried in an outer event exactly like a message:
+
+```json
+{
+  "id": "<Event Id>",
+  "pubkey": "<Index N pubkey (trade key)>",
+  "kind": 7,
+  "created_at": 1691518467,
+  "content": "👍",
+  "tags": [["e", "<inner event id of the message reacted to>"]],
+  "sig": "<Index N (trade key) signature>"
+}
+```
+
+- **`e` tag**: exactly one, whose value is a valid event id (32 bytes in hex): the **inner** event id of a kind 1 message of this conversation. That is the id both parties and a solver see after decryption, never an outer id. Other tags are ignored.
+- **`content`**: the reaction, at most 64 bytes of UTF-8 (the longest emoji sequences, such as a couple with two skin tones, take 35). It SHOULD be a single emoji, and clients render it as plain text. NIP-25's `+`, `-` and `:shortcode:` forms carry no special meaning here. An **empty** `content` withdraws the sender's reaction to that message.
+- **One reaction per sender and message.** Of a sender's reactions to one message, the one with the greatest inner `created_at` holds, ties broken by the lowest inner id. A newer reaction replaces an older one, and a newer empty one removes it.
+- **Only on the other party's messages.** A client MUST NOT show a reaction on a message its own sender wrote. A kind 7 event is never itself a target.
+- **The target may arrive later.** Offline catch-up does not guarantee order, so a client SHOULD keep a reaction whose target it does not hold yet and show it once the target arrives.
+- **A reaction is not a message.** It MUST NOT count as unread, SHOULD NOT raise a notification, does not become the conversation's preview, and a sender SHOULD NOT wake the other party's device for it.
+
+Reactions are defined for this chat only. A client that does not implement them discards them at [step 11](#validation-order), as it discards any other inner kind, and nothing else changes for it.
+
 ### 2. Outer event
 
 The JSON-encoded inner event is NIP-44 encrypted under `K_conv` and placed in the `content` of a kind 14 event, `p`-tagged to `pub(K_conv)` and signed with `K_sign`:
@@ -155,8 +180,8 @@ Each incoming event MUST be validated cheapest-check-first, so that an abusive p
 8. Only now, **NIP-44 decrypt** with `K_conv`.
 9. **Inner signature** verifies — this is the sender authentication and MUST NOT be skipped. Reading the inner `pubkey` field without verifying the signature accepts forged senders.
 10. **Inner pubkey** is the buyer's or the seller's trade key for this order — otherwise discard. No other signer is accepted, including a dispute solver.
-11. **Inner kind** is 1 — otherwise discard.
-12. **Inner event id** has not been seen before, checked against **durable** state — otherwise discard.
+11. **Inner kind** is 1, or 7 with exactly one `e` tag holding a valid event id and a `content` of at most 64 bytes (see [Reactions](#reactions)) — otherwise discard.
+12. **Inner event id** has not been seen before, checked against **durable** state — otherwise discard. For a reaction, the newest reaction kept per sender and message meets this: a re-wrapped reaction is never newer than the one already kept, so it changes nothing.
 13. **Relative timestamp bound**: `|inner.created_at − outer.created_at|` is within the same tolerance — otherwise discard.
 
 Steps 1 through 6 are all reachable without any cryptographic work, and steps 2 and 3 in particular cost a tag comparison and an integer comparison.
@@ -183,7 +208,9 @@ The counterparty is the only party who can flood, and is now a single stable aut
 
 On sustained violation, a client SHOULD mark the conversation as flooded, stop processing it, and inform the user, while leaving the trade fully operational.
 
-Clients SHOULD also cap the number of messages and total bytes stored per trade.
+A client that counts rejected events to detect a flood SHOULD NOT count an event discarded at step 11 only for its inner kind: it passed every check up to the counterparty's own signature, and is an extension of this protocol the client does not implement, not abuse.
+
+Clients SHOULD also cap the number of messages and total bytes stored per trade. Reactions count toward these caps, including the ones kept for a target that has not arrived.
 
 ### Isolation
 
@@ -195,9 +222,11 @@ This is the invariant that prevents any future flaw in this channel from costing
 
 A flood is attributable to `pub(K_sign)`, and every accepted message to a trade key. Clients SHOULD retain a bounded sample and counters, which are usable as evidence in a dispute.
 
+Reactions are part of the transcript a solver reads with `K_conv`, and each one is attributed to its sender by the inner signature, like a message.
+
 ### Presentation
 
-Clients SHOULD order messages by the validated inner `created_at`. Because that value is chosen by the sender, it MUST NOT be trusted beyond the tolerance enforced in step 11.
+Clients SHOULD order messages by the validated inner `created_at`. Because that value is chosen by the sender, it MUST NOT be trusted beyond the tolerance enforced in step 13.
 
 ## Dispute disclosure
 
@@ -241,6 +270,9 @@ const MAX_CLOCK_SKEW_SECS: u64 = 60;
 
 /// Upper bound on the encrypted payload, enforced before decrypting.
 const MAX_CONTENT_BYTES: usize = 64 * 1024;
+
+/// Upper bound on a reaction's `content`: one emoji, or empty to withdraw it.
+const MAX_REACTION_BYTES: usize = 64;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -443,8 +475,21 @@ pub fn mostro_unwrap(
     if !allowed_signers.contains(&inner.pubkey) {
         return Err("inner event is signed by a key that is not a party to this order".into());
     }
-    if inner.kind != Kind::TextNote {
-        return Err("inner event is not kind 1".into());
+    match inner.kind {
+        Kind::TextNote => {}
+        // A reaction names exactly one target, by its inner id. A tag with no
+        // value, or one that is not an id, names nothing.
+        Kind::Reaction => {
+            let mut targets = inner.tags.iter().filter(|t| t.kind() == TagKind::e());
+            let target = targets.next().and_then(|t| t.content()).map(EventId::from_hex);
+            if !matches!(target, Some(Ok(_))) || targets.next().is_some() {
+                return Err("a reaction must name exactly one valid target".into());
+            }
+            if inner.content.len() > MAX_REACTION_BYTES {
+                return Err("reaction content exceeds the accepted size".into());
+            }
+        }
+        _ => return Err("inner event is neither kind 1 nor kind 7".into()),
     }
 
     // Bounds how far back the caller's durable inner-id dedup has to reach: a
