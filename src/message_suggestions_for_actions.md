@@ -172,6 +172,20 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 - **invalid_mint_url:**
   This Mostro does not accept that Cashu mint for this order. When creating an order, choose one of the mints the node lists in its info event's `cashu_mint_url` tag, or any public mint if the tag is absent. When locking the escrow, lock it on the mint named in the order.
 
+- **invalid_cashu_token:**
+  Mostro could not accept the Cashu escrow token. It may be malformed, locked to the wrong keys, for the wrong amount, with a locktime below the node's `cashu_escrow_locktime_days` floor, already spent, or already escrowing another order. In those cases nothing was recorded: build a new escrow token for this order and send it again.
+
+  A seller also gets this reason for sending a different token for an order whose escrow is already locked. A new token is then rejected the same way, so do not build one: resend the original token, which Mostro treats as a retry and answers with the escrow confirmation again, or refresh the order's state.
+
+- **cashu_mint_unavailable:**
+  The order's Cashu mint did not respond. Your escrow was not recorded, so you can safely send it again once the mint is back.
+
+- **cashu_escrow_not_locked:**
+  The action needs the order's Cashu escrow to be locked first. Current daemons do not send this reason yet.
+
+- **cashu_signature_missing:**
+  The request is missing a Cashu signature it requires. Current daemons do not send this reason yet.
+
 - **unknown:**
   Mostro rejected the action for a reason this client does not recognize yet. Please update your client.
 
