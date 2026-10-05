@@ -130,6 +130,10 @@ This event contains specific data about a Mostro instance. The instance is ident
         "1"
       ],
       [
+        "escrow_mode",
+        "lightning"
+      ],
+      [
         "hold_invoice_expiration_window",
         "120"
       ],
@@ -232,6 +236,7 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `pow`: Proof of work ([NIP-13](https://github.com/nostr-protocol/nips/blob/master/13.md)) required of **every** event a client sends the instance, expressed as the number of leading zero bits the event id must have. Measured on the *outer* event (the gift wrap on protocol v1, the kind-`14` event on v2) and checked before anything else, so an under-powered event is discarded without any reply. `"0"` means no work is required. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
 - `pow_first_contact`: Proof of work required of a **first-contact** event — one whose visible sender is a trade key the instance does not currently associate with an active order or dispute, i.e. a new order or a take. Always at least `pow`, and typically higher: it is the anti-spam toll on the only lane an unknown sender can arrive through. Read this tag, not `pow`, before mining the first event of a trade. Daemons that predate the tag omit it; absence means the difficulty is *unknown*, not that it equals `pow`. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
 - `protocol_version`: The Mostro protocol (wire transport) this node speaks — `"1"` for NIP-59 gift wrap (kind `1059`, DEPRECATED) or `"2"` for NIP-44 direct messages (kind `14`). A node speaks exactly one, and the two are incompatible; clients read this tag before sending anything to pick the matching wire format, or to refuse a node whose protocol they do not speak. Nodes running mostrod v0.19.0 or later always publish `"2"`. See the [client migration guide](./transport_migration.md).
+- `escrow_mode`: The escrow backend this node runs: `"lightning"` or `"cashu"`. See [Escrow mode tags](#escrow-mode-tags).
 - `hold_invoice_expiration_window`: The maximum time, in seconds, for the hold invoice issued by Mostro to be paid by the seller. When the node requires a taker bond, it is also how long a taker has to pay the bond hold invoice: that invoice expires after this many seconds (see [Pay bond invoice](./pay_bond_invoice.md#failure-modes)).
 - `hold_invoice_cltv_delta`: The number of blocks in which the Mostro hold invoice will expire.
 - `invoice_expiration_window`: The maximum time, in seconds, for a buyer to submit an invoice to Mostro.
@@ -268,6 +273,29 @@ These tags advertise the node's anti-abuse-bond configuration so clients can sho
 The node registers that key as a `read` solver (see [Add solver](./admin_add_solver.md)), and refuses to start if the key is a `read-write` solver, a user that is not a solver, or its own key. The tag therefore also tells clients that this solver cannot settle or cancel.
 
 Clients compare the tag with the solver pubkey in [`admin-took-dispute`](./dispute.md#taking-the-dispute) to tell the assistant from a human solver, for example to label the dispute chat "Serbero" instead of "Solver". When the tag is absent, clients cannot identify a Serbero from this event. It does not mean every solver is a person: a node that predates the tag may still run one, registered through `admin-add-solver`.
+
+### Escrow mode tags
+
+A node escrows every trade with exactly one backend, fixed by its operator: Lightning hold invoices on its LND node, or [Cashu](https://cashu.space) ecash locked with a NUT-11 2-of-3 spending condition on a single mint. The info event tells clients which one, so they can pick the right trade flow, or refuse a node whose backend they do not support, before they create or take an order.
+
+- `escrow_mode`: `"lightning"` or `"cashu"`. Always emitted by daemons that know the tag. Older daemons omit it, and clients should treat its absence as `"lightning"`.
+
+Lightning nodes (`escrow_mode = "lightning"`) publish `hold_invoice_expiration_window`, `hold_invoice_cltv_delta`, `invoice_expiration_window` and the `lnd_*` tags described above. A Cashu node has no LND node and issues no invoices, so it omits all of them and publishes these instead:
+
+- `cashu_mint_url`: The URL of the one mint this node escrows on. Escrow tokens from any other mint are rejected.
+- `cashu_escrow_locktime_days`: The seller-recovery locktime floor, in days. The seller's escrow token must carry a locktime of at least *now + this many days*; a longer locktime is accepted, a shorter one is rejected.
+
+The remaining tags (fees, limits, `pow`, `pow_first_contact`, `protocol_version`, `maintenance_mode`, `y`, `z`, and so on) keep their meaning in both modes. An anti-abuse bond is paid as a Lightning hold invoice, so a Cashu node never enforces one and always publishes `bond_enabled = "false"`.
+
+The escrow tags of a Cashu node look like this:
+
+```json
+[
+  ["escrow_mode", "cashu"],
+  ["cashu_mint_url", "https://mint.example.com"],
+  ["cashu_escrow_locktime_days", "15"]
+]
+```
 
 ### Maintenance mode tag
 
