@@ -50,6 +50,15 @@ Below are suggestions for messages that clients can show to users when receiving
   - _To the buyer:_ I have informed `seller-npub` that you sent the fiat money. If the seller confirms receipt, they will release the funds. If they refuse, you can open a dispute. 
   - _To the seller:_ `buyer-npub` has informed you that they sent the fiat money. Once you confirm receipt, release the funds. After releasing, the money will go to the buyer and there will be no turning back, so only proceed if you are sure. If you want to release the Sats to the buyer, send me `release-order-message`.  
 
+- **payer-declared:**
+  - _To the buyer:_ Your payment sender for order ID: `id` has been registered. Send the same details to the seller through the chat, and pay only from that account.
+  - _To the seller:_ The buyer has declared the account they will pay from for order ID: `id`. Compare it with the details they send you in the chat, and with the sender shown by your bank.
+
+- **payment-history:**
+  - _With history:_ The buyer has completed `successful_trades` successful trades from this payment account, with `distinct_counterparties` different counterparties, `experienced_counterparties` of them already experienced on this node. This is information, not a guarantee: check the sender of the payment yourself before you release.
+  - _With no history:_ No previous successful trades with this payment account. Check the sender of the payment carefully before you release.
+  - _When `buyer_mode` is `full_privacy`:_ History unavailable: the buyer trades in full-privacy mode. Check the sender of the payment yourself before you release.
+
 - **released:**  
   `seller-npub` has released the Sats! Expect your invoice to be paid shortly. Ensure your wallet is online to receive via Lightning Network.
 
@@ -168,6 +177,12 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 
 - **maintenance_mode:**
   Mostro is in maintenance mode and is not accepting new orders or takes right now. Your existing orders are not affected and can still be completed or canceled. Please try again later.
+
+- **invalid_payment_hash:**
+  The payment sender declaration could not be saved because its hash is malformed. Please update your client and try again.
+
+- **payer_not_declared:**
+  This Mostro requires you to declare the account you are paying from before you notify that the fiat was sent. Declare your payment sender and try again.
 
 - **unknown:**
   Mostro rejected the action for a reason this client does not recognize yet. Please update your client.
