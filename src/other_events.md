@@ -276,13 +276,13 @@ Clients compare the tag with the solver pubkey in [`admin-took-dispute`](./dispu
 
 ### Escrow mode tags
 
-A node escrows every trade with exactly one backend, fixed by its operator: Lightning hold invoices on its LND node, or [Cashu](https://cashu.space) ecash locked with a NUT-11 2-of-3 spending condition on a single mint. The info event tells clients which one, so they can pick the right trade flow, or refuse a node whose backend they do not support, before they create or take an order.
+A node escrows every trade with exactly one backend, fixed by its operator: Lightning hold invoices on its LND node, or [Cashu](https://cashu.space) ecash locked with a NUT-11 2-of-3 spending condition on the mint each order names. The info event tells clients which one, so they can pick the right trade flow, or refuse a node whose backend they do not support, before they create or take an order.
 
 - `escrow_mode`: `"lightning"` or `"cashu"`. Always emitted by daemons that know the tag. Older daemons omit it, and clients should treat its absence as `"lightning"`.
 
 Lightning nodes (`escrow_mode = "lightning"`) publish `hold_invoice_expiration_window`, `hold_invoice_cltv_delta`, `invoice_expiration_window` and the `lnd_*` tags described above. A Cashu node has no LND node and issues no invoices, so it omits all of them and publishes these instead:
 
-- `cashu_mint_url`: The URL of the one mint this node escrows on. Escrow tokens from any other mint are rejected.
+- `cashu_mint_url`: The mints this node accepts for new orders, one URL per tag value. The maker of each order chooses one of them ([Cashu escrow mint](./new_sell_order.md#optional-cashu-escrow-mint)). The tag is **absent** when the node accepts any mint with a public host. A client that reads only the first value still gets a mint the node accepts.
 - `cashu_escrow_locktime_days`: The seller-recovery locktime floor, in days. The seller's escrow token must carry a locktime of at least *now + this many days*; a longer locktime is accepted, a shorter one is rejected.
 
 The remaining tags (fees, limits, `pow`, `pow_first_contact`, `protocol_version`, `maintenance_mode`, `y`, `z`, and so on) keep their meaning in both modes. An anti-abuse bond is paid as a Lightning hold invoice, so a Cashu node never enforces one and always publishes `bond_enabled = "false"`.
@@ -292,7 +292,7 @@ The escrow tags of a Cashu node look like this:
 ```json
 [
   ["escrow_mode", "cashu"],
-  ["cashu_mint_url", "https://mint.example.com"],
+  ["cashu_mint_url", "https://mint.example.com", "https://mint.example2.com"],
   ["cashu_escrow_locktime_days", "15"]
 ]
 ```

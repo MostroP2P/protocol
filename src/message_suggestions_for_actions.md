@@ -169,6 +169,9 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 - **maintenance_mode:**
   Mostro is in maintenance mode and is not accepting new orders or takes right now. Your existing orders are not affected and can still be completed or canceled. Please try again later.
 
+- **invalid_mint_url:**
+  This Mostro does not accept that Cashu mint for this order. When creating an order, choose one of the mints the node lists in its info event's `cashu_mint_url` tag, or any public mint if the tag is absent. When locking the escrow, lock it on the mint named in the order.
+
 - **unknown:**
   Mostro rejected the action for a reason this client does not recognize yet. Please update your client.
 

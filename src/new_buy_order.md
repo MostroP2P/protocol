@@ -55,6 +55,10 @@ Only after the maker pays the bond does Mostro:
 
 If the maker never pays, the bond invoice expires at the node's deadline, no order is published and Mostro sends the maker `canceled`. Before paying, the maker can also [cancel](./cancel.md#cancel-during-waiting-maker-bond) the order. See [Pay bond invoice — Maker bond](./pay_bond_invoice.md#maker-bond) for details.
 
+## Optional: Cashu escrow mint
+
+On a Cashu node the maker of a buy order also chooses the escrow mint, with the same `cashu_mint_url` field and the same rules as a sell order. See [Creating a sell order — Cashu escrow mint](./new_sell_order.md#optional-cashu-escrow-mint). The seller who takes the order locks the escrow on that mint.
+
 ## Confirmation message
 
 Mostro will send back a kind `14` event as a confirmation message, the decrypted content looks like the following:
