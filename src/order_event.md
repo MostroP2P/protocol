@@ -85,6 +85,7 @@ Events are [addressable events](https://github.com/nostr-protocol/nips/blob/mast
 - `name` [Name]: The name of the maker.
 - `g` [Geohash]: The geohash of the operation, it can be useful in a face to face trade.
 - `bond` [Bond]: The bond amount, the bond is a security deposit that both parties must pay.
+- `cashu_mint_url` [Cashu mint]: Mostro only. On a node with `escrow_mode = "cashu"` (see the [info event](./other_events.md#escrow-mode-tags)), this is the URL of the mint the order's escrow is locked on. The maker chose it when [creating the order](./new_sell_order.md#optional-cashu-escrow-mint). By taking the order, a taker accepts this mint, so clients SHOULD show it before the take. Lightning orders omit it.
 - `published_at` [Published At]: The unix timestamp when the order was created, named as in [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md). Unlike the event's `created_at`, which changes on every update of this addressable event, it stays the same across updates, so clients can show the order's age and sort by it. Clients SHOULD fall back to the event's `created_at` when the tag is absent (nodes that predate it).
 
   In Mostro this is when the daemon created the order, which is not always when its first event went out: with an anti-abuse bond on the maker, the order exists before it is published, once the bond locks. The remainder of a partially taken range order is a new order with its own `published_at`.
