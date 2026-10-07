@@ -115,7 +115,7 @@ An issuer answers one request with one attestation; there is no session.
 
 1. **Authenticate the source account.** The issuer attests only the account that asks:
    - A Mostro issuer requires the identity the transport proved (on protocol v2, the
-     identity signature of the [signed content tuple](./transport_migration.md)), and
+     [identity proof](./key_management.md#identity-proof) in the content tuple), and
      sets `subject` to that identity. It never reads the source account from the payload,
      and refuses a request without an identity proof: a `full_privacy` user or a bare
      trade key has no identity-bound reputation to export.
