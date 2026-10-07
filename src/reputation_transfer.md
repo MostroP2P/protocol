@@ -24,6 +24,15 @@ user's **identity**, so they MUST carry the identity proof (the third element of
 identity-bound reputation to export or import into, and the node refuses with
 `reputation_identity_required`.
 
+Neither request belongs to an order, so the trade key that sends it is normally one the
+node does not associate with an active order or dispute: a fresh key, or one whose trade
+has finished. Such an event is a **first contact**, and the node drops it without any
+reply unless it carries the proof of work of the
+[`pow_first_contact`](./transport_migration.md#proof-of-work-and-the-first-contact-gate)
+tag, not just `pow`. Clients mine `export-reputation` and `import-reputation` at the
+first-contact difficulty whenever the sending key has no active order or dispute on that
+node, and treat an absent `pow_first_contact` tag as that section describes.
+
 ## Discovery
 
 A node advertises what it supports in its [info event](./other_events.md#reputation-tags):
