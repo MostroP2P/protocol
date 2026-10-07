@@ -68,6 +68,12 @@ Below are suggestions for messages that clients can show to users when receiving
 - **rate-received:**  
   The rating has been successfully saved.
 
+- **reputation-exported:**
+  Your reputation on this Mostro is ready to import. Review the figures before importing them.
+
+- **reputation-imported:**
+  Your reputation was imported. Counterparties now see it merged with your reputation on this Mostro.
+
 - **cooperative-cancel-initiated-by-you:**  
   You’ve initiated the cancellation of order ID: `id`. Your counterparty must agree. If they do not respond, you can open a dispute. Note that no administrator will contact you regarding this cancellation unless you open a dispute first.
 
@@ -191,6 +197,39 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 
 - **cashu_signature_missing:**
   The request is missing a Cashu signature it requires. Current daemons do not send this reason yet.
+
+- **invalid_action:**
+  This Mostro does not support the requested action.
+
+- **invalid_payload:**
+  The message payload is missing or malformed. Please update your client and try again.
+
+- **reputation_identity_required:**
+  This needs your identity key, and the request did not prove it. Reputation is kept for an identity key only: if you use full privacy mode, switch to reputation mode to build one.
+
+- **not_eligible_for_reputation_export:**
+  Your account on this Mostro cannot export its reputation yet. You need at least 10 completed trades and 5 ratings received.
+
+- **reputation_bound_to_other_identity:**
+  Your reputation on this Mostro was already exported to another identity. To move it to a new identity, authorize the move with the identity it was exported to. If you lost that identity, ask the operator to move it.
+
+- **invalid_reputation_rebind:**
+  The authorization to move your reputation to a new identity is invalid or has expired. Please create a new one and try again.
+
+- **invalid_reputation_attestation:**
+  The reputation you are trying to import is invalid. Please request it again from its source.
+
+- **untrusted_reputation_issuer:**
+  This Mostro does not accept reputation from that source.
+
+- **expired_reputation_attestation:**
+  The reputation you are trying to import has expired. Please request it again from its source.
+
+- **reputation_identity_mismatch:**
+  This reputation was issued for a different identity than the one you are using.
+
+- **reputation_already_imported:**
+  This reputation was already imported on this Mostro.
 
 - **unknown:**
   Mostro rejected the action for a reason this client does not recognize yet. Please update your client.

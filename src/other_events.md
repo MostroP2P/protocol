@@ -206,6 +206,15 @@ This event contains specific data about a Mostro instance. The instance is ident
         "<Serbero's pubkey>"
       ],
       [
+        "reputation_import_issuers",
+        "<Trusted issuer key>",
+        "<Another trusted issuer key>"
+      ],
+      [
+        "reputation_issuer",
+        "<This instance's issuer key>"
+      ],
+      [
         "y",
         "mostro",
         "[Mostro instance name]"
@@ -234,7 +243,7 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `max_orders_per_response`: Maximum complete orders data per response in orders action.
 - `fee`: The fee percentage charged by the instance. For example, "0.006" means a 0.6% fee.
 - `pow`: Proof of work ([NIP-13](https://github.com/nostr-protocol/nips/blob/master/13.md)) required of **every** event a client sends the instance, expressed as the number of leading zero bits the event id must have. Measured on the *outer* event (the gift wrap on protocol v1, the kind-`14` event on v2) and checked before anything else, so an under-powered event is discarded without any reply. `"0"` means no work is required. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
-- `pow_first_contact`: Proof of work required of a **first-contact** event — one whose visible sender is a trade key the instance does not currently associate with an active order or dispute, i.e. a new order or a take. Always at least `pow`, and typically higher: it is the anti-spam toll on the only lane an unknown sender can arrive through. Read this tag, not `pow`, before mining the first event of a trade. Daemons that predate the tag omit it; absence means the difficulty is *unknown*, not that it equals `pow`. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
+- `pow_first_contact`: Proof of work required of a **first-contact** event — one whose visible sender is a trade key the instance does not currently associate with an active order or dispute: a new order or a take, and any request sent from a key with no active order or dispute, such as [`export-reputation` or `import-reputation`](./reputation_transfer.md). Always at least `pow`, and typically higher: it is the anti-spam toll on the only lane an unknown sender can arrive through. Read this tag, not `pow`, before mining the first event of a trade or such a request. Daemons that predate the tag omit it; absence means the difficulty is *unknown*, not that it equals `pow`. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
 - `protocol_version`: The Mostro protocol (wire transport) this node speaks — `"1"` for NIP-59 gift wrap (kind `1059`, DEPRECATED) or `"2"` for NIP-44 direct messages (kind `14`). A node speaks exactly one, and the two are incompatible; clients read this tag before sending anything to pick the matching wire format, or to refuse a node whose protocol they do not speak. Nodes running mostrod v0.19.0 or later always publish `"2"`. See the [client migration guide](./transport_migration.md).
 - `escrow_mode`: The escrow backend this node runs: `"lightning"` or `"cashu"`. See [Escrow mode tags](#escrow-mode-tags).
 - `hold_invoice_expiration_window`: The maximum time, in seconds, for the hold invoice issued by Mostro to be paid by the seller. When the node requires a taker bond, it is also how long a taker has to pay the bond hold invoice: that invoice expires after this many seconds (see [Pay bond invoice](./pay_bond_invoice.md#failure-modes)).
@@ -296,6 +305,15 @@ The escrow tags of a Cashu node look like this:
   ["cashu_escrow_locktime_days", "15"]
 ]
 ```
+
+### Reputation tags
+
+These tags say whether the node takes part in [reputation export and import](./reputation_transfer.md). Clients read them before offering either, and never send `export-reputation` or `import-reputation` to a node that does not advertise it.
+
+- `reputation_import_issuers`: the hex keys of every issuer whose [attestations](./reputation_attestation.md) the node imports, one value per key, across all the entries of its trust list. Present only when import is enabled; an enabled node with an empty trust list publishes the tag with no values.
+- `reputation_issuer`: the hex key the node signs attestations with. Present only when export is enabled. It is a key dedicated to issuance, never the node's own key, and an operator who trusts this node adds it to their trust list. When the node rotates it, the tag names the new key.
+
+A key in `reputation_import_issuers` is never the node's own `reputation_issuer`: a node does not import its own attestations.
 
 ### Maintenance mode tag
 

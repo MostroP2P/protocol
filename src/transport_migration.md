@@ -105,9 +105,11 @@ per instance — many run with `0` and require nothing.
 - **`pow`** — required of every event the client sends, on either transport.
 - **`pow_first_contact`** — required of an event whose visible sender is a trade
   key the node does not currently associate with an active order or dispute.
-  In practice that is the first event of a trade: creating an order, or taking
-  one. It is never lower than `pow` and is typically higher, because that lane
-  is where spam concentrates. Once the node associates the trade key with an
+  In practice that is the first event of a trade — creating an order, or taking
+  one — and any request sent from a key with no active order or dispute, such
+  as [`export-reputation` or `import-reputation`](./reputation_transfer.md).
+  It is never lower than `pow` and is typically higher, because that lane is
+  where spam concentrates. Once the node associates the trade key with an
   active order or dispute, its later messages are back to needing only `pow`.
 
 Two consequences for a client:

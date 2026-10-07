@@ -41,4 +41,5 @@
 - [P2P Order event. NIP-69](./order_event.md)
 - [Announcement events](./announcement_event.md)
 - [Reputation attestation](./reputation_attestation.md)
+- [Reputation export and import](./reputation_transfer.md)
 - [Other events published by Mostro](./other_events.md)
