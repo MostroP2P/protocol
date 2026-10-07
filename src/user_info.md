@@ -91,6 +91,6 @@ Mostro answers with [`cant-do`](./message_suggestions_for_actions.md#cant-do-rea
 
 ## Example
 
-Alice, in reputation mode, opens her account screen. Her client sends `user-info` with her identity proof. Mostro answers 23 reviews averaging `4.8`, first trade on 2023-11-24 (`since: 1700784000`), and her client shows "★ 4.8 · 23 trades · since Nov 2023".
+Alice, in reputation mode, opens her account screen. Her client sends `user-info` with her identity proof. Mostro answers 23 reviews averaging `4.8`, first trade on 2023-11-24 (`since: 1700784000`), and her client shows "★ 4.8 · 23 reviews · since Nov 2023". The count is of ratings received, not of trades: a trade nobody rated adds nothing to it.
 
 Bob uses full privacy mode. His client does not send `user-info`; it tells him that reputation is only kept in reputation mode.
