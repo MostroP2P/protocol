@@ -166,8 +166,10 @@ characters, and `expiration` is greater than `created_at` and at most
 `created_at + 3600`. The `z` tag keeps an authorisation and an attestation from ever
 being taken for each other, although they share the kind.
 
-The issuer checks the signature, that `pubkey` equals the bound identity and that
-`issuer` is its own issuer key. It then checks the times with the same 300-second clock
+The issuer checks the signature, that `pubkey` equals the bound identity, that `issuer`
+is its own issuer key and that `p` equals the destination identity of the request it
+came with: the bound identity consents to one new identity, so the request cannot name
+another. It then checks the times with the same 300-second clock
 skew as [redemption](#redemption) step 4: `created_at` is not in the future and
 `expiration` has not passed. Only then does it move the binding with the same
 compare-and-set conditioned on the old identity, and attest the new one. The `issuer` tag

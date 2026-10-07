@@ -62,7 +62,9 @@ identity with a rebind authorisation.
 - `destination`: the identity the attestation will name, 64 lowercase hex characters.
 - `rebind`: `null`, or a [rebind authorisation](./reputation_attestation.md#rebinding)
   serialised as a JSON string, when `destination` differs from the identity the user's
-  account is bound to on this node.
+  account is bound to on this node. Its `p` tag MUST equal `destination`; the node
+  refuses a mismatch with `invalid_reputation_rebind` and attests nothing, so an
+  authorisation for one identity can never move the binding to another.
 
 The source account is always the identity the transport proved, never a field of the
 payload. Before sending the first export for an identity, the client shows that identity
@@ -150,7 +152,7 @@ Either request is refused with a `cant-do` whose reason says why (see
 | `reputation_identity_required` | both | the request carries no identity proof |
 | `not_eligible_for_reputation_export` | export | the account is banned, or has fewer than 10 completed trades or 5 ratings received |
 | `reputation_bound_to_other_identity` | export | the account is bound to another identity and the request carries no rebind authorisation |
-| `invalid_reputation_rebind` | export | the rebind authorisation is malformed, badly signed, not signed by the bound identity, names another issuer or has expired |
+| `invalid_reputation_rebind` | export | the rebind authorisation is malformed, badly signed, not signed by the bound identity, names another issuer, names another identity than `destination`, is dated in the future or has expired |
 | `invalid_reputation_attestation` | import | the attestation does not parse, is badly signed, breaks a tag rule, is dated in the future or lives longer than the destination's cap |
 | `untrusted_reputation_issuer` | import | the signing key is in no entry of the destination's trust list, or is the destination's own issuer key |
 | `expired_reputation_attestation` | import | the attestation has expired |
