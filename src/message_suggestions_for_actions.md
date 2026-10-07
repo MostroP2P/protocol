@@ -28,6 +28,9 @@ Below are suggestions for messages that clients can show to users when receiving
 - **bond-slashed:**  
   You have lost your anti-abuse bond of `amount` Sats for your order `id`.
 
+- **user-info:**  
+  With `reviews` above `0`: Your reputation on this Mostro: ★ `rating` from `reviews` reviews. With `reviews` at `0`: You have no reputation on this Mostro yet; it starts with your first rated trade. Only when the response includes `since`, add: Trading since `since`.
+
 - **add-invoice:**  
   Please send me an invoice for `amount` satoshis equivalent to `fiat_code` `fiat_amount`. This is where I will send the funds upon trade completion. If you don’t provide the invoice within `expiration_seconds`, the trade will be canceled.
 
@@ -154,6 +157,9 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 - **invalid_signature:**  
   The action cannot be completed because the signature is invalid.
 
+- **reputation_identity_required:**  
+  This needs your identity key, and the request did not prove it. Reputation is kept for an identity key only: if you use full privacy mode, switch to reputation mode to build one.
+
 - **is_not_your_order:**  
   This order does not belong to you.
 
@@ -175,6 +181,23 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 - **maintenance_mode:**
   Mostro is in maintenance mode and is not accepting new orders or takes right now. Your existing orders are not affected and can still be completed or canceled. Please try again later.
 
+- **invalid_mint_url:**
+  This Mostro does not accept that Cashu mint for this order. When creating an order, choose one of the mints the node lists in its info event's `cashu_mint_url` tag, or any public mint if the tag is absent. When locking the escrow, lock it on the mint named in the order.
+
+- **invalid_cashu_token:**
+  Mostro could not accept the Cashu escrow token. It may be malformed, locked to the wrong keys, for the wrong amount, with a locktime below the node's `cashu_escrow_locktime_days` floor, already spent, or already escrowing another order. In those cases nothing was recorded: build a new escrow token for this order and send it again.
+
+  A seller also gets this reason for sending a different token for an order whose escrow is already locked. A new token is then rejected the same way, so do not build one: resend the original token, which Mostro treats as a retry and answers with the escrow confirmation again, or refresh the order's state.
+
+- **cashu_mint_unavailable:**
+  The order's Cashu mint did not respond. Your escrow was not recorded, so you can safely send it again once the mint is back.
+
+- **cashu_escrow_not_locked:**
+  The action needs the order's Cashu escrow to be locked first. Current daemons do not send this reason yet.
+
+- **cashu_signature_missing:**
+  The request is missing a Cashu signature it requires. Current daemons do not send this reason yet.
+
 - **invalid_action:**
   This Mostro does not support the requested action.
 
@@ -188,7 +211,7 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
   Your account on this Mostro cannot export its reputation yet. You need at least 10 completed trades and 5 ratings received.
 
 - **reputation_bound_to_other_identity:**
-  Your reputation on this Mostro was already exported to another identity. Sign the request with that identity to move it.
+  Your reputation on this Mostro was already exported to another identity. To move it to a new identity, authorize the move with the identity it was exported to. If you lost that identity, ask the operator to move it.
 
 - **invalid_reputation_rebind:**
   The authorization to move your reputation to a new identity is invalid or has expired. Please create a new one and try again.
