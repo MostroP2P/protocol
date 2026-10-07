@@ -163,11 +163,14 @@ characters, and `expiration` is greater than `created_at` and at most
 `created_at + 3600`. The `z` tag keeps an authorisation and an attestation from ever
 being taken for each other, although they share the kind.
 
-The issuer checks the signature, that `pubkey` equals the bound identity, that `issuer`
-is its own issuer key and that the authorisation has not expired, then moves the binding
-with the same compare-and-set conditioned on the old identity, and attests the new one.
-The `issuer` tag stops an authorisation from being replayed at another issuer; the
-compare-and-set makes a replay at the same issuer a no-op.
+The issuer checks the signature, that `pubkey` equals the bound identity and that
+`issuer` is its own issuer key. It then checks the times with the same 300-second clock
+skew as [redemption](#redemption) step 4: `created_at` is not in the future and
+`expiration` has not passed. Only then does it move the binding with the same
+compare-and-set conditioned on the old identity, and attest the new one. The `issuer` tag
+stops an authorisation from being replayed at another issuer; the compare-and-set makes a
+replay at the same issuer a no-op. The future-date check keeps the one-hour cap
+meaningful: without it, an authorisation dated years ahead would stay usable until then.
 
 A user who lost the bound identity cannot sign, so an operator MAY rebind by hand. Every
 such rebind is logged with the old and the new identity and the reason.
