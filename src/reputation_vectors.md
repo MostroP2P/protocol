@@ -26,7 +26,7 @@ The secret keys are in the file. They are test keys and nothing else.
 | `attestation.accepted` | More attestations to accept: each skew and lifetime boundary exactly at its limit, `reviews` and `rating` at their floors, and an unknown tag |
 | `attestation.invalid` | Attestations to refuse, each with the `cant-do` reason the destination answers with |
 | `rating_rounding` | An internal average and the `rating` an issuer writes for it |
-| `rebind` | A rebind authorisation to accept and several to refuse, checked as the issuer whose key is `context.issuer_key`, for an account bound to `context.bound_identity` |
+| `rebind` | A rebind authorisation to accept and several to refuse, with their own `rebind.context`: the clock (`now`) and `clock_skew`, the issuer whose key is `rebind.context.issuer_key`, the account's bound identity `rebind.context.bound_identity`, and the `destination` of the export request the authorisation comes with, `rebind.context.destination` |
 | `merge` | A user row before an import, after it, and after the import is reversed |
 
 ## Using the attestation vectors
@@ -45,6 +45,15 @@ caller's tests refuse them.
 
 Where an entry breaks two rules at once the order of the checks decides the reason; each
 entry here breaks exactly one.
+
+## Using the rebind vectors
+
+Run the [rebind checks](./reputation_attestation.md#rebinding) on each `event` with the
+values of `rebind.context`, not of the root `context`: `rebind.valid` passes, and every
+`rebind.invalid` entry fails with `invalid_reputation_rebind`. Two of those are well
+formed and fail only against that context: `other_destination`, whose `p` is not the
+request's `destination`, and `signed_by_other_identity`, whose author is not the bound
+identity.
 
 ## Using the rounding vectors
 

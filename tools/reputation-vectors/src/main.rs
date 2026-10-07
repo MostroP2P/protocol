@@ -311,6 +311,18 @@ fn rebinds(f: &Fixture) -> Value {
             reason,
         ),
         case(
+            "future_created_at",
+            "`created_at` is 301 seconds after `now`, beyond the clock skew.",
+            &sign(&f.identity, NOW + CLOCK_SKEW + 1, KIND, &raw(&new, &issuer, NOW + CLOCK_SKEW + 601, rebind)),
+            reason,
+        ),
+        case(
+            "other_destination",
+            "`p` names another identity than the `destination` of the request.",
+            &sign(&f.identity, created, KIND, &raw(&f.other_identity.public_key(), &issuer, created + 600, rebind)),
+            reason,
+        ),
+        case(
             "attestation_z",
             "`z` is `reputation-attestation`.",
             &sign(&f.identity, created, KIND, &raw(&new, &issuer, created + 600, "reputation-attestation")),
@@ -331,6 +343,7 @@ fn rebinds(f: &Fixture) -> Value {
             "clock_skew": CLOCK_SKEW,
             "bound_identity": f.identity.public_key().to_hex(),
             "issuer_key": issuer.to_hex(),
+            "destination": new.to_hex(),
         },
         "valid": {
             "description": "Signed by the bound identity, for this issuer, inside its hour.",
