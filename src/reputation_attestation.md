@@ -227,12 +227,25 @@ checks in order, and refuses the import at the first one that fails:
 A destination identifies an issuer by a local, stable **name** with one or more keys,
 never by a key alone. The name is what step 7 deduplicates on. Were it the key, an issuer
 rotating its key would look like a new issuer, and every account imported under the old
-key could import again under the new one. A key belongs to one entry only, and a
-destination refuses to start if a configured key already has imports recorded under a
-different name, so renaming an entry or moving a key cannot reset deduplication.
+key could import again under the new one.
 
-- **Planned rotation.** The operator adds the issuer's new key to its entry and removes
-  the old one once every attestation it signed has expired.
+A key belongs to one entry only, and the destination **persists which name every key
+belongs to**, independently of its imports and of its current configuration. The first
+time it loads a configured key, it records the key with the name of its entry; it keeps
+that record after the key leaves the trust list, and refuses to start if a configured
+key is recorded under a different name. Renaming an entry or moving a key therefore
+cannot reset deduplication, and neither can doing either after a rotation: a key added
+to an entry is recorded under that entry's name before it signs anything, so an entry
+rotated to a new key, stripped of the old one and then renamed is refused at startup,
+although the new key has no imports. Deriving the check from imports alone would miss
+exactly that case. An entry whose name and keys are all new is a different issuer to the
+destination; trusting an issuer under a fresh name and fresh keys is a deliberate
+operator decision to restart its deduplication, never a side effect of editing an
+existing entry.
+
+- **Planned rotation.** The operator adds the issuer's new key to its entry, which
+  records it under the entry's name, and removes the old one once every attestation it
+  signed has expired.
 - **Compromise.** The operator removes the key at once. Removing a key stops new imports
   but does not undo earlier ones; to undo them, the operator selects the imports made
   with that key by the destination's own import time — never by the attestation's
