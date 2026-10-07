@@ -211,7 +211,7 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
   Your account on this Mostro cannot export its reputation yet. You need at least 10 completed trades and 5 ratings received.
 
 - **reputation_bound_to_other_identity:**
-  Your reputation on this Mostro was already exported to another identity. Sign the request with that identity to move it.
+  Your reputation on this Mostro was already exported to another identity. To move it to a new identity, authorize the move with the identity it was exported to. If you lost that identity, ask the operator to move it.
 
 - **invalid_reputation_rebind:**
   The authorization to move your reputation to a new identity is invalid or has expired. Please create a new one and try again.
