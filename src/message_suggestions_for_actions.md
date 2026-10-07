@@ -28,6 +28,9 @@ Below are suggestions for messages that clients can show to users when receiving
 - **bond-slashed:**  
   You have lost your anti-abuse bond of `amount` Sats for your order `id`.
 
+- **user-info:**  
+  With `reviews` above `0`: Your reputation on this Mostro: ★ `rating` from `reviews` reviews. With `reviews` at `0`: You have no reputation on this Mostro yet; it starts with your first rated trade. Only when the response includes `since`, add: Trading since `since`.
+
 - **add-invoice:**  
   Please send me an invoice for `amount` satoshis equivalent to `fiat_code` `fiat_amount`. This is where I will send the funds upon trade completion. If you don’t provide the invoice within `expiration_seconds`, the trade will be canceled.
 
@@ -147,6 +150,9 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
 
 - **invalid_signature:**  
   The action cannot be completed because the signature is invalid.
+
+- **reputation_identity_required:**  
+  This needs your identity key, and the request did not prove it. Reputation is kept for an identity key only: if you use full privacy mode, switch to reputation mode to build one.
 
 - **is_not_your_order:**  
   This order does not belong to you.
