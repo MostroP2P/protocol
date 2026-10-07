@@ -23,7 +23,7 @@ The client sends a NIP-44 direct message (kind `14`) to Mostro, signed with a tr
 ]
 ```
 
-The identity proof is **required**: the reputation belongs to the identity key, never to a trade key. A request without it (full privacy mode) has no reputation to read; see [Errors](#errors).
+The identity proof is **required**: the reputation belongs to the identity key, never to a trade key. A request without it has no reputation to read; see [Errors](#errors).
 
 `request_id` is optional; when present, Mostro echoes it in the response so the client can match it.
 
@@ -79,7 +79,7 @@ A user Mostro has no record of yet (an identity that never traded on this node) 
 
 Mostro answers with [`cant-do`](./message_suggestions_for_actions.md#cant-do-reasons) instead of `user-info`:
 
-* `reputation_identity_required`: the request carries no identity proof (full privacy mode). A full-privacy user has no reputation by design; clients SHOULD not send `user-info` in that mode, and SHOULD explain that reputation needs reputation mode instead of showing zeros.
+* `reputation_identity_required`: the request carries no identity proof. A client in full privacy mode never has one to send, and a full-privacy user has no reputation by design; clients SHOULD not send `user-info` in that mode, and SHOULD explain that reputation needs reputation mode instead of showing zeros.
 * `invalid_signature`: the identity proof does not verify.
 
 ## Notes

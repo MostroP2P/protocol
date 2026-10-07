@@ -152,7 +152,7 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
   The action cannot be completed because the signature is invalid.
 
 - **reputation_identity_required:**  
-  This needs your identity key, and you are in full privacy mode, where no reputation is kept. Switch to reputation mode to build one.
+  This needs your identity key, and the request did not prove it. Reputation is kept for an identity key only: if you use full privacy mode, switch to reputation mode to build one.
 
 - **is_not_your_order:**  
   This order does not belong to you.
