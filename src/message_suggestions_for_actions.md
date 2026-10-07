@@ -182,7 +182,7 @@ Mostro also handles messages with the `CantDo` action for various reasons. The d
   The message payload is missing or malformed. Please update your client and try again.
 
 - **reputation_identity_required:**
-  Reputation can only be exported or imported from an account that keeps its reputation. Turn off full privacy mode and try again.
+  This needs your identity key, and the request did not prove it. Reputation is kept for an identity key only: if you use full privacy mode, switch to reputation mode to build one.
 
 - **not_eligible_for_reputation_export:**
   Your account on this Mostro cannot export its reputation yet. You need at least 10 completed trades and 5 ratings received.
