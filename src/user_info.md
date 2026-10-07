@@ -25,6 +25,8 @@ The client sends a NIP-44 direct message (kind `14`) to Mostro, signed with a tr
 
 The identity proof is **required**: the reputation belongs to the identity key, never to a trade key. A request without it has no reputation to read; see [Errors](#errors).
 
+`user-info` belongs to no order, so when the sending trade key has no active order or dispute on the node, the request is a **first contact**: mine it at the `pow_first_contact` difficulty, not just `pow`, or the node drops it without any reply (see [Proof of work and the first-contact gate](./transport_migration.md#proof-of-work-and-the-first-contact-gate)).
+
 `request_id` is optional; when present, Mostro echoes it in the response so the client can match it.
 
 ## Response
