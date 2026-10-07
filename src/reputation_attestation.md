@@ -264,6 +264,16 @@ An import is added to the user's reputation on the destination, never written ov
   Time passes in parallel on every venue, so adding day counts would count the same
   month twice.
 
+The first import into an identity with no reputation on the destination — no rating
+received and no completed trade yet, which is the common case for a user who moves to a
+new instance — is the base case of these rules. With no rating received
+(`total_reviews = 0`), the import sets `total_reviews = reviews` and
+`total_rating = rating`. With no `since` on the destination, the import sets
+`since = since_imported`. A destination with no record of the identity at all creates
+one. An implementation that stores an absent value as null, or as a sentinel, never feeds
+it into the formulas above: the weighted average of a null is null, and the minimum of a
+sentinel is not a date.
+
 The destination publishes the merged figures in its ordinary
 [rating event](./user_rating.md) and order [`rating` tag](./order_event.md), with no
 marker telling imported reputation from native. It keeps what it imported apart
