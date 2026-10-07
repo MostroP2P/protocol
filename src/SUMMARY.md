@@ -42,4 +42,5 @@
 - [Announcement events](./announcement_event.md)
 - [Reputation attestation](./reputation_attestation.md)
 - [Reputation export and import](./reputation_transfer.md)
+  - [Test vectors](./reputation_vectors.md)
 - [Other events published by Mostro](./other_events.md)
