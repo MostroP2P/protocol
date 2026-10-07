@@ -64,6 +64,36 @@ Only after the maker pays the bond does Mostro:
 
 If the maker never pays, the bond invoice expires at the node's deadline, no order is published and Mostro sends the maker `canceled`. Before paying, the maker can also [cancel](./cancel.md#cancel-during-waiting-maker-bond) the order. See [Pay bond invoice — Maker bond](./pay_bond_invoice.md#maker-bond) for details.
 
+## Optional: Cashu escrow mint
+
+On a node whose [info event](./other_events.md#escrow-mode-tags) says `escrow_mode = "cashu"`, the maker chooses the [Cashu](https://cashu.space) mint the escrow will be locked on, with a `cashu_mint_url` field in the order:
+
+```json
+"order": {
+  "kind": "sell",
+  "status": "pending",
+  "amount": 0,
+  "fiat_code": "VES",
+  "min_amount": null,
+  "max_amount": null,
+  "fiat_amount": 100,
+  "payment_method": "face to face,bank transfer,mobile",
+  "premium": 1,
+  "created_at": 0,
+  "cashu_mint_url": "https://mint.example.com"
+}
+```
+
+Mostro decides whether to publish the order on that mint, using the `cashu_mint_url` tag of its info event:
+
+- **Tag present:** it lists every mint the node accepts. An order on any other mint is rejected with `cant-do` and reason `invalid_mint_url`, and nothing is published.
+- **Tag absent:** the node accepts any mint whose host is public. Mints on loopback, private or link-local addresses are rejected the same way.
+- **No `cashu_mint_url` in the order:** Mostro uses the node's mint when the info event lists exactly one. Otherwise it rejects the order with `invalid_mint_url`.
+
+Mostro stores the mint in canonical form: lowercase host, no default port, no trailing `/`. It returns that form in the confirmation and publishes it in the order event's [`cashu_mint_url`](./order_event.md#tags) tag. A taker who takes the order accepts that mint, and the seller must lock the escrow on it and no other.
+
+A Lightning node rejects an order that carries `cashu_mint_url` with `invalid_mint_url`. Lightning orders omit the field.
+
 ## Confirmation message
 
 Mostro will send back a kind `14` event as a confirmation message to the user like the following (decrypted content example):
