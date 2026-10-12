@@ -82,3 +82,11 @@ Only the party and the admin can compute `K_sign`, so no third party can publish
 ## Client requirements
 
 Every rule in [Client security requirements](./chat.md#client-security-requirements) applies unchanged — mandatory author filter, bounded backlog with a cursor never advanced past the local clock, the cheapest-check-first validation order, durable inner-id deduplication, rate limiting, and the isolation invariant — with one substitution: the accepted inner signers are the party's trade key **and the admin's pubkey**, the latter learned from the `admin-took-dispute` message above.
+
+## No channel proof is needed here
+
+The peer chat requires a [channel proof](./chat.md#dispute-disclosure) before a solver may treat a disclosed conversation as evidence, because the solver cannot derive that channel's keys and has to be handed them.
+
+This channel is the opposite case: the solver derives `K_conv` and `K_sign` themselves, from their own private key and the party's trade pubkey, which the daemon published with the dispute. The channel is bound to the order by construction, and there is nothing for a party to substitute — a solver simply cannot be pointed at the wrong admin conversation.
+
+That asymmetry is worth keeping in mind when reading a dispute: what a party says to the solver here is self-authenticating, while what a party claims their peer said is not, until the channel proof establishes it.
