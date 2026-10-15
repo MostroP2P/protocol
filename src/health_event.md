@@ -50,6 +50,7 @@ published by the Mostro daemon with its own key:
       ["escrow_mode", "lightning"],
       ["lnd_block_height", "971349"],
       ["lnd_synced_to_chain", "false"],
+      ["lnd_network", "mainnet"],
       ["maintenance_mode", "true"],
       ["mostro_version", "0.19.3"],
       ["interval", "60"],
@@ -79,6 +80,7 @@ an integer number of seconds since 1970-01-01T00:00:00Z.
 | `escrow_mode` | yes | `lightning` or `cashu`, same values as in the info event |
 | `lnd_block_height` | see below | integer, the block height LND reports in `GetInfo` |
 | `lnd_synced_to_chain` | see below | `true` or `false`, as LND reports it in `GetInfo` |
+| `lnd_network` | see below | the Bitcoin network LND reports in `GetInfo` (the `network` of its `chains` entry): `mainnet`, `testnet`, `testnet4`, `signet`, `regtest` or `simnet` |
 | `maintenance_mode` | yes | `true` or `false`, same meaning as in the [info event](./other_events.md#maintenance-mode-tag) |
 | `mostro_version` | yes | the daemon version, same value as in the info event |
 | `interval` | yes | integer seconds between publications, between `30` and `3600` inclusive. Default `60` |
@@ -86,7 +88,7 @@ an integer number of seconds since 1970-01-01T00:00:00Z.
 | `p` | no | lowercase hex pubkey the encrypted `content` is addressed to. Present if and only if `content` is not empty. At most one `p` tag |
 | `expiration` | yes | [NIP-40](https://github.com/nostr-protocol/nips/blob/master/40.md) unix seconds, **exactly** `created_at + 3 × interval` |
 
-`lnd_block_height` and `lnd_synced_to_chain` are present when `escrow_mode` is
+`lnd_block_height`, `lnd_synced_to_chain` and `lnd_network` are present when `escrow_mode` is
 `lightning` and the last `GetInfo` call succeeded. They are omitted when `escrow_mode` is
 `cashu` (there is no LND node) or when LND could not be reached. In that second case the
 `lnd_sync` check is `unknown`. A Lightning instance that omits them is therefore saying
@@ -316,7 +318,9 @@ Every field below is required in a version-1 payload. A value that is unknown is
 Failure reason keys are LND's `PaymentFailureReason` values, lowercase, without the
 `FAILURE_REASON_` prefix: `timeout`, `no_route`, `error`, `incorrect_payment_details`,
 `insufficient_balance`, `canceled`. A failure the daemon cannot map to one of them is
-counted under `other`.
+counted under `other`. A reader MUST accept a `failure_reasons_1h` key it doesn't
+recognize, from a newer LND or daemon: it counts it as `other` or ignores it, and never
+rejects the payload because of it.
 
 A reader:
 
@@ -359,7 +363,12 @@ and watchdogs:
    must equal `created_at + 3 × interval`. Ignore anything else.
 2. **Take the newest valid revision.** Query every relay you use. Among the events that
    pass these rules, keep the one with the highest `seq`. Ignore an event whose `seq` is
-   not greater than the highest `seq` already accepted from that pubkey.
+   not greater than the highest `seq` already accepted from that pubkey. A reader that
+   runs continuously, such as a watcher, MUST persist the highest accepted `seq` per
+   pubkey and restore it before processing events after a restart, so that an older
+   event that has not expired yet is not accepted again. A stateless reader, such as a
+   status page loaded in a browser, can't keep it; rule 4 then limits a replay to an
+   event at most `3 × interval` seconds old.
 3. **Tolerate clock skew, but not much.** Ignore an event whose `created_at` is more than
    300 seconds in the future.
 4. **Treat absence and staleness as unknown, never as `ok`.** The instance's state is
@@ -372,6 +381,10 @@ and watchdogs:
    SHOULD compare `lnd_block_height` with an independent reference: one or more public
    block explorers, or the median `lnd_block_height` of other instances' fresh health
    events. A lag of 3 blocks or more that lasts is a failure whatever `status` says.
+   Heights are only comparable within one chain: use an explorer for the instance's
+   `lnd_network`, and take the median only over instances with the same `lnd_network`.
+   When there is no independent reference for that network (for example `regtest`),
+   skip the cross-check rather than compare against another chain.
 6. **Show the age.** Display when the last valid event was seen, not just its state.
 
 A reader that discovers instances, for example a status page listing every Mostro
@@ -419,8 +432,12 @@ it watches.
 | `interval`, `seq`, `expiration` | yes | same rules as for the instance's health event |
 
 `content` is the empty string. A watcher heartbeat carries no `status` and no `check`
-tags: it only says "this watcher is alive". Readers apply the same freshness, `seq` and
-signature rules, with `z` = `watcher` in rule 1.
+tags: it only says "this watcher is alive". Readers validate it against the table above,
+not against the instance's [Tags](#tags) table: rule 1 of
+[What a reader owes](#what-a-reader-owes) applies with `z` = `watcher` and with the
+required tags of this table, so the instance-only tags (`status`, `check`,
+`escrow_mode`, `maintenance_mode`, `mostro_version`) are neither required nor expected.
+Rules 2 to 4 (`seq`, clock skew and freshness) apply unchanged.
 
 ## Privacy
 
