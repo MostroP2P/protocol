@@ -313,18 +313,18 @@ value that is unknown is `null`, never omitted and never `0`: `0` is a measureme
 | `lnd.inbound_liquidity_sats` | integer or `null` | sum of `remote_balance` over **active** channels, in sats |
 | `lnd.pending_htlcs` | integer or `null` | number of pending HTLCs over all channels |
 | `lnd.nearest_htlc_expiry_blocks` | integer or `null` | minimum of `expiration_height − block_height` over all pending HTLCs, in blocks. `null` when there are no pending HTLCs. Zero or negative when an HTLC has already reached its expiry |
-| `payouts` | object or `null` | an object when `escrow_mode` is `lightning`, `null` when it is `cashu` |
+| `payouts` | object or `null` | an object when `escrow_mode` is `lightning`, `null` when it is `cashu`. When the daemon can't compute its payout metrics (the `payouts` check is `unknown`), the object is still sent and each metric it couldn't compute is `null` |
 | `payouts.window_secs` | integer | the window of the `_1h` fields: always `3600` in version 1 |
-| `payouts.payouts_succeeded_1h` | integer | payout attempts that succeeded in the last `window_secs` |
-| `payouts.payouts_failed_1h` | integer | payout attempts that failed in the last `window_secs` |
-| `payouts.failure_reasons_1h` | object | failed attempts in the window by reason: key = reason, value = count. Keys with a zero count MAY be omitted, so `{}` means no failures |
+| `payouts.payouts_succeeded_1h` | integer or `null` | payout attempts that succeeded in the last `window_secs` |
+| `payouts.payouts_failed_1h` | integer or `null` | payout attempts that failed in the last `window_secs` |
+| `payouts.failure_reasons_1h` | object or `null` | failed attempts in the window by reason: key = reason, value = count. Keys with a zero count MAY be omitted, so `{}` means no failures |
 | `payouts.last_payout_success_at` | unix seconds or `null` | the last successful payout attempt, persisted across restarts. `null` if there was never one |
-| `payouts.settled_unpaid_orders` | integer | settled unpaid orders, as defined [for the `payouts` check](#payouts) |
+| `payouts.settled_unpaid_orders` | integer or `null` | settled unpaid orders, as defined [for the `payouts` check](#payouts) |
 | `payouts.oldest_settled_unpaid_order_age_secs` | integer or `null` | age of the oldest settled unpaid order, in seconds. `null` when there are none |
-| `payouts.awaiting_buyer_invoice_orders` | integer | orders in `settled-hold-invoice` for which the daemon used up its attempts and asked the buyer for a new invoice |
+| `payouts.awaiting_buyer_invoice_orders` | integer or `null` | orders in `settled-hold-invoice` for which the daemon used up its attempts and asked the buyer for a new invoice |
 | `dev_fee` | object or `null` | `null` when the instance pays no dev fee |
-| `dev_fee.pending` | integer | completed orders whose dev fee is not paid yet |
-| `dev_fee.failed_1h` | integer | dev-fee payment attempts that failed in the last 3600 seconds |
+| `dev_fee.pending` | integer or `null` | completed orders whose dev fee is not paid yet |
+| `dev_fee.failed_1h` | integer or `null` | dev-fee payment attempts that failed in the last 3600 seconds |
 | `relays` | object | always present, never `null` |
 | `relays.configured` | integer | relays the daemon is configured to publish to |
 | `relays.connected` | integer | of those, how many are connected |
