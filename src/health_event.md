@@ -395,9 +395,12 @@ and watchdogs:
 2. **Take the newest valid revision.** Query every relay you use. Among the events that
    pass these rules, keep the one with the highest `seq`. Ignore an event whose `seq` is
    not greater than the highest `seq` already accepted from that pubkey. A reader that
-   runs continuously, such as a watcher, MUST persist the highest accepted `seq` per
-   pubkey and restore it before processing events after a restart, so that an older
-   event that has not expired yet is not accepted again. A stateless reader, such as a
+   runs continuously, such as a watcher, MUST persist, per pubkey, the highest accepted
+   `seq` together with the `id` of the event that carried it, and restore both before
+   processing events after a restart. After a restart it accepts an event with that same
+   `seq` only if its `id` matches the persisted one (the revision it had already
+   accepted, which restores the current state at once), and rejects any lower `seq`, so
+   that an older event that has not expired yet is not accepted again. A stateless reader, such as a
    status page loaded in a browser, can't keep it; rule 4 then limits a replay to an
    event at most `3 × interval` seconds old.
 3. **Tolerate clock skew, but not much.** Ignore an event whose `created_at` is more than
