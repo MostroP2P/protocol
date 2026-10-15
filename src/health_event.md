@@ -192,7 +192,7 @@ its NUT-06 info endpoint (`GET /v1/info`) with a success status within 10 second
 |---|---|
 | `ok` | every probed mint is reachable, or there is no mint to probe (an empty allowlist and no order in progress) |
 | `warn` | at least one probed mint is reachable and at least one is not |
-| `fail` | no probed mint is reachable |
+| `fail` | at least one mint was probed and none of them is reachable |
 | `unknown` | the daemon could not determine which mints to probe |
 
 #### `relays`
