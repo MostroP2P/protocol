@@ -299,7 +299,7 @@ value that is unknown is `null`, never omitted and never `0`: `0` is a measureme
 |---|---|---|
 | `v` | integer | schema version, `1` |
 | `generated_at` | unix seconds | when the values were collected. Equal to or slightly earlier than the event's `created_at` |
-| `lnd` | object or `null` | `null` when `escrow_mode` is `cashu` |
+| `lnd` | object or `null` | an object when `escrow_mode` is `lightning`, `null` when it is `cashu`. A Lightning instance that can't reach its node still sends the object, with `reachable` = `false` |
 | `lnd.reachable` | boolean | `false` when the last `GetInfo` call failed. Every other `lnd` field is then `null` |
 | `lnd.synced_to_chain` | boolean or `null` | from `GetInfo` |
 | `lnd.unsynced_since` | unix seconds or `null` | when the current uninterrupted run of `synced_to_chain = false` began; `null` while synced |
@@ -313,7 +313,7 @@ value that is unknown is `null`, never omitted and never `0`: `0` is a measureme
 | `lnd.inbound_liquidity_sats` | integer or `null` | sum of `remote_balance` over **active** channels, in sats |
 | `lnd.pending_htlcs` | integer or `null` | number of pending HTLCs over all channels |
 | `lnd.nearest_htlc_expiry_blocks` | integer or `null` | minimum of `expiration_height − block_height` over all pending HTLCs, in blocks. `null` when there are no pending HTLCs. Zero or negative when an HTLC has already reached its expiry |
-| `payouts` | object or `null` | `null` when `escrow_mode` is `cashu` |
+| `payouts` | object or `null` | an object when `escrow_mode` is `lightning`, `null` when it is `cashu` |
 | `payouts.window_secs` | integer | the window of the `_1h` fields: always `3600` in version 1 |
 | `payouts.payouts_succeeded_1h` | integer | payout attempts that succeeded in the last `window_secs` |
 | `payouts.payouts_failed_1h` | integer | payout attempts that failed in the last `window_secs` |
@@ -417,6 +417,10 @@ and watchdogs:
    events. A lag of 3 blocks or more that lasts is a failure whatever `status` says.
    Heights are only comparable within one chain: use an explorer for the instance's
    `lnd_network`, and take the median only over instances with the same `lnd_network`.
+   The median MUST only include instances the reader trusts, such as a list its operator
+   configured, never every instance it discovered: anyone can publish validly signed
+   health events with made-up heights and steer a median of strangers. Explorers queried
+   directly are the preferred reference.
    When there is no independent reference for that network (for example `regtest`),
    skip the cross-check rather than compare against another chain.
 6. **Show the age.** Display when the last valid event was seen, not just its state.
