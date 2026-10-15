@@ -88,6 +88,12 @@ an integer number of seconds since 1970-01-01T00:00:00Z.
 | `p` | no | lowercase hex pubkey the encrypted `content` is addressed to. Present if and only if `content` is not empty. At most one `p` tag |
 | `expiration` | yes | [NIP-40](https://github.com/nostr-protocol/nips/blob/master/40.md) unix seconds, **exactly** `created_at + 3 × interval` |
 
+Every tag in this table appears **at most once**, except `check`, which appears once per
+check name and never twice with the same name. A tag marked "yes" appears exactly once. A
+reader rejects an event that repeats any other tag or repeats a check name: Nostr allows
+repeated tags, and parsers that read the first or the last occurrence would otherwise
+disagree on its freshness, order or state.
+
 `lnd_block_height`, `lnd_synced_to_chain` and `lnd_network` are present when `escrow_mode` is
 `lightning` and the last `GetInfo` call succeeded. They are omitted when `escrow_mode` is
 `cashu` (there is no LND node) or when LND could not be reached. In that second case the
@@ -345,7 +351,19 @@ tell the two apart.
 - It MAY also republish immediately when `status`, the state of any check or
   `maintenance_mode` changes, but not more often than once every 10 seconds. Every
   publication, scheduled or immediate, gets a new `seq` and a new `expiration`.
-- `created_at` is the publisher's clock at publication time.
+- `created_at` is the publisher's clock at publication time, but never lower than the
+  `created_at` of its previous publication plus one. The publisher persists the last
+  `created_at` it used, alongside `seq`. Relays keep the latest revision of an
+  addressable event by `created_at` (NIP-01), not by `seq`, so a clock that steps back
+  (an NTP correction, a restored VM, a reboot with a wrong clock) would otherwise make
+  relays keep serving the previous revision.
+- If that rule puts `created_at` more than 300 seconds ahead of the publisher's own clock,
+  readers will reject the event as coming from the future (rule 3 of
+  [What a reader owes](#what-a-reader-owes)). The publisher still publishes, so the event
+  becomes valid again once its clock catches up, and logs an error: its clock moved
+  backwards by more than readers tolerate, and the operator has to look at it. Until
+  then the instance shows as unknown, which is the right signal for a host whose clock
+  can't be trusted.
 
 Because `expiration` is exactly three intervals ahead, a daemon that stops publishing
 stops being shown as healthy within three intervals, even by a reader that does no
