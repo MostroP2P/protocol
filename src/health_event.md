@@ -232,7 +232,10 @@ daemon persists so that it survives a restart during the outage.
 3. Otherwise `ok`.
 
 A reader can recompute `status` from the tags, so it never needs to trust it more than
-the checks it summarises.
+the checks it summarises. Recomputing can only make the result worse, never better: when
+the event carries a check name the reader doesn't know, a later version may have added a
+check that drove `status` down, so the reader keeps the worse of the published `status`
+and its own result (`down` is worse than `degraded`, which is worse than `ok`).
 
 ### `seq`
 
