@@ -142,6 +142,10 @@ This event contains specific data about a Mostro instance. The instance is ident
         "144"
       ],
       [
+        "escrow_deadline_margin_blocks",
+        "24"
+      ],
+      [
         "invoice_expiration_window",
         "120"
       ],
@@ -250,6 +254,7 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `escrow_mode`: The escrow backend this node runs: `"lightning"` or `"cashu"`. See [Escrow mode tags](#escrow-mode-tags).
 - `hold_invoice_expiration_window`: The maximum time, in seconds, for the hold invoice issued by Mostro to be paid by the seller. When the node requires a taker bond, it is also how long a taker has to pay the bond hold invoice: that invoice expires after this many seconds (see [Pay bond invoice](./pay_bond_invoice.md#failure-modes)).
 - `hold_invoice_cltv_delta`: The number of blocks in which the Mostro hold invoice will expire.
+- `escrow_deadline_margin_blocks`: How many blocks before the hold invoice's CLTV expiry Mostro acts on a trade whose escrow it still holds, so that LND does not refund the seller first: it cancels an `active` trade and opens a dispute on a `fiat-sent` one. Clients can estimate that moment as about `hold_invoice_cltv_delta - escrow_deadline_margin_blocks` blocks after the seller paid the hold invoice (120 blocks, about 20 hours, with `144` and `24`), for example to show the buyer how long they have to send the fiat. The value is always at least `18` and below `hold_invoice_cltv_delta`. It does not apply to a trade that is already in `dispute`. Daemons that predate the tag omit it: from v0.18.3 they act on the trade with a margin clients cannot know (`24` by default), and older daemons do not act on it at all.
 - `invoice_expiration_window`: The maximum time, in seconds, for a buyer to submit an invoice to Mostro.
 - `lnd_version`: The version of the LND daemon running on the instance.
 - `lnd_node_pubkey`: The pubkey of the LND node running on the instance.
@@ -291,7 +296,7 @@ A node escrows every trade with exactly one backend, fixed by its operator: Ligh
 
 - `escrow_mode`: `"lightning"` or `"cashu"`. Always emitted by daemons that know the tag. Older daemons omit it, and clients should treat its absence as `"lightning"`.
 
-Lightning nodes (`escrow_mode = "lightning"`) publish `hold_invoice_expiration_window`, `hold_invoice_cltv_delta`, `invoice_expiration_window` and the `lnd_*` tags described above. A Cashu node has no LND node and issues no invoices, so it omits all of them and publishes these instead:
+Lightning nodes (`escrow_mode = "lightning"`) publish `hold_invoice_expiration_window`, `hold_invoice_cltv_delta`, `escrow_deadline_margin_blocks`, `invoice_expiration_window` and the `lnd_*` tags described above. A Cashu node has no LND node and issues no invoices, so it omits all of them and publishes these instead:
 
 - `cashu_mint_url`: The mints this node accepts for new orders, one URL per tag value. The maker of each order chooses one of them ([Cashu escrow mint](./new_sell_order.md#optional-cashu-escrow-mint)). The tag is **absent** when the node accepts any mint with a public host. A client that reads only the first value still gets a mint the node accepts.
 - `cashu_escrow_locktime_days`: The seller-recovery locktime floor, in days. The seller's escrow token must carry a locktime of at least *now + this many days*; a longer locktime is accepted, a shorter one is rejected.
