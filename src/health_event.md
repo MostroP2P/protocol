@@ -189,8 +189,12 @@ Over the relays the daemon is configured to publish to:
 | `warn` | at least one is connected and at least one is not |
 | `fail` | none is connected |
 
-A `fail` can only reach readers once a relay is back, which is still useful: it shows
-how long the instance was cut off.
+While no relay is connected nothing can be published, so a `fail` normally never reaches
+readers: they see the event go stale and report the instance as unknown, which is the
+right signal. When a relay is back, the check reflects the current connections again,
+and the outage is reported through `relays.last_outage_started_at` and
+`relays.last_outage_ended_at` in the [encrypted content](#encrypted-content), which the
+daemon persists so that it survives a restart during the outage.
 
 #### `database`
 
@@ -272,7 +276,9 @@ The plaintext is a JSON object, UTF-8, no larger than 32 KiB:
   },
   "relays": {
     "configured": 4,
-    "connected": 4
+    "connected": 4,
+    "last_outage_started_at": null,
+    "last_outage_ended_at": null
   },
   "maintenance": {
     "enabled": true,
@@ -319,8 +325,12 @@ value that is unknown is `null`, never omitted and never `0`: `0` is a measureme
 | `dev_fee` | object or `null` | `null` when the instance pays no dev fee |
 | `dev_fee.pending` | integer | completed orders whose dev fee is not paid yet |
 | `dev_fee.failed_1h` | integer | dev-fee payment attempts that failed in the last 3600 seconds |
+| `relays` | object | always present, never `null` |
 | `relays.configured` | integer | relays the daemon is configured to publish to |
 | `relays.connected` | integer | of those, how many are connected |
+| `relays.last_outage_started_at` | unix seconds or `null` | when the daemon last lost its last connected relay, persisted across restarts. `null` if that never happened |
+| `relays.last_outage_ended_at` | unix seconds or `null` | when a relay was connected again after that outage. `null` if there was no outage, or while it is still going on (which a published event can't show) |
+| `maintenance` | object | always present, never `null` |
 | `maintenance.enabled` | boolean | same value as the `maintenance_mode` tag |
 | `maintenance.reason` | string or `null` | why maintenance is on. `null` when it is off or no reason was given. `lnd_unsynced` is reserved for maintenance the daemon turned on by itself because LND was not synced; any other value was set by the operator |
 
@@ -451,6 +461,10 @@ it watches.
 | `z` | yes | `watcher` |
 | `watching` | no | lowercase hex pubkey of a Mostro instance this watcher monitors, one tag per instance. Optional, because it publicly links the watcher to the instances |
 | `interval`, `seq`, `expiration` | yes | same rules as for the instance's health event |
+
+A watcher sets `created_at` with the same rule as the daemon (see [Publishing](#publishing)):
+never lower than its previous heartbeat's `created_at` plus one, persisted with `seq`, so
+that relays keep its newest heartbeat after a clock step.
 
 `content` is the empty string. A watcher heartbeat carries no `status` and no `check`
 tags: it only says "this watcher is alive". Readers validate it against the table above,
