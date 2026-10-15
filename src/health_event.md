@@ -283,8 +283,11 @@ The plaintext is a JSON object, UTF-8, no larger than 32 KiB:
 
 The values in both examples are illustrative.
 
-Every field below is required in a version-1 payload. A value that is unknown is
-`null`, never omitted and never `0`: `0` is a measurement, `null` is "I don't know".
+Every top-level field below is required in a version-1 payload. A nested field
+(`lnd.*`, `payouts.*`, `dev_fee.*`, `relays.*`, `maintenance.*`) is required when its
+parent object is present and not `null`; when the parent is `null`, it has no fields. A
+value that is unknown is `null`, never omitted and never `0`: `0` is a measurement,
+`null` is "I don't know".
 
 | Field | Type | Meaning |
 |---|---|---|
@@ -455,6 +458,9 @@ not against the instance's [Tags](#tags) table: rule 1 of
 [What a reader owes](#what-a-reader-owes) applies with `z` = `watcher` and with the
 required tags of this table, so the instance-only tags (`status`, `check`,
 `escrow_mode`, `maintenance_mode`, `mostro_version`) are neither required nor expected.
+The uniqueness rule of [Tags](#tags) applies here too: `d`, `y`, `z`, `interval`, `seq`
+and `expiration` appear exactly once, `watching` once per instance and never twice with
+the same pubkey, and a reader rejects a heartbeat that repeats any of them.
 Rules 2 to 4 (`seq`, clock skew and freshness) apply unchanged.
 
 ## Privacy
