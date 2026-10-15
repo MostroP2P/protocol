@@ -185,12 +185,14 @@ settled.
 Cashu instances only. The daemon can't escrow anything when the mint is down, even though
 its relays and database are fine. The mints probed are the ones in the daemon's mint
 allowlist. When the allowlist is empty (the daemon accepts any mint), they are the
-distinct mints of the orders currently in progress. A mint is reachable when it answers
+distinct mints that currently hold escrow for an order (orders past the escrow step),
+never the mints of pending orders: anyone can publish a pending order naming any mint,
+and an unreachable one there must not make the instance look down. A mint is reachable when it answers
 its NUT-06 info endpoint (`GET /v1/info`) with a success status within 10 seconds.
 
 | State | When |
 |---|---|
-| `ok` | every probed mint is reachable, or there is no mint to probe (an empty allowlist and no order in progress) |
+| `ok` | every probed mint is reachable, or there is no mint to probe (an empty allowlist and no escrow held at any mint) |
 | `warn` | at least one probed mint is reachable and at least one is not |
 | `fail` | at least one mint was probed and none of them is reachable |
 | `unknown` | the daemon could not determine which mints to probe |
