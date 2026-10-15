@@ -231,6 +231,8 @@ This event contains specific data about a Mostro instance. The instance is ident
 ]
 ```
 
+The info event says that an instance is alive and how it is configured. It does not say whether the instance is *working*: an instance whose Lightning node has stopped syncing keeps publishing a normal info event while every buyer payout fails. That is what the [health event](./health_event.md) (kind `38389`) is for.
+
 Below is an explanation of the meaning of some of the labels in this event, all of which can be modified by anyone running a Mostro instance.
 
 - `mostro_version`: The version of the Mostro daemon running on the instance.

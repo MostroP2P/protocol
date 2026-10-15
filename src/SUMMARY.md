@@ -44,3 +44,4 @@
 - [Reputation export and import](./reputation_transfer.md)
   - [Test vectors](./reputation_vectors.md)
 - [Other events published by Mostro](./other_events.md)
+- [Health event](./health_event.md)
