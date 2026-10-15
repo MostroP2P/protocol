@@ -250,7 +250,11 @@ recipient is configured, `content` is the empty string `""` and there is no `p` 
 
 There is exactly one recipient. NIP-44 is one-to-one, and one event per recipient would
 break "one addressable event per instance". An operator who runs several watchdogs gives
-them the same key, or has one forward to the others.
+them the same *decryption* key (the private key of the `p` pubkey), or has one forward
+to the others. Each watchdog still signs its own [heartbeat](#watcher-heartbeat) with a
+distinct key of its own: heartbeats from a shared key would share one addressable
+coordinate, a live watchdog's heartbeat would replace a dead one's, and neither could keep
+`seq` and `created_at` monotonic for the key.
 
 The plaintext is a JSON object, UTF-8, no larger than 32 KiB:
 
