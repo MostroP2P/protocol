@@ -409,9 +409,11 @@ tell the two apart.
     real time advances by `interval`. Readers soon find the event older than
     `3 × interval` and treat it as stale (rule 4).
 
-  Either way the instance shows as unknown until the publisher's clock catches up with
-  its last `created_at`, which is the right signal for a host whose clock can't be
-  trusted.
+  Either way the instance shows as unknown until the publisher's clock is correct again,
+  which is the right signal for a host whose clock can't be trusted. Catching up with its
+  last `created_at` is not enough on its own: a clock that is still behind real time by
+  more than `3 × interval` keeps producing events that readers find stale, so the
+  operator has to fix the clock (for example with NTP).
 
 Because `expiration` is exactly three intervals ahead, a daemon that stops publishing
 stops being shown as healthy within three intervals, even by a reader that does no
