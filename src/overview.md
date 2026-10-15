@@ -11,6 +11,7 @@ Mostro uses [Addressable Events](https://github.com/nostr-protocol/nips/blob/mas
 | Info       | 38385 | Mostro instance status and information |
 | Disputes   | 38386 | Dispute events |
 | Announcements | 38387 | Client announcements, published by a client project's keys rather than by a Mostro daemon — see [Announcement events](./announcement_event.md) |
+| Health     | 38389 | Whether the instance is working: Lightning sync, buyer payouts, relays — see [Health event](./health_event.md) |
 
 You can find more details about the order event [here](./order_event.md)
 
