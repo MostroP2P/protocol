@@ -199,7 +199,9 @@ its NUT-06 info endpoint (`GET /v1/info`) with a success status within 10 second
 
 #### `relays`
 
-Over the relays the daemon is configured to publish to:
+Over the relays the daemon is configured to publish to. A daemon with no configured relay
+can't publish at all, so a published event always has at least one: `relays.configured`
+is never `0`.
 
 | State | When |
 |---|---|
@@ -395,13 +397,21 @@ tell the two apart.
   addressable event by `created_at` (NIP-01), not by `seq`, so a clock that steps back
   (an NTP correction, a restored VM, a reboot with a wrong clock) would otherwise make
   relays keep serving the previous revision.
-- If that rule puts `created_at` more than 300 seconds ahead of the publisher's own clock,
-  readers will reject the event as coming from the future (rule 3 of
-  [What a reader owes](#what-a-reader-owes)). The publisher still publishes, so the event
-  becomes valid again once its clock catches up, and logs an error: its clock moved
-  backwards by more than readers tolerate, and the operator has to look at it. Until
-  then the instance shows as unknown, which is the right signal for a host whose clock
-  can't be trusted.
+- Whenever that rule overrides the clock (the clock is behind the previous `created_at`),
+  the publisher logs an error, because its clock moved backwards and the operator has to
+  look at it. It still publishes. What readers see depends on which clock was wrong:
+  - If the publisher's clock had been running ahead and stepped back to the right time,
+    the previous `created_at` was already in readers' future. Readers ignore the new
+    events while they are more than 300 seconds ahead (rule 3 of
+    [What a reader owes](#what-a-reader-owes)).
+  - If the publisher's clock stepped back behind the right time, `created_at` starts
+    close to the real time, but then advances by only one second per publication while
+    real time advances by `interval`. Readers soon find the event older than
+    `3 × interval` and treat it as stale (rule 4).
+
+  Either way the instance shows as unknown until the publisher's clock catches up with
+  its last `created_at`, which is the right signal for a host whose clock can't be
+  trusted.
 
 Because `expiration` is exactly three intervals ahead, a daemon that stops publishing
 stops being shown as healthy within three intervals, even by a reader that does no
