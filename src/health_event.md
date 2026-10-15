@@ -126,6 +126,7 @@ Each check appears at most once per event. Which checks a publisher emits depend
 |---|---|---|
 | `lnd_sync` | yes | no |
 | `payouts` | yes | no |
+| `cashu_mint` | no | yes |
 | `relays` | yes | yes |
 | `database` | yes | yes |
 
@@ -179,6 +180,21 @@ buyer, not on the daemon.
 The age of a settled unpaid order is measured from the moment its hold invoice was
 settled.
 
+#### `cashu_mint`
+
+Cashu instances only. The daemon can't escrow anything when the mint is down, even though
+its relays and database are fine. The mints probed are the ones in the daemon's mint
+allowlist. When the allowlist is empty (the daemon accepts any mint), they are the
+distinct mints of the orders currently in progress. A mint is reachable when it answers
+its NUT-06 info endpoint (`GET /v1/info`) with a success status within 10 seconds.
+
+| State | When |
+|---|---|
+| `ok` | every probed mint is reachable, or there is no mint to probe (an empty allowlist and no order in progress) |
+| `warn` | at least one probed mint is reachable and at least one is not |
+| `fail` | no probed mint is reachable |
+| `unknown` | the daemon could not determine which mints to probe |
+
 #### `relays`
 
 Over the relays the daemon is configured to publish to:
@@ -207,8 +223,8 @@ daemon persists so that it survives a restart during the outage.
 
 `status` is a function of the checks and of `maintenance_mode`, applied in this order:
 
-1. `down` if any of these holds: `lnd_sync` is `fail` or `unknown`; `database` is
-   `fail`; `relays` is `fail`. The instance cannot do its basic job: escrow and pay
+1. `down` if any of these holds: `lnd_sync` is `fail` or `unknown`; `cashu_mint` is
+   `fail`; `database` is `fail`; `relays` is `fail`. The instance cannot do its basic job: escrow and pay
    out, or even talk to its users.
 2. Otherwise `degraded` if any check is `warn`, `fail` or `unknown`, or
    `maintenance_mode` is `true`. The instance works, but something needs attention or it
