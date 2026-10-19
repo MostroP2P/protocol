@@ -156,13 +156,15 @@ sending payouts and waits for LND, so `warn` means payouts are being held back. 
 60-second threshold only, time in which the `GetInfo` call failed counts as time `false`,
 since payouts wait just the same: a node that answers `false` after an outage warns once
 the outage and the `false` answers together reach 60 seconds. The 600-second threshold
-counts the run of `false` answers itself, from the first one, and so does
-[`lnd.unsynced_since`](#encrypted-content); an outage in the middle of a run does not end
-it. A publisher that cannot tell how long `synced_to_chain` has been `false` (when it has
-just started, for example) MUST report `warn` at once, as if 60 seconds had passed, since
-an unknown duration is never read as a short one; it reports `fail` once it has itself
-seen `false` for 600 seconds, and `lnd.unsynced_since` is the first `false` it saw. The
-600-second threshold is the same one that turns on
+runs in wall time from the first `false` answer of the run, which is also
+[`lnd.unsynced_since`](#encrypted-content). Only a `true` answer ends the run: an outage
+after that first `false` neither pauses nor resets it (the check is `unknown` while the
+calls fail, and `fail` if the next answer is still `false` once 600 seconds have passed),
+and an outage before it is not part of it. A publisher that cannot tell how long
+`synced_to_chain` has been `false` (when it has just started, for example) MUST report
+`warn` at once, as if 60 seconds had passed, since an unknown duration is never read as a
+short one; the first `false` it saw starts the run, so it reports `fail` 600 seconds
+later. The 600-second threshold is the same one that turns on
 [automatic maintenance](#relation-to-maintenance-mode) in mostrod.
 
 #### `payouts`
