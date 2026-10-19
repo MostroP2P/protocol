@@ -144,14 +144,19 @@ From LND's `GetInfo`:
 
 | State | When |
 |---|---|
-| `ok` | `synced_to_chain` is `true` |
-| `warn` | `synced_to_chain` has been `false` for less than 600 seconds without interruption |
+| `ok` | `synced_to_chain` is `true`, or has been `false` for less than 60 seconds without interruption |
+| `warn` | `synced_to_chain` has been `false` for 60 seconds or more, and less than 600, without interruption |
 | `fail` | `synced_to_chain` has been `false` for 600 seconds or more without interruption |
 | `unknown` | the `GetInfo` call failed or timed out |
 
-`warn` exists because LND reports `synced_to_chain = false` for a few seconds whenever a
-new block arrives; a single `false` is normal. The 600-second threshold is the same one
-that turns on [automatic maintenance](#relation-to-maintenance-mode) in mostrod.
+LND reports `synced_to_chain = false` for a few seconds whenever a new block arrives, so
+a short `false` is normal and stays `ok`: it says nothing about the node, and a reader
+that showed it would warn at every block. The 60-second threshold is when mostrod stops
+sending payouts and waits for LND, so `warn` means payouts are being held back. A
+publisher that cannot tell how long `synced_to_chain` has been `false` (when it has just
+started, for example) MUST count it as at least 60 seconds: an unknown duration is never
+read as a short one. The 600-second threshold is the same one that turns on
+[automatic maintenance](#relation-to-maintenance-mode) in mostrod.
 
 #### `payouts`
 
