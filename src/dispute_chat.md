@@ -66,6 +66,10 @@ Messages use the same envelope as the [Peer-to-peer Chat](./chat.md#event-struct
 
 Unlike the peer chat, **the admin is a legitimate writer here** — this channel is how a solver talks to each party privately. The accepted inner signers are therefore that party's trade key and the admin's pubkey, and nothing else.
 
+## Attachments
+
+Files follow [Chat attachments](./chat_attachments.md), keyed to this conversation: each party's files to the admin, and the admin's files to that party, are encrypted with the `K_file` derived from the `K_conv` they share.
+
 ## Subscribing to messages
 
 Clients subscribe by **author**, not by `p` tag:
