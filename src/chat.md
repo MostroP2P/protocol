@@ -63,7 +63,7 @@ Both outputs are interpreted as secp256k1 secret keys. In the negligible event t
 
 Separating the two is what makes a **read-only** dispute disclosure possible: a solver given `K_conv` can read the entire conversation but cannot publish into it. See [Dispute disclosure](#dispute-disclosure).
 
-Files sent in the conversation are encrypted with a third key, `K_file`, derived from `K_conv`, so that disclosure covers them too. See [Chat attachments](./chat_attachments.md#file-key).
+Files sent in the conversation are encrypted with a third key, `K_file`, derived from `K_conv`, so that disclosure covers them too. Files sent with the legacy key of earlier clients are the exception ([Migration](./chat_attachments.md#migration)). See [Chat attachments](./chat_attachments.md#file-key).
 
 ## Event structure
 
@@ -234,7 +234,7 @@ Clients SHOULD order messages by the validated inner `created_at`. Because that 
 
 ## Dispute disclosure
 
-Either party may voluntarily disclose **`K_conv`** to the solver, who can then decrypt the whole conversation and verify every inner signature to establish who wrote what. The same key opens the files sent in the conversation ([Chat attachments](./chat_attachments.md#dispute-disclosure)).
+Either party may voluntarily disclose **`K_conv`** to the solver, who can then decrypt the whole conversation and verify every inner signature to establish who wrote what. The same key opens the files encrypted with `K_file`, but not those sent with the legacy key of earlier clients ([Chat attachments](./chat_attachments.md#dispute-disclosure)).
 
 Because `K_sign` is never disclosed, this grant is **read-only**: the solver cannot publish into the conversation. The chat therefore keeps only the messages exchanged by the two parties, and a solver who needs to talk to them does so privately with each side, outside this channel. Even a solver who obtained `K_sign` could not impersonate a party, since forging a message would require a trade private key.
 

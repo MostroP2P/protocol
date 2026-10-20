@@ -42,7 +42,7 @@ The blob is uploaded with [BUD-02](https://github.com/hzrd149/blossom/blob/maste
 ```
 PUT <server>/upload
 Content-Type: application/octet-stream
-Authorization: Nostr <base64 of the authorization event>
+Authorization: Nostr <the authorization event, Base64url without padding>
 ```
 
 The content type is always `application/octet-stream`: the blob is ciphertext, whatever the file was. The authorization is a Blossom kind 24242 event:
@@ -64,6 +64,8 @@ The content type is always `application/octet-stream`: the blob is ciphertext, w
 ```
 
 The event MUST be signed by a key generated for that upload alone, never by the identity key or a trade key. Otherwise a server would see one pubkey behind every file of a trade, or of a user. `expiration` is a short window after `created_at`; existing clients use one hour.
+
+[BUD-11](https://github.com/hzrd149/blossom/blob/master/buds/11.md) requires the event to be encoded as Base64url without padding, and senders SHOULD encode it that way. Existing clients send standard Base64 with padding, which the servers they use accept.
 
 The server then serves the blob at `<server>/<sha256>` (BUD-01), where `<sha256>` is the lowercase hex SHA-256 of the blob. That URL is what the message carries. If the server answers with a blob descriptor whose `sha256` is not the blob's, the sender MUST treat the upload as failed.
 
@@ -125,12 +127,14 @@ Which files a client offers to send is its own choice. Existing clients send JPE
 A reader treats an incoming kind 1 as an attachment only when its `content` starts with `{` and parses as one of the shapes above. Anything else is text. For an attachment:
 
 1. `blossom_url` MUST be an `https` URL whose last path segment, before any extension, is 64 hex digits. Otherwise the blob is not fetched.
-2. The reader MUST NOT download more than the blob limit, whatever `encrypted_size` says, and MAY refuse a message whose `encrypted_size` is already above it.
-3. The SHA-256 of the downloaded blob MUST equal the hash in the URL before anything is decrypted. A server cannot substitute a blob.
-4. The reader decrypts with `K_file`. If the AEAD rejects it, the reader tries the legacy key ([Migration](#migration)). If both fail, the file cannot be opened.
-5. What the file is MUST be decided from the decrypted bytes, by their signature, never from `mime_type`, `file_type` or `filename`, which the sender chose. `filename` MUST be sanitized before it is used as a path.
+2. The URL's host MUST NOT be `localhost` or an IP address in a loopback, private, link-local or unspecified range. Readers SHOULD also refuse a host that resolves to such an address, where the platform exposes the resolution. The sender chose the URL: without this rule, a counterparty could make the reader send requests into the reader's own network. The hash check comes too late to prevent that, since it runs after the request.
+3. Every redirect the reader follows MUST pass rules 1 and 2 again. Readers MAY refuse redirects altogether.
+4. The reader MUST NOT download more than the blob limit, whatever `encrypted_size` says, and MAY refuse a message whose `encrypted_size` is already above it.
+5. The SHA-256 of the downloaded blob MUST equal the hash in the URL before anything is decrypted. A server cannot substitute a blob.
+6. The reader decrypts with `K_file`. If the AEAD rejects it, the reader tries the legacy key ([Migration](#migration)). If both fail, the file cannot be opened.
+7. What the file is MUST be decided from the decrypted bytes, by their signature, never from `mime_type`, `file_type` or `filename`, which the sender chose. `filename` MUST be sanitized before it is used as a path.
 
-Fetching a blob tells its server the reader's IP address, so clients MAY fetch a blob only when the user asks for it.
+The sender also chose the server, so fetching a blob can tell a server the counterparty runs the reader's IP address. Readers SHOULD fetch automatically only from servers they trust, such as the ones they upload to. They SHOULD fetch from any other host only when the user asks, and show that host. Requiring every host to be on the reader's own list would break delivery between clients that use different servers.
 
 ## Dispute disclosure
 
@@ -143,6 +147,7 @@ A file encrypted with the legacy key cannot be opened from `K_conv`. A party who
 ## Privacy considerations
 
 - The server learns the blob's size (the file's plus 28 bytes, since nothing is padded), its hash, and the IP address of whoever uploads or fetches it. It learns nothing of the content, the file name or the trade.
+- The URL comes from the counterparty, who can name a server it runs and so learn the reader's IP address when the blob is fetched. See [Receiving](#receiving).
 - A new authorization key for every upload keeps a server from linking two uploads by their signer.
 - Blobs stay on public servers for as long as the servers keep them. Anyone who later obtains `K_conv` or a trade private key can decrypt them: there is no forward secrecy.
 
