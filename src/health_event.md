@@ -173,12 +173,14 @@ buyer, not on the daemon.
 | State | When |
 |---|---|
 | `fail` | (a) there is at least one settled unpaid order older than 7200 seconds, and no payout attempt succeeded in the last 7200 seconds; **or** (b) at least 3 payout attempts reached a final state in the last 3600 seconds and more than half of them failed |
-| `warn` | not `fail`, and there is at least one settled unpaid order older than 900 seconds |
+| `warn` | not `fail`, and there is at least one settled unpaid order older than 1800 seconds |
 | `ok` | neither of the above, including when there were no payouts at all |
 | `unknown` | the publisher could not evaluate the rules, for example because the database query failed |
 
 The age of a settled unpaid order is measured from the moment its hold invoice was
-settled.
+settled. The `warn` threshold is half an hour because a buyer whose wallet is offline or
+unreachable keeps the daemon retrying for a while with nothing wrong on its side; a
+shorter one would report every such buyer as the instance being degraded.
 
 #### `cashu_mint`
 
@@ -206,9 +208,15 @@ is never `0`.
 
 | State | When |
 |---|---|
-| `ok` | every configured relay is connected |
-| `warn` | at least one is connected and at least one is not |
+| `ok` | every configured relay is connected; or at least one is, and the current spell with some of them disconnected began less than 300 seconds ago |
+| `warn` | at least one is connected, and the current spell with some of them disconnected began 300 seconds ago or more |
 | `fail` | none is connected |
+
+A spell with some relay disconnected begins when a configured relay is not connected and
+ends only when every one is connected again; losing all of them in between does not end
+it. Relays drop and reconnect on their own, and the event keeps going out through the
+others meanwhile, so a short spell is not a warning. A publisher that cannot tell when the
+current spell began MUST treat it as 300 seconds old or more.
 
 While no relay is connected nothing can be published, so a `fail` normally never reaches
 readers: they see the event go stale and report the instance as unknown, which is the
