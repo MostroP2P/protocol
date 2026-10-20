@@ -144,14 +144,28 @@ From LND's `GetInfo`:
 
 | State | When |
 |---|---|
-| `ok` | `synced_to_chain` is `true` |
-| `warn` | `synced_to_chain` has been `false` for less than 600 seconds without interruption |
+| `ok` | `synced_to_chain` is `true`, or has been `false` for less than 60 seconds without interruption |
+| `warn` | `synced_to_chain` has been `false` for 60 seconds or more, and less than 600, without interruption |
 | `fail` | `synced_to_chain` has been `false` for 600 seconds or more without interruption |
 | `unknown` | the `GetInfo` call failed or timed out |
 
-`warn` exists because LND reports `synced_to_chain = false` for a few seconds whenever a
-new block arrives; a single `false` is normal. The 600-second threshold is the same one
-that turns on [automatic maintenance](#relation-to-maintenance-mode) in mostrod.
+LND reports `synced_to_chain = false` for a few seconds whenever a new block arrives, so
+a short `false` is normal and stays `ok`: it says nothing about the node, and a reader
+that showed it would warn at every block. The 60-second threshold is when mostrod stops
+sending payouts and waits for LND, so `warn` means payouts are being held back. For that
+60-second threshold only, time in which the `GetInfo` call failed counts as time `false`,
+since payouts wait just the same: a node that answers `false` after an outage warns once
+the outage and the `false` answers together reach 60 seconds. The 600-second threshold
+runs in wall time from the first `false` answer of the run, which is also
+[`lnd.unsynced_since`](#encrypted-content). Only a `true` answer ends the run: an outage
+after that first `false` neither pauses nor resets it (the check is `unknown` while the
+calls fail, and `fail` if the next answer is still `false` once 600 seconds have passed),
+and an outage before it is not part of it. A publisher that cannot tell how long
+`synced_to_chain` has been `false` (when it has just started, for example) MUST report
+`warn` at once, as if 60 seconds had passed, since an unknown duration is never read as a
+short one; the first `false` it saw starts the run, so it reports `fail` 600 seconds
+later. The 600-second threshold is the same one that turns on
+[automatic maintenance](#relation-to-maintenance-mode) in mostrod.
 
 #### `payouts`
 
