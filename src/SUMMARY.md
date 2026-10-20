@@ -27,6 +27,7 @@
 - [Rate user](./user_rating.md)
 - [Cancel](./cancel.md)
 - [Peer-to-peer Chat](./chat.md)
+  - [Chat attachments](./chat_attachments.md)
 - [Dispute](./dispute.md)
 - [Dispute Chat](./dispute_chat.md)
 - [List disputes](./list_disputes.md)
