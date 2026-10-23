@@ -40,6 +40,7 @@
 - [Actions](./actions.md)
   - [Message suggestions for actions](./message_suggestions_for_actions.md)
 - [P2P Order event. NIP-69](./order_event.md)
+  - [Stablecoins](./stablecoins.md)
 - [Announcement events](./announcement_event.md)
 - [Reputation attestation](./reputation_attestation.md)
 - [Reputation export and import](./reputation_transfer.md)
