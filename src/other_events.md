@@ -245,7 +245,7 @@ Below is an explanation of the meaning of some of the labels in this event, all 
 - `min_order_amount`: The minimum amount of Satoshis allowed for exchange.
 - `expiration_hours`: The maximum time, in hours, that an order can remain in `pending` status before it expires.
 - `expiration_seconds`: The maximum time, in seconds, that an order can remain in `waiting-payment` or `waiting-buyer-invoice` status before being canceled or reverted to `pending` status.
-- `fiat_currencies_accepted`: Fiat currencies accepted by the Mostro. If no currency is specified, all are accepted.
+- `fiat_currencies_accepted`: Fiat currencies accepted by the Mostro, which may include [stablecoin](./stablecoins.md) codes. If no currency is specified, all are accepted.
 - `max_orders_per_response`: Maximum complete orders data per response in orders action.
 - `fee`: The fee percentage charged by the instance. For example, "0.006" means a 0.6% fee.
 - `pow`: Proof of work ([NIP-13](https://github.com/nostr-protocol/nips/blob/master/13.md)) required of **every** event a client sends the instance, expressed as the number of leading zero bits the event id must have. Measured on the *outer* event (the gift wrap on protocol v1, the kind-`14` event on v2) and checked before anything else, so an under-powered event is discarded without any reply. `"0"` means no work is required. See [Proof of work](./transport_migration.md#proof-of-work-and-the-first-contact-gate).
@@ -408,6 +408,8 @@ The `content` field contains the full rate response in JSON format matching the 
 ```
 
 **Rate semantics**: Each value under `"BTC"` represents the price of 1 BTC in that currency.
+
+A node that quotes [stablecoins](./stablecoins.md) includes their codes, each at the price of the fiat it is pegged to: `"USDT"` carries the same value as `"USD"`. A code that is missing means the node does not price market orders in it.
 
 # Development Fee
 
