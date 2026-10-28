@@ -35,9 +35,10 @@ For these codes `fa` counts **sats of the asset**, not whole units: `fa` = `1000
 
 ## Price
 
-A node that quotes these codes publishes each of them at `100000000` in its [exchange rates
-event](./other_events.md#exchange-rates): 10⁸ units per BTC, a unit being a sat. A
-market-priced order (`amt` = `0`) is therefore `fa` sats, less the premium:
+A node publishes each of these codes that it quotes at `100000000` in its [exchange rates
+event](./other_events.md#exchange-rates): 10⁸ units per BTC, a unit being a sat. An operator
+may quote any subset of the three. A market-priced order (`amt` = `0`) is therefore `fa`
+sats, less the premium:
 
 ```text
 sats = fa × (1 − premium / 100), rounded to the nearest sat
@@ -53,8 +54,10 @@ Pricing these codes is the operator's choice, as for [stablecoins](./stablecoins
 - A node that does not quote it refuses market-priced orders in it. It may still accept
   fixed-price ones, if [`fiat_currencies_accepted`](./other_events.md#mostro-instance-status)
   allows the code.
-- The node checks a market order against its sats limits (`min_order_amount`,
-  `max_order_amount`) with the premium applied.
+- A node with [MostroP2P/mostro#1095](https://github.com/MostroP2P/mostro/pull/1095) checks
+  a market order against its sats limits (`min_order_amount`, `max_order_amount`) with the
+  premium applied. An earlier node checks them without it, so an order close to a limit can
+  pass creation and be taken outside it.
 
 Clients SHOULD offer market price for these codes only when the node's exchange rates event
 carries the code.

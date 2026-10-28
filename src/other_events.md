@@ -411,7 +411,7 @@ The `content` field contains the full rate response in JSON format matching the 
 
 A node that quotes [stablecoins](./stablecoins.md) includes their codes, each at the price of the fiat it is pegged to: `"USDT"` carries the same value as `"USD"`. A code that is missing means the node does not price market orders in it.
 
-A node that quotes [bitcoin on other networks](./bitcoin_networks.md) includes `BTC`, `LBTC` and `RBTC`, each at `100000000`: 10⁸ units per BTC, a unit being a sat. On-chain bitcoin is the inner `"BTC"` entry, so an inner `"BTC"` of `100000000` means the node quotes it, while `1` is a source's self-rate and not a quote.
+A node that quotes [bitcoin on other networks](./bitcoin_networks.md) includes each code it quotes among `BTC`, `LBTC` and `RBTC`, at `100000000`: 10⁸ units per BTC, a unit being a sat. On-chain bitcoin is the inner `"BTC"` entry, so an inner `"BTC"` of `100000000` means the node quotes it, while `1` is a source's self-rate and not a quote.
 
 # Development Fee
 
